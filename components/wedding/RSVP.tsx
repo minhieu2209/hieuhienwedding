@@ -208,7 +208,7 @@ export default function RSVP() {
 
                 <div className="text-center">
 
-                  <p className="font-wedding text-xl">
+                  <p className="font-wedding text-xl font-light italic text-[#dceae0]/75">
                     H
                   </p>
 
@@ -216,7 +216,7 @@ export default function RSVP() {
                     ♡
                   </p>
 
-                  <p className="font-wedding text-xl">
+                  <p className="font-wedding text-xl font-light italic text-[#dceae0]/75">
                     H
                   </p>
 

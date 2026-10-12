@@ -176,11 +176,23 @@ export default function Hero() {
       <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-6 pb-24 pt-20 text-center text-white">
 
         {/* MONOGRAM */}
-        <div className="hero-fade hero-delay-1 mb-7 flex h-14 w-14 items-center justify-center rounded-full border border-white/40 bg-white/5 backdrop-blur-sm">
-          <span className="text-[10px] uppercase tracking-[0.2em] text-white/90">
-            M · H
-          </span>
-        </div>
+       <div className="mx-auto mt-12 mb-5 flex h-20 w-20 rotate-[-7deg] items-center justify-center rounded-full border border-white/20 bg-white/5">
+  <div className="text-center">
+
+    <p className="font-wedding text-lg font-light italic text-[#dceae0]/75">
+      H
+    </p>
+
+    <p className="my-1 text-[10px] text-[#dceae0]">
+      ♡
+    </p>
+
+    <p className="font-wedding text-lg font-light italic text-[#dceae0]/75">
+      H
+    </p>
+
+  </div>
+</div>
 
         {/* EYEBROW */}
         <p className="hero-fade hero-delay-1 text-[10px] uppercase tracking-[0.5em] text-white/75 md:text-xs">
@@ -198,20 +210,20 @@ export default function Hero() {
 
         {/* NAMES */}
         <div className="hero-fade hero-delay-3 mt-7">
-          <h1 className="font-wedding text-[clamp(3.5rem,12vw,7.5rem)] leading-[0.92] tracking-tight drop-shadow-sm">
-            <span className="block">
-              {weddingData.groom.fullName}
-            </span>
+  <h1 className="font-wedding text-[clamp(2.9rem,10vw,6.2rem)] leading-[0.94] tracking-tight drop-shadow-sm">
+    <span className="block text-white/85">
+      {weddingData.groom.fullName}
+    </span>
 
-            <span className="my-3 block text-[0.52em] font-light italic text-[#dceae0]">
-              &
-            </span>
+    <span className="my-3 block text-[0.48em] font-light italic text-[#dceae0]/75">
+      &
+    </span>
 
-            <span className="block">
-              {weddingData.bride.fullName}
-            </span>
-          </h1>
-        </div>
+    <span className="block text-white/85">
+      {weddingData.bride.fullName}
+    </span>
+  </h1>
+</div>
 
         {/* SAVE THE DATE */}
         <div className="hero-fade hero-delay-4 mt-9">

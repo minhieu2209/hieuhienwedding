@@ -10,9 +10,9 @@ export const weddingData = {
   },
 
   wedding: {
-    date: "2026-12-20",
-    dateTime: "2026-12-20T11:00:00+07:00",
-    displayDate: "20 · 12 · 2026",
+    date: "2026-11-29",
+    dateTime: "2026-11-29T11:00:00+07:00",
+    displayDate: "29 · 11 · 2026",
     time: "11:00",
   },
 
@@ -48,16 +48,16 @@ export const weddingData = {
   family: {
   groom: {
     title: "Nhà Trai",
-    father: "Ông Nguyễn Văn Lộc",
-    mother: "Bà Nguyễn Thị Thoan",
+    father: "Nguyễn Văn Lộc",
+    mother: "Nguyễn Thị Thoan",
     address: "114 Phù Nghĩa, Nam Định, Ninh Bình",
   },
 
   bride: {
     title: "Nhà Gái",
-    father: "Ông Đào Tuấn",
-    mother: "Bà Khương Thị Nhung",
-    address: "Km6, Thôn Làng Bạc, Xuân Quang, Lào Cai",
+    father: "Đào Tuấn",
+    mother: "Khương Thị Nhung",
+    address: "Km 6, Thôn Làng Bạc, Xuân Quang, Lào Cai",
   },
 },
 

@@ -165,19 +165,24 @@ export default function SaveTheDate() {
             </p>
 
             {/* seal */}
-            <div className="mt-10 flex h-20 w-20 rotate-[-8deg] items-center justify-center rounded-full border border-white/30 bg-white/5 backdrop-blur-sm">
-              <div className="text-center">
-                <p className="text-[8px] uppercase tracking-[0.2em] text-white/60">
-                  H
-                </p>
-                <p className="my-1 text-xs text-white/90">
-                  ♡
-                </p>
-                <p className="text-[8px] uppercase tracking-[0.2em] text-white/60">
-                  H
-                </p>
-              </div>
-            </div>
+            <div className="mx-auto mt-12 mb-5 flex h-20 w-20 rotate-[-7deg] items-center justify-center rounded-full border border-white/20 bg-white/5">
+  <div className="text-center">
+
+    <p className="font-wedding text-lg font-light italic text-[#dceae0]/75">
+      H
+    </p>
+
+    <p className="my-1 text-[10px] text-[#dceae0]">
+      ♡
+    </p>
+
+    <p className="font-wedding text-lg font-light italic text-[#dceae0]/75">
+      H
+    </p>
+
+  </div>
+</div>
+
           </div>
 
           {/* RIGHT SIDE - CALENDAR */}

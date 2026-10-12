@@ -72,12 +72,6 @@ export default function LoveStory() {
                         />
 
                         <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-
-                        <div className="absolute bottom-5 left-5 rounded-full border border-white/30 bg-white/10 px-4 py-2 backdrop-blur-sm">
-                          <span className="text-[10px] uppercase tracking-[0.25em] text-white">
-                            {story.date}
-                          </span>
-                        </div>
                       </div>
                     </div>
                   </div>

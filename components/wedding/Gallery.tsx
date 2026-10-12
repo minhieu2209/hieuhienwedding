@@ -310,18 +310,6 @@ export default function Gallery() {
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-60 transition duration-500 group-hover:opacity-80" />
 
-                  {/* IMAGE NUMBER */}
-
-                  <div className="absolute bottom-4 left-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-black/10 backdrop-blur-md md:bottom-5 md:left-5">
-
-                    <span className="text-[9px] tracking-wider text-white">
-                      {String(
-                        index + 1
-                      ).padStart(2, "0")}
-                    </span>
-
-                  </div>
-
                   {/* VIEW LABEL */}
 
                   <div className="absolute bottom-4 right-4 translate-y-2 opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100 md:bottom-5 md:right-5">

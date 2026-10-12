@@ -50,7 +50,7 @@ export default function Footer() {
         <div className="mx-auto mt-12 flex h-24 w-24 rotate-[-7deg] items-center justify-center rounded-full border border-white/20 bg-white/5">
           <div className="text-center">
 
-            <p className="font-wedding text-xl">
+            <p className="font-wedding text-xl font-light italic text-[#dceae0]/75">
               H
             </p>
 
@@ -58,7 +58,7 @@ export default function Footer() {
               ♡
             </p>
 
-            <p className="font-wedding text-xl">
+            <p className="font-wedding text-xl font-light italic text-[#dceae0]/75">
               H
             </p>
 
@@ -75,11 +75,11 @@ export default function Footer() {
 
         <div className="mt-20 border-t border-white/10 pt-7">
           <p className="text-[8px] uppercase tracking-[0.3em] text-white/25">
-            Made with love
+            Made by groom
           </p>
 
           <p className="mt-2 text-[9px] text-white/30">
-            Minh Hiếu & Thu Hiền
+            minhieu2209
           </p>
         </div>
 

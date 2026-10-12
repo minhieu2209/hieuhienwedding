@@ -162,7 +162,7 @@ export default function Countdown() {
         {/* MONOGRAM */}
         <div className="mx-auto mt-16 flex h-24 w-24 rotate-[-8deg] items-center justify-center rounded-full border border-white/20 bg-white/5 backdrop-blur-sm">
           <div className="text-center">
-            <p className="font-wedding text-xl">
+            <p className="font-wedding text-xl font-light italic text-[#dceae0]/75">
               H
             </p>
 
@@ -170,7 +170,7 @@ export default function Countdown() {
               ♡
             </p>
 
-            <p className="font-wedding text-xl">
+            <p className="font-wedding text-xl font-light italic text-[#dceae0]/75">
               H
             </p>
           </div>
