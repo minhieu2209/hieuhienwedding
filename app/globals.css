@@ -24,3 +24,277 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+.font-wedding {
+  font-family: var(--font-wedding), serif;
+}
+:root {
+  --wedding-bg: #f6faf7;
+  --wedding-surface: #eaf3ed;
+
+  --wedding-primary: #86aa94;
+  --wedding-primary-dark: #496b58;
+  --wedding-primary-light: #dceae0;
+
+  --wedding-text: #29362e;
+  --wedding-text-muted: #68776d;
+
+  --wedding-cream: #fffcf8;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--wedding-bg);
+  color: var(--wedding-text);
+}
+.hero-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroFadeUp 1s ease forwards;
+}
+
+.hero-delay-1 {
+  animation-delay: 0.2s;
+}
+
+.hero-delay-2 {
+  animation-delay: 0.45s;
+}
+
+.hero-delay-3 {
+  animation-delay: 0.7s;
+}
+
+.hero-delay-4 {
+  animation-delay: 1s;
+}
+
+.hero-delay-5 {
+  animation-delay: 1.25s;
+}
+
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scroll-arrow {
+  animation: scrollArrow 1.6s ease-in-out infinite;
+}
+
+@keyframes scrollArrow {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+/* ========================================
+   PREMIUM HERO
+   ======================================== */
+
+.premium-hero-image {
+  transform: scale(1.06);
+  animation: heroImageZoom 14s ease-out forwards;
+}
+
+@keyframes heroImageZoom {
+  from {
+    transform: scale(1.12);
+  }
+
+  to {
+    transform: scale(1.04);
+  }
+}
+
+/* Decorative botanical branches */
+
+.premium-branch-left {
+  opacity: 0;
+  animation: branchRevealLeft 1.8s ease 0.8s forwards;
+}
+
+.premium-branch-right {
+  opacity: 0;
+  animation: branchRevealRight 1.8s ease 1s forwards;
+}
+
+@keyframes branchRevealLeft {
+  from {
+    opacity: 0;
+    transform: translate(-20px, -10px) rotate(-4deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+@keyframes branchRevealRight {
+  from {
+    opacity: 0;
+    transform: translate(20px, 10px) rotate(4deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+/* Scroll line */
+
+.scroll-line {
+  transform-origin: top;
+  animation: scrollLine 1.8s ease-in-out infinite;
+}
+
+@keyframes scrollLine {
+  0% {
+    transform: scaleY(0.25);
+    opacity: 0.25;
+  }
+
+  50% {
+    transform: scaleY(1);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: scaleY(0.25);
+    opacity: 0.25;
+  }
+}
+
+/* Better rendering on mobile */
+
+@media (max-width: 640px) {
+  .premium-hero-image {
+    background-position: center 25%;
+  }
+}
+
+/* Respect accessibility settings */
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-hero-image,
+  .premium-branch-left,
+  .premium-branch-right,
+  .hero-fade,
+  .scroll-line {
+    animation: none !important;
+  }
+
+  .hero-fade,
+  .premium-branch-left,
+  .premium-branch-right {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* ========================================
+   GALLERY RANDOM REVEAL
+   ======================================== */
+
+.gallery-reveal {
+  opacity: 0;
+
+  transition:
+    opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+
+  will-change: transform, opacity;
+}
+
+/* Slide from left */
+
+.gallery-reveal-left {
+  transform: translate3d(-80px, 0, 0);
+}
+
+/* Slide from right */
+
+.gallery-reveal-right {
+  transform: translate3d(80px, 0, 0);
+}
+
+/* Slide from bottom */
+
+.gallery-reveal-up {
+  transform: translate3d(0, 80px, 0);
+}
+
+/* Slide from top */
+
+.gallery-reveal-down {
+  transform: translate3d(0, -80px, 0);
+}
+
+/* Final position */
+
+.gallery-is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-reveal,
+  .gallery-reveal-left,
+  .gallery-reveal-right,
+  .gallery-reveal-up,
+  .gallery-reveal-down {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+/* ========================================
+   MUSIC PLAYLIST
+   ======================================== */
+
+.music-bar {
+  transform-origin: bottom;
+  animation: musicEqualizer 0.75s ease-in-out infinite alternate;
+}
+
+.music-bar-delay-1 {
+  animation-delay: 0.2s;
+}
+
+.music-bar-delay-2 {
+  animation-delay: 0.4s;
+}
+
+@keyframes musicEqualizer {
+  from {
+    transform: scaleY(0.35);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music-bar {
+    animation: none !important;
+  }
+}
