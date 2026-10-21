@@ -1,3 +1,4 @@
+// Dữ liệu dùng chung cho các phần của thiệp cưới.
 export const weddingData = {
   groom: {
     firstName: "Hiếu",
