@@ -17,19 +17,6 @@ export const weddingData = {
     time: "10:00",
   },
 
-  weddingGroom: {
-    date: "2026-11-29",
-    dateTime: "2026-11-29T10:00:00+07:00",
-    displayDate: "29 · 11 · 2026",
-    time: "10:00",
-  },
-    weddingBride: {
-    date: "2026-11-28",
-    dateTime: "2026-11-28T10:00:00+07:00",
-    displayDate: "28 · 11 · 2026",
-    time: "10:00",
-  },
-
   text: {
     saveTheDate: "Save The Date",
     invitation:
@@ -41,7 +28,7 @@ export const weddingData = {
     title: "Nhà Trai",
     father: "Nguyễn Văn Lộc",
     mother: "Nguyễn Thị Thoan",
-    address: "Nhà hàng Chen 01 Nam Định, 300 Trường Chinh, Nam Định, Ninh Bình"
+    address: "Nhà hàng Chen 01 Nam Định\n300 Trường Chinh, Nam Định, Ninh Bình"
   },
 
   bride: {

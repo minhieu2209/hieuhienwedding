@@ -247,12 +247,12 @@ export default function Hero({ invitation }: InvitationProps) {
           <p className="mt-4 text-sm leading-7 text-white/85">
             {invitation.message}
           </p>
-          <p className="mt-5 text-sm leading-7 text-white/80">
+          {/* <p className="mt-5 text-sm leading-7 text-white/80">
             {invitation.event.time} · {invitation.event.date}
             <span className="block text-xs">{invitation.copy.labels.vietnamTime}</span>
             <span className="block">{invitation.event.venue}</span>
             <span className="block">{invitation.event.address}</span>
-          </p>
+          </p> */}
         </div>
 
         {/* SCROLL */}

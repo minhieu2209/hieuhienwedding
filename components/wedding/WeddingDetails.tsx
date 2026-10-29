@@ -173,7 +173,7 @@ export default function WeddingDetails({ invitation }: InvitationProps) {
               <h3 className="mt-3 font-wedding text-4xl font-normal text-[var(--wedding-primary-dark)] md:text-5xl">{family.fullName}</h3>
               <div className="mx-auto mt-8 flex max-w-xs items-center justify-center gap-2 border-t border-[var(--wedding-primary-light)] pt-6 text-sm leading-6 text-[var(--wedding-text-muted)]">
                 <LocationIcon />
-                <span>{family.address}</span>
+                <span className="whitespace-pre-line">{family.address}</span>
               </div>
             </article>
           ))}
