@@ -7,6 +7,7 @@ import {
 } from "react";
 
 import { supabase } from "@/lib/supabase";
+import type { InvitationProps } from "@/data/invitations";
 
 type Wish = {
   id: number;
@@ -15,12 +16,12 @@ type Wish = {
   created_at: string;
 };
 
-export default function Guestbook() {
+export default function Guestbook({ invitation }: InvitationProps) {
   const [wishes, setWishes] =
     useState<Wish[]>([]);
 
   const [name, setName] =
-    useState("");
+    useState(invitation.id === "chu-re/cong-ty" ? "" : invitation.recipientName);
 
   const [message, setMessage] =
     useState("");
@@ -29,10 +30,12 @@ export default function Guestbook() {
     useState(false);
 
   const [loadingWishes, setLoadingWishes] =
-    useState(true);
+    useState(Boolean(supabase));
 
   useEffect(() => {
     async function loadWishes() {
+      if (!supabase) return;
+
       setLoadingWishes(true);
 
       const { data, error } =
@@ -68,7 +71,8 @@ export default function Guestbook() {
     if (
       !name.trim() ||
       !message.trim() ||
-      loading
+      loading ||
+      !supabase
     ) {
       return;
     }
@@ -164,8 +168,7 @@ export default function Guestbook() {
           <p className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-[var(--wedding-text-muted)] md:text-base md:leading-8">
             Một vài lời nhắn nhỏ từ bạn
             sẽ trở thành những kỷ niệm thật
-            đẹp mà Minh Hiếu & Thu Hiền
-            luôn muốn giữ lại.
+            đẹp mà {invitation.names} luôn muốn giữ lại.
           </p>
 
         </div>
@@ -243,7 +246,7 @@ export default function Guestbook() {
                         event.target.value
                       )
                     }
-                    placeholder="Viết lời chúc dành cho Minh Hiếu & Thu Hiền..."
+                    placeholder={`Viết lời chúc dành cho ${invitation.names}...`}
                     className="mt-3 w-full resize-none border-0 border-b border-[var(--wedding-primary-light)] bg-transparent px-0 py-3 leading-7 text-[var(--wedding-text)] outline-none transition placeholder:text-[var(--wedding-text-muted)]/45 focus:border-[var(--wedding-primary)]"
                   />
 
@@ -253,7 +256,7 @@ export default function Guestbook() {
 
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || !supabase}
                   className="group mt-9 flex w-full items-center justify-center gap-3 rounded-full bg-[var(--wedding-primary-dark)] px-6 py-4 text-[10px] uppercase tracking-[0.3em] text-white transition duration-300 hover:bg-[var(--wedding-primary)] disabled:cursor-not-allowed disabled:opacity-50"
                 >
 
@@ -269,6 +272,12 @@ export default function Guestbook() {
 
                 </button>
 
+                {!supabase && (
+                  <p role="status" className="mt-5 text-sm leading-6 text-[var(--wedding-text-muted)]">
+                    Gửi lời chúc trực tuyến hiện chưa khả dụng. Bạn có thể gửi lời chúc trực tiếp tới cô dâu và chú rể nhé.
+                  </p>
+                )}
+
               </form>
 
               <div className="mt-8 border-t border-[var(--wedding-primary-light)] pt-6 text-center">
@@ -278,7 +287,7 @@ export default function Guestbook() {
                 </p>
 
                 <p className="mt-2 text-[8px] uppercase tracking-[0.35em] text-[var(--wedding-text-muted)]">
-                  Minh Hiếu · Thu Hiền
+                  {invitation.namesWithDot}
                 </p>
 
               </div>
@@ -324,7 +333,7 @@ export default function Guestbook() {
 
             {/* EMPTY */}
 
-            {!loadingWishes &&
+            {!loadingWishes && supabase &&
               wishes.length === 0 && (
                 <div className="rounded-[28px] border border-[var(--wedding-primary-light)] bg-white/70 p-8 text-center">
 
@@ -337,8 +346,7 @@ export default function Guestbook() {
                   </p>
 
                   <p className="mt-2 text-sm leading-7 text-[var(--wedding-text-muted)]">
-                    Gửi một lời chúc tới
-                    Minh Hiếu & Thu Hiền nhé.
+                    Gửi một lời chúc tới {invitation.names} nhé.
                   </p>
 
                 </div>

@@ -1,4 +1,4 @@
-import { weddingData } from "@/data/wedding";
+import type { InvitationProps } from "@/data/invitations";
 
 function BotanicalBranch({
   className = "",
@@ -130,7 +130,7 @@ function BotanicalBranch({
   );
 }
 
-export default function Hero() {
+export default function Hero({ invitation }: InvitationProps) {
   return (
     <section className="premium-hero relative min-h-screen overflow-hidden bg-[#dfe9e2]">
 
@@ -212,7 +212,7 @@ export default function Hero() {
         <div className="hero-fade hero-delay-3 mt-7">
   <h1 className="font-wedding text-[clamp(2.9rem,10vw,6.2rem)] leading-[0.94] tracking-tight drop-shadow-sm">
     <span className="block text-white/85">
-      {weddingData.groom.fullName}
+      {invitation.people[0].fullName}
     </span>
 
     <span className="my-3 block text-[0.48em] font-light italic text-[#dceae0]/75">
@@ -220,7 +220,7 @@ export default function Hero() {
     </span>
 
     <span className="block text-white/85">
-      {weddingData.bride.fullName}
+      {invitation.people[1].fullName}
     </span>
   </h1>
 </div>
@@ -232,14 +232,27 @@ export default function Hero() {
           </p>
 
           <p className="mt-4 text-lg font-light tracking-[0.28em] text-white md:text-2xl">
-            {weddingData.wedding.displayDate}
+            {invitation.event.date}
           </p>
         </div>
 
-        {/* INVITATION TEXT */}
-        <p className="hero-fade hero-delay-5 mx-auto mt-8 max-w-md text-sm leading-7 text-white/80 md:text-base">
-          {weddingData.text.invitation}
-        </p>
+        {/* PERSONAL INVITATION */}
+        <div className="hero-fade hero-delay-5 mx-auto mt-8 w-full max-w-xl rounded-[24px] border border-white/20 bg-black/15 px-5 py-6 backdrop-blur-sm">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-white/70">
+            {invitation.salutation}
+          </p>
+          <p className="mt-3 break-words font-wedding text-2xl leading-relaxed text-white md:text-3xl">
+            {invitation.recipient}
+          </p>
+          <p className="mt-4 text-sm leading-7 text-white/85">
+            {invitation.message}
+          </p>
+          <p className="mt-5 text-sm leading-7 text-white/80">
+            {invitation.event.time} · {invitation.event.date}
+            <span className="block">{invitation.event.venue}</span>
+            <span className="block">{invitation.event.address}</span>
+          </p>
+        </div>
 
         {/* SCROLL */}
         <a

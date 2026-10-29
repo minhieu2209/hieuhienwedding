@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { weddingData } from "@/data/wedding";
+import type { InvitationProps } from "@/data/invitations";
 
 function MiniLeaf({
   className = "",
@@ -47,7 +47,7 @@ function MiniLeaf({
   );
 }
 
-export default function Couple() {
+export default function Couple({ invitation }: InvitationProps) {
   return (
     <section className="relative overflow-hidden bg-[var(--wedding-cream)] px-5 py-24 md:px-6 md:py-32">
       {/* BACKGROUND DETAILS */}
@@ -64,7 +64,7 @@ export default function Couple() {
         {/* TITLE */}
         <div className="text-center">
           <p className="text-[10px] uppercase tracking-[0.5em] text-[var(--wedding-primary)] md:text-xs">
-            Bride & Groom
+            {invitation.side === "groom" ? "Groom & Bride" : "Bride & Groom"}
           </p>
 
           <h2 className="mt-5 font-wedding text-5xl text-[var(--wedding-primary-dark)] md:text-7xl">
@@ -80,89 +80,33 @@ export default function Couple() {
 
         {/* COUPLE AREA */}
         <div className="relative mt-16 grid gap-16 md:grid-cols-2 md:gap-12 lg:gap-20">
-          {/* GROOM */}
-          <article className="group relative">
-            <div className="relative mx-auto max-w-md">
-              <div className="pointer-events-none absolute -left-4 -top-4 h-full w-full rounded-t-[190px] border border-[var(--wedding-primary-light)] md:-left-6 md:-top-6" />
-
-              <div className="relative aspect-[4/5] overflow-hidden rounded-t-[190px] rounded-b-[34px]">
-                <Image
-                  src="/images/couple/groom.jpg"
-                  alt={weddingData.groom.fullName}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover transition duration-1000 group-hover:scale-105"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-[#213029]/65 via-transparent to-transparent" />
-
-                <div className="absolute bottom-6 left-0 right-0 px-6 text-center text-white">
-                  <p className="text-[10px] uppercase tracking-[0.4em] text-white/65">
-                    Groom
-                  </p>
-
-                  <h3 className="mt-2 font-wedding text-4xl md:text-5xl">
-                    {weddingData.groom.fullName}
-                  </h3>
+          {invitation.people.map((person, index) => (
+            <article key={person.side} className="group relative">
+              <div className="relative mx-auto max-w-md">
+                <div className={`pointer-events-none absolute -top-4 h-full w-full rounded-t-[190px] border border-[var(--wedding-primary-light)] md:-top-6 ${index === 0 ? "-left-4 md:-left-6" : "-right-4 md:-right-6"}`} />
+                <div className="relative aspect-[4/5] overflow-hidden rounded-t-[190px] rounded-b-[34px]">
+                  <Image
+                    src={person.image}
+                    alt={person.fullName}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover transition duration-1000 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#213029]/65 via-transparent to-transparent" />
+                  <div className="absolute bottom-6 left-0 right-0 px-6 text-center text-white">
+                    <p className="text-[10px] uppercase tracking-[0.4em] text-white/65">{person.role}</p>
+                    <h3 className="mt-2 font-wedding text-4xl md:text-5xl">{person.fullName}</h3>
+                  </div>
+                </div>
+                <div className="absolute -bottom-7 -right-2 flex h-20 w-20 rotate-[-10deg] items-center justify-center rounded-full border border-[var(--wedding-primary)] bg-[var(--wedding-cream)] shadow-[0_12px_30px_rgba(73,107,88,0.12)]">
+                  <span className="font-wedding text-2xl text-[var(--wedding-primary-dark)]">{person.firstName[0]}</span>
                 </div>
               </div>
-
-              <div className="absolute -bottom-7 -right-2 flex h-20 w-20 rotate-[-10deg] items-center justify-center rounded-full border border-[var(--wedding-primary)] bg-[var(--wedding-cream)] shadow-[0_12px_30px_rgba(73,107,88,0.12)]">
-                <span className="font-wedding text-2xl text-[var(--wedding-primary-dark)]">
-                  H
-                </span>
+              <div className="mx-auto mt-12 max-w-sm text-center">
+                <p className="leading-8 text-[var(--wedding-text-muted)]">{person.description}</p>
               </div>
-            </div>
-
-            <div className="mx-auto mt-12 max-w-sm text-center">
-              <p className="leading-8 text-[var(--wedding-text-muted)]">
-                Chàng trai tin rằng những điều đẹp nhất trong cuộc sống
-                trở nên ý nghĩa hơn khi được sẻ chia cùng người mình yêu.
-              </p>
-            </div>
-          </article>
-
-          {/* BRIDE */}
-          <article className="group relative">
-            <div className="relative mx-auto max-w-md">
-              <div className="pointer-events-none absolute -right-4 -top-4 h-full w-full rounded-t-[190px] border border-[var(--wedding-primary-light)] md:-right-6 md:-top-6" />
-
-              <div className="relative aspect-[4/5] overflow-hidden rounded-t-[190px] rounded-b-[34px]">
-                <Image
-                  src="/images/couple/bride.jpg"
-                  alt={weddingData.bride.fullName}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover transition duration-1000 group-hover:scale-105"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-[#213029]/65 via-transparent to-transparent" />
-
-                <div className="absolute bottom-6 left-0 right-0 px-6 text-center text-white">
-                  <p className="text-[10px] uppercase tracking-[0.4em] text-white/65">
-                    Bride
-                  </p>
-
-                  <h3 className="mt-2 font-wedding text-4xl md:text-5xl">
-                    {weddingData.bride.fullName}
-                  </h3>
-                </div>
-              </div>
-
-              <div className="absolute -bottom-7 -left-2 flex h-20 w-20 rotate-[10deg] items-center justify-center rounded-full border border-[var(--wedding-primary)] bg-[var(--wedding-cream)] shadow-[0_12px_30px_rgba(73,107,88,0.12)]">
-                <span className="font-wedding text-2xl text-[var(--wedding-primary-dark)]">
-                  H
-                </span>
-              </div>
-            </div>
-
-            <div className="mx-auto mt-12 max-w-sm text-center">
-              <p className="leading-8 text-[var(--wedding-text-muted)]">
-                Cô gái tin vào những khoảnh khắc bình dị, những nụ cười
-                chân thành và một hành trình dài được đồng hành bên người mình thương.
-              </p>
-            </div>
-          </article>
+            </article>
+          ))}
 
           {/* CENTER AMPERSAND */}
           <div className="pointer-events-none absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 md:block">

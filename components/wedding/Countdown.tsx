@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { weddingData } from "@/data/wedding";
+import type { InvitationProps } from "@/data/invitations";
 
 type TimeLeft = {
   days: number;
@@ -10,9 +10,9 @@ type TimeLeft = {
   seconds: number;
 };
 
-function calculateTimeLeft(): TimeLeft {
+function calculateTimeLeft(dateTime: string): TimeLeft {
   const weddingTime = new Date(
-    weddingData.wedding.dateTime
+    dateTime
   ).getTime();
 
   const now = Date.now();
@@ -41,7 +41,7 @@ function calculateTimeLeft(): TimeLeft {
   };
 }
 
-export default function Countdown() {
+export default function Countdown({ invitation }: InvitationProps) {
   const [timeLeft, setTimeLeft] =
     useState<TimeLeft>({
       days: 0,
@@ -54,16 +54,17 @@ export default function Countdown() {
     useState(false);
 
   useEffect(() => {
-    setMounted(true);
-
-    setTimeLeft(calculateTimeLeft());
-
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
+    const updateTime = () => {
+      setMounted(true);
+      setTimeLeft(calculateTimeLeft(invitation.event.dateTime));
+    };
+    const initialUpdate = setTimeout(updateTime, 0);
+    const timer = setInterval(updateTime, 1000);
+    return () => {
+      clearTimeout(initialUpdate);
+      clearInterval(timer);
+    };
+  }, [invitation.event.dateTime]);
 
   const items = [
     {
@@ -128,7 +129,7 @@ export default function Countdown() {
 
         {/* DATE */}
         <p className="mt-7 text-xs uppercase tracking-[0.35em] text-white/60">
-          {weddingData.wedding.displayDate}
+          {invitation.event.date}
         </p>
 
         {/* COUNTDOWN */}
@@ -184,7 +185,7 @@ export default function Countdown() {
 
         {/* BOTTOM TEXT */}
         <p className="mt-8 text-[9px] uppercase tracking-[0.4em] text-white/35">
-          Minh Hiếu · Thu Hiền
+          {invitation.namesWithDot}
         </p>
 
       </div>

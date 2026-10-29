@@ -1,38 +1,16 @@
 "use client";
 
 import Image from "next/image";
+import type { InvitationProps } from "@/data/invitations";
 import {
   useEffect,
   useRef,
   useState,
 } from "react";
 
-const images = [
-  {
-    src: "/images/gallery/gallery-1.jpg",
-    alt: "Minh Hiếu & Thu Hiền - Wedding photo 1",
-  },
-  {
-    src: "/images/gallery/gallery-2.jpg",
-    alt: "Minh Hiếu & Thu Hiền - Wedding photo 2",
-  },
-  {
-    src: "/images/gallery/gallery-3.jpg",
-    alt: "Minh Hiếu & Thu Hiền - Wedding photo 3",
-  },
-  {
-    src: "/images/gallery/gallery-4.jpg",
-    alt: "Minh Hiếu & Thu Hiền - Wedding photo 4",
-  },
-  {
-    src: "/images/gallery/gallery-5.jpg",
-    alt: "Minh Hiếu & Thu Hiền - Wedding photo 5",
-  },
-  {
-    src: "/images/gallery/gallery-6.jpg",
-    alt: "Minh Hiếu & Thu Hiền - Wedding photo 6",
-  },
-];
+const images = Array.from({ length: 6 }, (_, index) => ({
+  src: `/images/gallery/gallery-${index + 1}.jpg`,
+}));
 
 const layoutClasses = [
   "col-span-2 row-span-2 md:col-span-7 md:row-span-4",
@@ -50,35 +28,14 @@ const directions = [
   "down",
 ];
 
-export default function Gallery() {
+export default function Gallery({ invitation }: InvitationProps) {
   const galleryRef =
     useRef<HTMLDivElement | null>(null);
 
   const [selectedIndex, setSelectedIndex] =
     useState<number | null>(null);
 
-  const [
-    revealDirections,
-    setRevealDirections,
-  ] = useState<string[]>([]);
-
   const isOpen = selectedIndex !== null;
-
-  /*
-   * Sinh hướng animation ngẫu nhiên.
-   * Chỉ chạy ở client sau khi component mount.
-   */
-  useEffect(() => {
-    const randomDirections = images.map(() => {
-      const randomIndex = Math.floor(
-        Math.random() * directions.length
-      );
-
-      return directions[randomIndex];
-    });
-
-    setRevealDirections(randomDirections);
-  }, []);
 
   /*
    * Theo dõi khi từng ảnh đi vào viewport
@@ -86,8 +43,6 @@ export default function Gallery() {
    */
   useEffect(() => {
     if (
-      revealDirections.length !==
-        images.length ||
       !galleryRef.current
     ) {
       return;
@@ -123,9 +78,9 @@ export default function Gallery() {
       );
 
     elements.forEach(
-      (element, index) => {
+      (element) => {
         const direction =
-          revealDirections[index];
+          directions[Math.floor(Math.random() * directions.length)];
 
         element.classList.add(
           `gallery-reveal-${direction}`
@@ -138,7 +93,7 @@ export default function Gallery() {
     return () => {
       observer.disconnect();
     };
-  }, [revealDirections]);
+  }, []);
 
   /*
    * Lightbox controls
@@ -296,7 +251,7 @@ export default function Gallery() {
 
                   <Image
                     src={image.src}
-                    alt={image.alt}
+                    alt={`${invitation.names} - Ảnh cưới ${index + 1}`}
                     fill
                     sizes={
                       index === 0
@@ -338,7 +293,7 @@ export default function Gallery() {
             </p>
 
             <p className="mt-7 text-[9px] uppercase tracking-[0.4em] text-[var(--wedding-primary)]">
-              Minh Hiếu · Thu Hiền
+              {invitation.namesWithDot}
             </p>
 
           </div>
@@ -419,8 +374,7 @@ export default function Gallery() {
                   .src
               }
               alt={
-                images[selectedIndex]
-                  .alt
+                `${invitation.names} - Ảnh cưới ${selectedIndex + 1}`
               }
               fill
               sizes="100vw"
@@ -435,7 +389,7 @@ export default function Gallery() {
           <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-center md:bottom-7">
 
             <p className="font-wedding text-xl text-white md:text-2xl">
-              Minh Hiếu & Thu Hiền
+              {invitation.names}
             </p>
 
             <p className="mt-1 text-[8px] uppercase tracking-[0.35em] text-white/40">

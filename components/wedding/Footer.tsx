@@ -1,6 +1,6 @@
-import { weddingData } from "@/data/wedding";
+import type { InvitationProps } from "@/data/invitations";
 
-export default function Footer() {
+export default function Footer({ invitation }: InvitationProps) {
   return (
     <footer className="relative overflow-hidden bg-[var(--wedding-primary-dark)] px-5 pb-10 pt-24 text-white md:px-6 md:pt-32">
 
@@ -18,13 +18,13 @@ export default function Footer() {
         </p>
 
         <h2 className="mt-6 font-wedding text-5xl leading-tight md:text-7xl">
-          {weddingData.groom.fullName}
+          {invitation.people[0].fullName}
 
           <span className="mx-4 inline-block font-light italic text-[#dceae0]">
             &
           </span>
 
-          {weddingData.bride.fullName}
+          {invitation.people[1].fullName}
         </h2>
 
         <div className="mx-auto mt-8 flex items-center justify-center gap-4">
@@ -66,7 +66,7 @@ export default function Footer() {
         </div>
 
         <p className="mt-10 text-[10px] uppercase tracking-[0.35em] text-white/50">
-          {weddingData.wedding.displayDate}
+          {invitation.event.date}
         </p>
 
         <p className="mx-auto mt-8 max-w-2xl font-wedding text-2xl leading-relaxed text-white/85 md:text-3xl">
