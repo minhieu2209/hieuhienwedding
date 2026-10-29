@@ -1,5 +1,7 @@
 "use client";
 
+import type { InvitationProps } from "@/data/invitations";
+
 import {
   useEffect,
   useRef,
@@ -34,7 +36,7 @@ const tracks = [
   },
 ];
 
-export default function MusicPlayer() {
+export default function MusicPlayer({ invitation }: InvitationProps) {
   const audioRef =
     useRef<HTMLAudioElement | null>(null);
 
@@ -404,7 +406,7 @@ export default function MusicPlayer() {
           <div className="border-t border-[var(--wedding-primary-light)] px-5 py-4 text-center">
 
             <p className="text-[8px] uppercase tracking-[0.35em] text-[var(--wedding-text-muted)]/60">
-              Minh Hiếu · Thu Hiền
+              {invitation.namesWithDot}
             </p>
 
           </div>

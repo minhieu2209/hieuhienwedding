@@ -11,9 +11,9 @@ export const weddingData = {
 
   wedding: {
     date: "2026-11-29",
-    dateTime: "2026-11-29T11:00:00+07:00",
+    dateTime: "2026-11-29T10:00:00+07:00",
     displayDate: "29 · 11 · 2026",
-    time: "11:00",
+    time: "10:00",
   },
 
   text: {
@@ -67,6 +67,8 @@ events: [
     side: "Nhà Trai",
     time: "10:00",
     date: "29 · 11 · 2026",
+    isoDate: "2026-11-29",
+    dateTime: "2026-11-29T10:00:00+07:00",
     venue: "Nhà hàng Chen 02 Nam Định",
     address: "114 Phù Nghĩa, Nam Định, Ninh Bình",
     mapUrl: "https://www.google.com/maps",
@@ -76,6 +78,8 @@ events: [
     side: "Nhà Gái",
     time: "10:00",
     date: "28 · 11 · 2026",
+    isoDate: "2026-11-28",
+    dateTime: "2026-11-28T10:00:00+07:00",
     venue: "Tư gia nhà gái",
     address: "Km6, Bảo Thắng, Lào Cai",
     mapUrl: "https://www.google.com/maps",

@@ -1,4 +1,4 @@
-import { weddingData } from "@/data/wedding";
+import type { InvitationProps } from "@/data/invitations";
 
 function TimelineIcon({ index }: { index: number }) {
   if (index === 0) {
@@ -114,7 +114,7 @@ function TimelineIcon({ index }: { index: number }) {
   );
 }
 
-export default function Timeline() {
+export default function Timeline({ invitation }: InvitationProps) {
   return (
     <section className="relative overflow-hidden bg-[var(--wedding-bg)] px-5 py-24 md:px-6 md:py-32">
 
@@ -163,7 +163,7 @@ export default function Timeline() {
           <div className="pointer-events-none absolute bottom-0 left-[27px] top-0 w-px bg-gradient-to-b from-transparent via-[var(--wedding-primary)] to-transparent opacity-35 md:hidden" />
 
           <div className="space-y-14 md:space-y-20">
-            {weddingData.timeline.map((item, index) => {
+            {invitation.timeline.map((item, index) => {
               const reverse = index % 2 !== 0;
 
               return (

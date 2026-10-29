@@ -6,8 +6,9 @@ import {
 } from "react";
 
 import { supabase } from "@/lib/supabase";
+import type { InvitationProps } from "@/data/invitations";
 
-export default function RSVP() {
+export default function RSVP({ invitation }: InvitationProps) {
   const [submitted, setSubmitted] =
     useState(false);
 
@@ -120,8 +121,7 @@ export default function RSVP() {
             Chúng mình đã nhận được
             phản hồi của bạn. Cảm ơn bạn
             đã dành thời gian xác nhận
-            tham dự ngày vui của
-            Minh Hiếu & Thu Hiền.
+            tham dự ngày vui của {invitation.names}.
           </p>
 
           <p className="mt-8 font-wedding text-2xl text-[var(--wedding-primary-dark)]">
@@ -181,8 +181,7 @@ export default function RSVP() {
           <p className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-[var(--wedding-text-muted)] md:text-base md:leading-8">
             Sự hiện diện của bạn là
             niềm vui lớn đối với chúng mình.
-            Hãy cho Minh Hiếu & Thu Hiền
-            biết bạn có thể tham dự nhé.
+            Hãy cho {invitation.names} biết bạn có thể tham dự nhé.
           </p>
 
         </div>
@@ -238,11 +237,7 @@ export default function RSVP() {
               <div className="mt-9 h-px w-16 bg-white/25" />
 
               <p className="mt-8 text-[9px] uppercase tracking-[0.35em] text-white/40">
-                Minh Hiếu
-                <span className="mx-2">
-                  ·
-                </span>
-                Thu Hiền
+                {invitation.namesWithDot}
               </p>
 
             </div>
@@ -267,6 +262,7 @@ export default function RSVP() {
                   name="guestName"
                   type="text"
                   required
+                  defaultValue={invitation.id === "chu-re/cong-ty" ? "" : invitation.recipientName}
                   placeholder="Tên của bạn"
                   className="mt-3 w-full border-0 border-b border-[var(--wedding-primary-light)] bg-transparent px-0 py-3 text-[var(--wedding-text)] outline-none transition placeholder:text-[var(--wedding-text-muted)]/45 focus:border-[var(--wedding-primary)]"
                 />
@@ -440,8 +436,7 @@ export default function RSVP() {
               </button>
 
               <p className="mt-5 text-center text-[10px] leading-5 text-[var(--wedding-text-muted)]/60">
-                Thông tin phản hồi chỉ được
-                Minh Hiếu & Thu Hiền sử dụng
+                Thông tin phản hồi chỉ được {invitation.names} sử dụng
                 để chuẩn bị cho ngày cưới.
               </p>
 

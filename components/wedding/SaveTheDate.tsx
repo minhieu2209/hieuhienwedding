@@ -1,4 +1,4 @@
-import { weddingData } from "@/data/wedding";
+import type { InvitationProps } from "@/data/invitations";
 
 const weekDays = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
@@ -66,8 +66,8 @@ function LeafDecoration({
   );
 }
 
-export default function SaveTheDate() {
-  const [year, month, weddingDay] = weddingData.wedding.date
+export default function SaveTheDate({ invitation }: InvitationProps) {
+  const [year, month, weddingDay] = invitation.event.isoDate
     .split("-")
     .map(Number);
 
@@ -242,11 +242,11 @@ export default function SaveTheDate() {
             {/* DATE LINE */}
             <div className="mx-auto mt-10 max-w-sm border-t border-[var(--wedding-primary-light)] pt-8 text-center">
               <p className="text-[10px] uppercase tracking-[0.35em] text-[var(--wedding-text-muted)]">
-                Minh Hiếu & Thu Hiền
+                {invitation.names}
               </p>
 
               <p className="mt-3 font-wedding text-2xl text-[var(--wedding-primary-dark)]">
-                {weddingData.wedding.displayDate}
+                {invitation.event.date}
               </p>
             </div>
           </div>

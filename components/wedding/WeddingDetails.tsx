@@ -1,4 +1,4 @@
-import { weddingData } from "@/data/wedding";
+import type { InvitationProps } from "@/data/invitations";
 
 function LocationIcon() {
   return (
@@ -111,7 +111,7 @@ function DecorativeFlower({
   );
 }
 
-export default function WeddingDetails() {
+export default function WeddingDetails({ invitation }: InvitationProps) {
   return (
     <section className="relative overflow-hidden bg-[var(--wedding-cream)] px-5 py-24 md:px-6 md:py-32">
       {/* DECORATIVE BACKGROUND */}
@@ -142,159 +142,41 @@ export default function WeddingDetails() {
           </div>
 
           <p className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-[var(--wedding-text-muted)] md:text-base md:leading-8">
-            Hai gia đình trân trọng báo tin lễ thành hôn của
-            Minh Hiếu & Thu Hiền.
+            Hai gia đình trân trọng báo tin lễ thành hôn của {invitation.names}.
           </p>
         </div>
 
         {/* FAMILY CARDS */}
         <div className="relative mt-16 grid gap-8 md:grid-cols-2 md:gap-12">
 
-         {/* GROOM FAMILY */}
-<article className="relative overflow-hidden rounded-[36px] border border-[var(--wedding-primary-light)] bg-white/80 p-8 text-center shadow-[0_18px_60px_rgba(73,107,88,0.06)] backdrop-blur-sm md:p-12">
-
-  {/* top decorative line */}
-  <div className="pointer-events-none absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-[var(--wedding-primary)] to-transparent opacity-50" />
-
-  {/* FAMILY TITLE */}
-  <p className="text-[10px] uppercase tracking-[0.4em] text-[var(--wedding-primary)]">
-    {weddingData.family.groom.title}
-  </p>
-
-  {/* ORNAMENT */}
-  <div className="mx-auto mt-6 flex items-center justify-center gap-3">
-    <span className="h-px w-8 bg-[var(--wedding-primary-light)]" />
-
-    <span className="text-[9px] text-[var(--wedding-primary)]">
-      ♡
-    </span>
-
-    <span className="h-px w-8 bg-[var(--wedding-primary-light)]" />
-  </div>
-
-  {/* PARENTS */}
-  <div className="mt-8 space-y-4">
-
-  <p className="text-base md:text-lg">
-    <span className="text-[var(--wedding-text-muted)]">
-      Bố:
-    </span>{" "}
-
-    <span className="font-wedding text-2xl font-normal text-[var(--wedding-primary-dark)] md:text-3xl">
-      {weddingData.family.groom.father}
-    </span>
-  </p>
-
-  <p className="text-base md:text-lg">
-    <span className="text-[var(--wedding-text-muted)]">
-      Mẹ:
-    </span>{" "}
-
-    <span className="font-wedding text-2xl font-normal text-[var(--wedding-primary-dark)] md:text-3xl">
-      {weddingData.family.groom.mother}
-    </span>
-  </p>
-
-</div>
-
-  {/* DIVIDER */}
-  <div className="mx-auto my-8 h-px w-12 bg-[var(--wedding-primary-light)]" />
-
-  {/* GROOM */}
-  <div>
-    <p className="text-[9px] uppercase tracking-[0.3em] text-[var(--wedding-primary)]">
-      Chú rể
-    </p>
-
-    <h3 className="mt-3 font-wedding text-4xl font-normal text-[var(--wedding-primary-dark)] md:text-5xl">
-      {weddingData.groom.fullName}
-    </h3>
-  </div>
-
-  {/* ADDRESS */}
-  <div className="mx-auto mt-8 flex max-w-xs items-center justify-center gap-2 border-t border-[var(--wedding-primary-light)] pt-6 text-sm leading-6 text-[var(--wedding-text-muted)]">
-    <LocationIcon />
-
-    <span>
-      {weddingData.family.groom.address}
-    </span>
-  </div>
-
-</article>
-
-
-{/* BRIDE FAMILY */}
-<article className="relative overflow-hidden rounded-[36px] border border-[var(--wedding-primary-light)] bg-white/80 p-8 text-center shadow-[0_18px_60px_rgba(73,107,88,0.06)] backdrop-blur-sm md:p-12">
-
-  {/* top decorative line */}
-  <div className="pointer-events-none absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-[var(--wedding-primary)] to-transparent opacity-50" />
-
-  {/* FAMILY TITLE */}
-  <p className="text-[10px] uppercase tracking-[0.4em] text-[var(--wedding-primary)]">
-    {weddingData.family.bride.title}
-  </p>
-
-  {/* ORNAMENT */}
-  <div className="mx-auto mt-6 flex items-center justify-center gap-3">
-    <span className="h-px w-8 bg-[var(--wedding-primary-light)]" />
-
-    <span className="text-[9px] text-[var(--wedding-primary)]">
-      ♡
-    </span>
-
-    <span className="h-px w-8 bg-[var(--wedding-primary-light)]" />
-  </div>
-
-  {/* PARENTS */}
-  {/* PARENTS */}
-<div className="mt-8 space-y-4">
-
-  <p className="text-base md:text-lg">
-    <span className="text-[var(--wedding-text-muted)]">
-      Bố:
-    </span>{" "}
-
-    <span className="font-wedding text-2xl font-normal text-[var(--wedding-primary-dark)] md:text-3xl">
-      {weddingData.family.bride.father}
-    </span>
-  </p>
-
-  <p className="text-base md:text-lg">
-    <span className="text-[var(--wedding-text-muted)]">
-      Mẹ:
-    </span>{" "}
-
-    <span className="font-wedding text-2xl font-normal text-[var(--wedding-primary-dark)] md:text-3xl">
-      {weddingData.family.bride.mother}
-    </span>
-  </p>
-
-</div>
-
-  {/* DIVIDER */}
-  <div className="mx-auto my-8 h-px w-12 bg-[var(--wedding-primary-light)]" />
-
-  {/* BRIDE */}
-  <div>
-    <p className="text-[9px] uppercase tracking-[0.3em] text-[var(--wedding-primary)]">
-      Cô dâu
-    </p>
-
-    <h3 className="mt-3 font-wedding text-4xl font-normal text-[var(--wedding-primary-dark)] md:text-5xl">
-      {weddingData.bride.fullName}
-    </h3>
-  </div>
-
-  {/* ADDRESS */}
-  <div className="mx-auto mt-8 flex max-w-xs items-center justify-center gap-2 border-t border-[var(--wedding-primary-light)] pt-6 text-sm leading-6 text-[var(--wedding-text-muted)]">
-    <LocationIcon />
-
-    <span>
-      {weddingData.family.bride.address}
-    </span>
-  </div>
-
-</article>
+          {invitation.families.map((family) => (
+            <article key={family.side} className="relative overflow-hidden rounded-[36px] border border-[var(--wedding-primary-light)] bg-white/80 p-8 text-center shadow-[0_18px_60px_rgba(73,107,88,0.06)] backdrop-blur-sm md:p-12">
+              <div className="pointer-events-none absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-[var(--wedding-primary)] to-transparent opacity-50" />
+              <p className="text-[10px] uppercase tracking-[0.4em] text-[var(--wedding-primary)]">{family.title}</p>
+              <div className="mx-auto mt-6 flex items-center justify-center gap-3">
+                <span className="h-px w-8 bg-[var(--wedding-primary-light)]" />
+                <span className="text-[9px] text-[var(--wedding-primary)]">♡</span>
+                <span className="h-px w-8 bg-[var(--wedding-primary-light)]" />
+              </div>
+              <div className="mt-8 space-y-4">
+                <p className="text-base md:text-lg">
+                  <span className="text-[var(--wedding-text-muted)]">Bố:</span>{" "}
+                  <span className="font-wedding text-2xl font-normal text-[var(--wedding-primary-dark)] md:text-3xl">{family.father}</span>
+                </p>
+                <p className="text-base md:text-lg">
+                  <span className="text-[var(--wedding-text-muted)]">Mẹ:</span>{" "}
+                  <span className="font-wedding text-2xl font-normal text-[var(--wedding-primary-dark)] md:text-3xl">{family.mother}</span>
+                </p>
+              </div>
+              <div className="mx-auto my-8 h-px w-12 bg-[var(--wedding-primary-light)]" />
+              <p className="text-[9px] uppercase tracking-[0.3em] text-[var(--wedding-primary)]">{family.role}</p>
+              <h3 className="mt-3 font-wedding text-4xl font-normal text-[var(--wedding-primary-dark)] md:text-5xl">{family.fullName}</h3>
+              <div className="mx-auto mt-8 flex max-w-xs items-center justify-center gap-2 border-t border-[var(--wedding-primary-light)] pt-6 text-sm leading-6 text-[var(--wedding-text-muted)]">
+                <LocationIcon />
+                <span>{family.address}</span>
+              </div>
+            </article>
+          ))}
 
           {/* CENTER HEART DESKTOP */}
           <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 hidden h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--wedding-primary-light)] bg-[var(--wedding-cream)] shadow-[0_10px_30px_rgba(73,107,88,0.08)] md:flex">
@@ -329,8 +211,8 @@ export default function WeddingDetails() {
         </div>
 
         {/* EVENTS */}
-        <div className="mt-16 grid gap-8 md:grid-cols-2">
-          {weddingData.events.map((event, index) => (
+        <div className="mx-auto mt-16 grid max-w-2xl gap-8">
+          {[invitation.event].map((event, index) => (
             <article
               key={`${event.type}-${event.side}`}
               className="group relative overflow-hidden rounded-[38px] border border-[var(--wedding-primary-light)] bg-[var(--wedding-bg)] p-7 shadow-[0_20px_60px_rgba(73,107,88,0.07)] md:p-10"
@@ -353,7 +235,7 @@ export default function WeddingDetails() {
               <div className="relative mt-8 flex items-center gap-5">
                 <div className="flex h-20 w-20 shrink-0 rotate-[-5deg] flex-col items-center justify-center rounded-full border border-[var(--wedding-primary)] bg-[var(--wedding-cream)]">
                   <span className="font-wedding text-2xl leading-none text-[var(--wedding-primary-dark)]">
-                    {weddingData.wedding.date.slice(-2)}
+                    {event.isoDate.slice(-2)}
                   </span>
 
                   <span className="mt-1 text-[8px] uppercase tracking-[0.15em] text-[var(--wedding-text-muted)]">
