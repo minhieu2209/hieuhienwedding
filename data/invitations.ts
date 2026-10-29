@@ -12,7 +12,7 @@ type InvitationProfile = {
 
 // Mỗi đường dẫn có lời mời riêng. Có thể chỉnh nội dung tại đây.
 export const invitationProfiles = {
-  "chu-re/cong-ty": {
+  "groom/NGV": {
     side: "groom",
     label: "Thiệp mời đồng nghiệp của chú rể",
     salutation: "Trân trọng kính mời",
@@ -20,19 +20,27 @@ export const invitationProfiles = {
     message:
       "Trân trọng kính mời toàn thể Anh/Chị/Em Công ty Cổ phần NGV tham dự ngày trọng đại của chúng em",
   },
-  "chu-re/ban-be": {
+  "groom/friends": {
     side: "groom",
     label: "Thiệp mời bạn của chú rể",
     salutation: "Thân mời",
-    defaultRecipient: "Những người bạn thân yêu của Hiếu",
+    defaultRecipient: "Bạn thân yêu của Hiếu",
     message:
       "Hiếu thân mời bạn đến chung vui cùng Hiếu và Hiền trong ngày cưới. Có bạn bên cạnh, ngày đặc biệt của chúng mình sẽ càng trọn vẹn và đáng nhớ hơn!",
   },
-  "co-dau/ban-be": {
+  "bride/Partron": {
+    side: "bride",
+    label: "Thiệp mời đồng nghiệp của cô dâu",
+    salutation: "Trân trọng kính mời",
+    defaultRecipient: "Công ty Cổ phần Partron Vina",
+    message:
+      "Trân trọng kính mời toàn thể Anh/Chị/Em Công ty Cổ phần Partron Vina tham dự ngày trọng đại của chúng em",
+  },
+  "bride/friends": {
     side: "bride",
     label: "Thiệp mời bạn của cô dâu",
     salutation: "Thân mời",
-    defaultRecipient: "Những người bạn thân yêu của Hiền",
+    defaultRecipient: " Bạn thân yêu của Hiền",
     message:
       "Hiền thân mời bạn đến chung vui cùng Hiền và Hiếu trong ngày cưới. Mong được gặp bạn, cùng lưu lại những khoảnh khắc thật đẹp trong ngày vui của chúng mình!",
   },

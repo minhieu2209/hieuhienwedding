@@ -16,48 +16,38 @@ export const weddingData = {
     time: "10:00",
   },
 
+  weddingGroom: {
+    date: "2026-11-29",
+    dateTime: "2026-11-29T10:00:00+07:00",
+    displayDate: "29 · 11 · 2026",
+    time: "10:00",
+  },
+    weddingBride: {
+    date: "2026-11-28",
+    dateTime: "2026-11-28T10:00:00+07:00",
+    displayDate: "28 · 11 · 2026",
+    time: "10:00",
+  },
+
   text: {
     saveTheDate: "Save The Date",
     invitation:
       "Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng mình.",
   },
 
-  loveStory: [
-    {
-      date: "Ngày đầu gặp nhau",
-      title: "Một cuộc gặp thật đặc biệt",
-      description:
-        "Từ một cuộc gặp tưởng như rất bình thường, chúng mình đã bắt đầu một câu chuyện mà cả hai đều không ngờ sẽ đi xa đến thế.",
-      image: "/images/story/story-1.jpg",
-    },
-    {
-      date: "Những ngày bên nhau",
-      title: "Từ hai người xa lạ",
-      description:
-        "Qua những cuộc trò chuyện, những chuyến đi và vô số khoảnh khắc giản dị, chúng mình dần trở thành một phần không thể thiếu trong cuộc sống của nhau.",
-      image: "/images/story/story-2.jpg",
-    },
-    {
-      date: "Về chung một nhà",
-      title: "Và rồi chúng mình chọn nhau",
-      description:
-        "Sau những tháng ngày đồng hành, chúng mình quyết định cùng nhau bắt đầu một chương mới của cuộc đời.",
-      image: "/images/story/story-3.jpg",
-    },
-  ],
   family: {
   groom: {
     title: "Nhà Trai",
     father: "Nguyễn Văn Lộc",
     mother: "Nguyễn Thị Thoan",
-    address: "114 Phù Nghĩa, Nam Định, Ninh Bình",
+    address: "Nhà hàng Chen 01 Nam Định, 300 Trường Chinh, Nam Định, Ninh Bình"
   },
 
   bride: {
     title: "Nhà Gái",
     father: "Đào Tuấn",
     mother: "Khương Thị Nhung",
-    address: "Km 6, Thôn Làng Bạc, Xuân Quang, Lào Cai",
+    address: "Km 06, Thôn Làng Bạc, Xuân Quang, Lào Cai",
   },
 },
 
@@ -69,9 +59,9 @@ events: [
     date: "29 · 11 · 2026",
     isoDate: "2026-11-29",
     dateTime: "2026-11-29T10:00:00+07:00",
-    venue: "Nhà hàng Chen 02 Nam Định",
-    address: "114 Phù Nghĩa, Nam Định, Ninh Bình",
-    mapUrl: "https://www.google.com/maps",
+    venue: "Nhà hàng Chen 01 Nam Định",
+    address: "300 Trường Chinh, Nam Định, Ninh Bình",
+    mapUrl: "https://www.google.com/maps?q=Nh%C3%A0+h%C3%A0ng+Chen+01+Nam+%C4%90%E1%BB%8Bnh,+300+Tr%C6%B0%E1%BB%9Dng+Chinh,+Nam+%C4%90%E1%BB%8Bnh,+Ninh+B%C3%ACnh&ftid=0x3135e7002ad4fb21:0x1e57b3077c7916cc&entry=gps&shh=CAE&lucs=,94297699,94231188,94280568,100821555,47071704,94218641,94282134,100835694,100840646,94286869,100820247,100822504,100838877,121816461&g_ep=CAISEjI2LjQwLjMuOTg5Mjk1MzUwMBgAIIgnKoUBLDk0Mjk3Njk5LDk0MjMxMTg4LDk0MjgwNTY4LDEwMDgyMTU1NSw0NzA3MTcwNCw5NDIxODY0MSw5NDI4MjEzNCwxMDA4MzU2OTQsMTAwODQwNjQ2LDk0Mjg2ODY5LDEwMDgyMDI0NywxMDA4MjI1MDQsMTAwODM4ODc3LDEyMTgxNjQ2MUICVk4%3D&skid=67cf4219-22a7-47cc-bc80-48e4a7a17452&g_st=ic",
   },
   {
     type: "Tiệc Cưới",
@@ -80,9 +70,9 @@ events: [
     date: "28 · 11 · 2026",
     isoDate: "2026-11-28",
     dateTime: "2026-11-28T10:00:00+07:00",
-    venue: "Tư gia nhà gái",
-    address: "Km6, Bảo Thắng, Lào Cai",
-    mapUrl: "https://www.google.com/maps",
+    venue: "Tư gia Nhà gái",
+    address: "Km 06, Thôn Làng Bạc, Xuân Quang, Lào Cai",
+    mapUrl: "https://www.google.com/maps?q=22.3466555,104.2134899&entry=gps&shh=CAE&lucs=,94297699,94231188,94280568,100821555,47071704,94218641,94282134,100835694,100840646,94286869,100820247,100822504,100838877,121816461&g_ep=CAISEjI2LjQwLjMuOTg5Mjk1MzUwMBgAIIgnKoUBLDk0Mjk3Njk5LDk0MjMxMTg4LDk0MjgwNTY4LDEwMDgyMTU1NSw0NzA3MTcwNCw5NDIxODY0MSw5NDI4MjEzNCwxMDA4MzU2OTQsMTAwODQwNjQ2LDk0Mjg2ODY5LDEwMDgyMDI0NywxMDA4MjI1MDQsMTAwODM4ODc3LDEyMTgxNjQ2MUICVk4%3D&skid=892dc456-411b-4445-93a6-75b12085f0e8&g_st=ic",
   },
 ],
 timeline: [

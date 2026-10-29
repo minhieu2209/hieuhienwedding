@@ -262,7 +262,7 @@ export default function RSVP({ invitation }: InvitationProps) {
                   name="guestName"
                   type="text"
                   required
-                  defaultValue={invitation.id === "chu-re/cong-ty" ? "" : invitation.recipientName}
+                  defaultValue={invitation.id === "groom/friends" ? "" : invitation.recipientName}
                   placeholder="Tên của bạn"
                   className="mt-3 w-full border-0 border-b border-[var(--wedding-primary-light)] bg-transparent px-0 py-3 text-[var(--wedding-text)] outline-none transition placeholder:text-[var(--wedding-text-muted)]/45 focus:border-[var(--wedding-primary)]"
                 />

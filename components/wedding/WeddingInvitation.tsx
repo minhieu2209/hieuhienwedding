@@ -2,7 +2,6 @@ import type { InvitationProps } from "@/data/invitations";
 import Hero from "./Hero";
 import SaveTheDate from "./SaveTheDate";
 import Couple from "./Couple";
-import LoveStory from "./LoveStory";
 import WeddingDetails from "./WeddingDetails";
 import Timeline from "./Timeline";
 import Countdown from "./Countdown";
@@ -18,7 +17,6 @@ export default function WeddingInvitation({ invitation }: InvitationProps) {
       <Hero invitation={invitation} />
       <SaveTheDate invitation={invitation} />
       <Couple invitation={invitation} />
-      <LoveStory />
       <WeddingDetails invitation={invitation} />
       <Timeline invitation={invitation} />
       <Countdown invitation={invitation} />

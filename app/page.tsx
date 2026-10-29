@@ -7,6 +7,6 @@ export default async function Home({
 }: {
   searchParams: Promise<InvitationSearchParams>;
 }) {
-  const { khach } = await searchParams;
-  return <WeddingInvitation invitation={getInvitation("chu-re/ban-be", khach)} />;
+  const { guest } = await searchParams;
+  return <WeddingInvitation invitation={getInvitation("groom/friends", guest)} />;
 }
