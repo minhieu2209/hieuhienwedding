@@ -13,7 +13,7 @@ import MusicPlayer from "./MusicPlayer";
 
 export default function WeddingInvitation({ invitation }: InvitationProps) {
   return (
-    <main>
+    <main lang={invitation.locale}>
       <Hero invitation={invitation} />
       <SaveTheDate invitation={invitation} />
       <Couple invitation={invitation} />

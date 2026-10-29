@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "test:smoke": "node --test tests/invitations.test.mjs",
-    "test:config": "node --test tests/supabase-config.test.mjs"
+    "test:config": "node --test tests/supabase-config.test.mjs",
+    "test:unit": "node --test tests/supabase-config.test.mjs tests/admin.test.mjs",
+    "test:browser": "playwright test",
+    "guests:prepare": "node scripts/prepare-guests.mjs",
+    "guests:links": "node --env-file-if-exists=.env.local scripts/issue-links.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",
@@ -17,6 +21,8 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.13",
+    "@playwright/test": "1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

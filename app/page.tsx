@@ -1,12 +1,7 @@
-import WeddingInvitation from "@/components/wedding/WeddingInvitation";
-import { getInvitation, type InvitationSearchParams } from "@/data/invitations";
-
-// Giữ đường dẫn cũ hoạt động như thiệp bạn của chú rể.
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Promise<InvitationSearchParams>;
-}) {
-  const { guest } = await searchParams;
-  return <WeddingInvitation invitation={getInvitation("groom/friends", guest)} />;
+import InvitationPage, { invitationMetadata } from "@/components/wedding/InvitationPage";
+import type { InvitationSearchParams } from "@/data/invitations";
+type Props = { searchParams: Promise<InvitationSearchParams> };
+export const generateMetadata = ({ searchParams }: Props) => invitationMetadata("/groom/friends", searchParams);
+export default function Home({ searchParams }: Props) {
+  return <InvitationPage path="/groom/friends" searchParams={searchParams} />;
 }

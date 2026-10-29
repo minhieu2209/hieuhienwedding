@@ -196,7 +196,7 @@ export default function Hero({ invitation }: InvitationProps) {
 
         {/* EYEBROW */}
         <p className="hero-fade hero-delay-1 text-[10px] uppercase tracking-[0.5em] text-white/75 md:text-xs">
-          Wedding Invitation
+          {invitation.label}
         </p>
 
         {/* DIVIDER */}
@@ -228,7 +228,7 @@ export default function Hero({ invitation }: InvitationProps) {
         {/* SAVE THE DATE */}
         <div className="hero-fade hero-delay-4 mt-9">
           <p className="text-[10px] uppercase tracking-[0.45em] text-white/70 md:text-xs">
-            Save The Date
+            {invitation.copy.labels.saveTheDate}
           </p>
 
           <p className="mt-4 text-lg font-light tracking-[0.28em] text-white md:text-2xl">
@@ -249,6 +249,7 @@ export default function Hero({ invitation }: InvitationProps) {
           </p>
           <p className="mt-5 text-sm leading-7 text-white/80">
             {invitation.event.time} · {invitation.event.date}
+            <span className="block text-xs">{invitation.copy.labels.vietnamTime}</span>
             <span className="block">{invitation.event.venue}</span>
             <span className="block">{invitation.event.address}</span>
           </p>
@@ -260,7 +261,7 @@ export default function Hero({ invitation }: InvitationProps) {
           className="hero-fade hero-delay-5 absolute bottom-10 flex flex-col items-center gap-2"
         >
           <span className="text-[8px] uppercase tracking-[0.4em] text-white/55">
-            Discover
+            {invitation.copy.labels.discover}
           </span>
 
           <span className="scroll-line block h-10 w-px bg-white/45" />

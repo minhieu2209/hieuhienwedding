@@ -128,11 +128,11 @@ export default function WeddingDetails({ invitation }: InvitationProps) {
         ========================== */}
         <div className="text-center">
           <p className="text-[10px] uppercase tracking-[0.5em] text-[var(--wedding-primary)] md:text-xs">
-            Together With Our Families
+            {invitation.families.map((family) => family.title).join(" & ")}
           </p>
 
           <h2 className="mt-5 font-wedding text-5xl text-[var(--wedding-primary-dark)] md:text-7xl">
-            Trân trọng báo tin
+            {invitation.copy.labels.familyAnnouncement}
           </h2>
 
           <div className="mx-auto mt-7 flex items-center justify-center gap-3">
@@ -142,7 +142,7 @@ export default function WeddingDetails({ invitation }: InvitationProps) {
           </div>
 
           <p className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-[var(--wedding-text-muted)] md:text-base md:leading-8">
-            Hai gia đình trân trọng báo tin lễ thành hôn của {invitation.names}.
+            {invitation.familyIntro}
           </p>
         </div>
 
@@ -160,11 +160,11 @@ export default function WeddingDetails({ invitation }: InvitationProps) {
               </div>
               <div className="mt-8 space-y-4">
                 <p className="text-base md:text-lg">
-                  <span className="text-[var(--wedding-text-muted)]">Bố:</span>{" "}
+                  <span className="text-[var(--wedding-text-muted)]">{invitation.copy.labels.father}:</span>{" "}
                   <span className="font-wedding text-2xl font-normal text-[var(--wedding-primary-dark)] md:text-3xl">{family.father}</span>
                 </p>
                 <p className="text-base md:text-lg">
-                  <span className="text-[var(--wedding-text-muted)]">Mẹ:</span>{" "}
+                  <span className="text-[var(--wedding-text-muted)]">{invitation.copy.labels.mother}:</span>{" "}
                   <span className="font-wedding text-2xl font-normal text-[var(--wedding-primary-dark)] md:text-3xl">{family.mother}</span>
                 </p>
               </div>
@@ -191,11 +191,11 @@ export default function WeddingDetails({ invitation }: InvitationProps) {
         ========================== */}
         <div className="mt-28 text-center md:mt-36">
           <p className="text-[10px] uppercase tracking-[0.5em] text-[var(--wedding-primary)] md:text-xs">
-            Wedding Events
+            {invitation.copy.labels.eventEyebrow}
           </p>
 
           <h2 className="mt-5 font-wedding text-5xl text-[var(--wedding-primary-dark)] md:text-7xl">
-            Ngày chung đôi
+            {invitation.copy.eventHeading}
           </h2>
 
           <div className="mx-auto mt-7 flex items-center justify-center gap-3">
@@ -205,8 +205,7 @@ export default function WeddingDetails({ invitation }: InvitationProps) {
           </div>
 
           <p className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-[var(--wedding-text-muted)] md:text-base md:leading-8">
-            Sự hiện diện của bạn sẽ là niềm vui và vinh dự lớn
-            đối với hai gia đình và chúng mình.
+            {invitation.copy.eventIntro}
           </p>
         </div>
 
@@ -239,7 +238,7 @@ export default function WeddingDetails({ invitation }: InvitationProps) {
                   </span>
 
                   <span className="mt-1 text-[8px] uppercase tracking-[0.15em] text-[var(--wedding-text-muted)]">
-                    Wedding
+                    {invitation.event.type}
                   </span>
                 </div>
 
@@ -279,7 +278,7 @@ export default function WeddingDetails({ invitation }: InvitationProps) {
                 className="relative mt-8 inline-flex items-center gap-3 rounded-full border border-[var(--wedding-primary)] px-6 py-3 text-[10px] uppercase tracking-[0.25em] text-[var(--wedding-primary-dark)] transition duration-300 hover:bg-[var(--wedding-primary-dark)] hover:text-white"
               >
                 <LocationIcon />
-                Xem bản đồ
+                {invitation.copy.labels.map}
               </a>
             </article>
           ))}
@@ -288,7 +287,7 @@ export default function WeddingDetails({ invitation }: InvitationProps) {
         {/* ENDING LINE */}
         <div className="mx-auto mt-20 max-w-xl text-center">
           <p className="font-wedding text-3xl leading-relaxed text-[var(--wedding-primary-dark)] md:text-4xl">
-            “Rất mong được đón tiếp bạn trong ngày đặc biệt của chúng mình.”
+            {invitation.copy.closingQuote}
           </p>
         </div>
       </div>

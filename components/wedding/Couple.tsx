@@ -64,11 +64,11 @@ export default function Couple({ invitation }: InvitationProps) {
         {/* TITLE */}
         <div className="text-center">
           <p className="text-[10px] uppercase tracking-[0.5em] text-[var(--wedding-primary)] md:text-xs">
-            {invitation.side === "groom" ? "Groom & Bride" : "Bride & Groom"}
+            {invitation.people.map((person) => person.role).join(" & ")}
           </p>
 
           <h2 className="mt-5 font-wedding text-5xl text-[var(--wedding-primary-dark)] md:text-7xl">
-            Chúng mình
+            {invitation.copy.coupleHeading}
           </h2>
 
           <div className="mx-auto mt-7 flex items-center justify-center gap-3">
@@ -121,8 +121,7 @@ export default function Couple({ invitation }: InvitationProps) {
         {/* QUOTE */}
         <div className="mx-auto mt-24 max-w-2xl text-center">
           <p className="font-wedding text-3xl leading-relaxed text-[var(--wedding-primary-dark)] md:text-4xl">
-            “Từ hôm nay, chúng mình không chỉ có một câu chuyện để kể,
-            mà còn có cả một hành trình để cùng nhau viết tiếp.”
+            {invitation.copy.coupleQuote}
           </p>
         </div>
       </div>

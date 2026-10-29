@@ -40,6 +40,8 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
   const audioRef =
     useRef<HTMLAudioElement | null>(null);
 
+  const shouldPlay = useRef(false);
+
   const [playing, setPlaying] =
     useState(false);
 
@@ -61,7 +63,7 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
 
     audio.load();
 
-    if (playing) {
+    if (shouldPlay.current) {
       audio.play().catch((error) => {
         console.error(
           "Music playback error:",
@@ -78,9 +80,11 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
 
     try {
       if (playing) {
+        shouldPlay.current = false;
         audio.pause();
         setPlaying(false);
       } else {
+        shouldPlay.current = true;
         await audio.play();
         setPlaying(true);
       }
@@ -109,8 +113,12 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
   }
 
   function selectTrack(index: number) {
-    setCurrentTrack(index);
-    setPlaying(true);
+    shouldPlay.current = true;
+    if (index === currentTrack) {
+      audioRef.current?.play().catch(() => setPlaying(false));
+    } else {
+      setCurrentTrack(index);
+    }
   }
 
   return (
@@ -122,6 +130,9 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
         src={tracks[currentTrack].src}
         preload="metadata"
         onEnded={nextTrack}
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onError={() => { shouldPlay.current = false; setPlaying(false); }}
       />
 
       {/* =========================
@@ -151,11 +162,11 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
 
                 <div>
                   <p className="text-[8px] uppercase tracking-[0.4em] text-white/45">
-                    Wedding Playlist
+                    {invitation.copy.labels.playlist}
                   </p>
 
                   <p className="mt-2 font-wedding text-2xl">
-                    Music for our day
+                    {invitation.copy.labels.musicHeading}
                   </p>
                 </div>
 
@@ -165,7 +176,7 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
                     setOpen(false)
                   }
                   className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/5 text-lg text-white/70 transition hover:bg-white/10 hover:text-white"
-                  aria-label="Đóng danh sách nhạc"
+                  aria-label={invitation.copy.labels.closePlaylist}
                 >
                   ×
                 </button>
@@ -216,7 +227,7 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
                   type="button"
                   onClick={previousTrack}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/75 transition hover:bg-white/10 hover:text-white"
-                  aria-label="Bài trước"
+                  aria-label={invitation.copy.labels.previousTrack}
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -245,8 +256,8 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
                   className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-[var(--wedding-primary-dark)] shadow-lg transition hover:scale-105"
                   aria-label={
                     playing
-                      ? "Tạm dừng"
-                      : "Phát nhạc"
+                      ? invitation.copy.labels.pause
+                      : invitation.copy.labels.play
                   }
                 >
                   {playing ? (
@@ -289,7 +300,7 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
                   type="button"
                   onClick={nextTrack}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/75 transition hover:bg-white/10 hover:text-white"
-                  aria-label="Bài tiếp theo"
+                  aria-label={invitation.copy.labels.nextTrack}
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -429,8 +440,8 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
             className="flex h-11 w-11 items-center justify-center rounded-full border border-white/60 bg-[var(--wedding-cream)] text-[var(--wedding-primary-dark)] shadow-[0_10px_30px_rgba(30,50,38,0.15)] transition hover:scale-105"
             aria-label={
               playing
-                ? "Tạm dừng nhạc"
-                : "Phát nhạc"
+                ? invitation.copy.labels.pause
+                : invitation.copy.labels.play
             }
           >
             {playing ? "Ⅱ" : "▶"}
@@ -445,7 +456,7 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
             setOpen((current) => !current)
           }
           className="group relative"
-          aria-label="Mở danh sách nhạc"
+          aria-label={invitation.copy.labels.openPlaylist}
         >
 
           {playing && (

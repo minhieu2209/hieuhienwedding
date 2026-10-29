@@ -1,104 +1,73 @@
-import { weddingData } from "@/data/wedding";
+import { weddingData } from "./wedding";
+import records from "./invitation-copy.json";
+import { events, findVariant, type Locale, type Side, type Variant, type WeddingEvent } from "./invitation-catalog";
 
-type Side = "groom" | "bride";
-
-type InvitationProfile = {
-  side: Side;
-  label: string;
-  salutation: string;
-  defaultRecipient: string;
-  message: string;
+export type Copy = (typeof records)[number]["content"];
+export type InvitationSearchParams = Record<string, string | string[] | undefined>;
+export const firstParam = (value?: string | string[]) => Array.isArray(value) ? value[0] : value;
+export const chooseLocale = (variant: Variant, value?: string | string[]): Locale => {
+  const candidate = firstParam(value);
+  return variant.supported_locales.includes(candidate as Locale) ? candidate as Locale : variant.default_locale;
 };
-
-// Mỗi đường dẫn có lời mời riêng. Có thể chỉnh nội dung tại đây.
-export const invitationProfiles = {
-  "groom/NGV": {
-    side: "groom",
-    label: "Thiệp mời đồng nghiệp của chú rể",
-    salutation: "Trân trọng kính mời",
-    defaultRecipient: "Công ty Cổ phần NGV",
-    message:
-      "Trân trọng kính mời toàn thể Anh/Chị/Em Công ty Cổ phần NGV tham dự ngày trọng đại của chúng em",
-  },
-  "groom/friends": {
-    side: "groom",
-    label: "Thiệp mời bạn của chú rể",
-    salutation: "Thân mời",
-    defaultRecipient: "Bạn thân yêu của Hiếu",
-    message:
-      "Hiếu thân mời bạn đến chung vui cùng Hiếu và Hiền trong ngày cưới. Có bạn bên cạnh, ngày đặc biệt của chúng mình sẽ càng trọn vẹn và đáng nhớ hơn!",
-  },
-  "bride/Partron": {
-    side: "bride",
-    label: "Thiệp mời đồng nghiệp của cô dâu",
-    salutation: "Trân trọng kính mời",
-    defaultRecipient: "Công ty Cổ phần Partron Vina",
-    message:
-      "Trân trọng kính mời toàn thể Anh/Chị/Em Công ty Cổ phần Partron Vina tham dự ngày trọng đại của chúng em",
-  },
-  "bride/friends": {
-    side: "bride",
-    label: "Thiệp mời bạn của cô dâu",
-    salutation: "Thân mời",
-    defaultRecipient: " Bạn thân yêu của Hiền",
-    message:
-      "Hiền thân mời bạn đến chung vui cùng Hiền và Hiếu trong ngày cưới. Mong được gặp bạn, cùng lưu lại những khoảnh khắc thật đẹp trong ngày vui của chúng mình!",
-  },
-} satisfies Record<string, InvitationProfile>;
-
-export type InvitationId = keyof typeof invitationProfiles;
-export type InvitationSearchParams = {
-  [key: string]: string | string[] | undefined;
-};
-
-export function isInvitationId(value: string): value is InvitationId {
-  return Object.hasOwn(invitationProfiles, value);
+export function getCopy(id: string, locale: Locale): Copy {
+  const record = records.find((item) => item.variant_id === id && item.locale === locale);
+  if (!record) throw new Error("Unsupported invitation translation");
+  return record.content;
 }
+export function formatText(template: string, values: Record<string, string | number>) {
+  return template.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? ""));
+}
+export const isInvitationId = (value: string) => Boolean(findVariant(`/${value}`));
 
-export function getInvitation(
-  id: InvitationId,
-  recipient?: string | string[],
-) {
-  const profile = invitationProfiles[id];
-  const recipientName = (Array.isArray(recipient) ? recipient[0] : recipient)
-    ?.trim()
-    .replace(/\s+/g, " ")
-    .slice(0, 120) || "";
-  const sides: Side[] = profile.side === "groom"
-    ? ["groom", "bride"]
-    : ["bride", "groom"];
+export type Couple = {
+  groom: typeof weddingData.groom & { family: typeof weddingData.family.groom };
+  bride: typeof weddingData.bride & { family: typeof weddingData.family.bride };
+};
+export const defaultCouple: Couple = {
+  groom: { ...weddingData.groom, family: weddingData.family.groom },
+  bride: { ...weddingData.bride, family: weddingData.family.bride },
+};
+
+export function buildInvitation(variant: Variant, event: WeddingEvent, locale: Locale, options: {
+  copy?: Copy; couple?: Couple; recipientName?: string; guestToken?: string;
+  formsEnabled?: boolean; wishesEnabled?: boolean; invalidGuest?: boolean;
+} = {}) {
+  const copy = options.copy ?? getCopy(variant.id, locale);
+  const couple = options.couple ?? defaultCouple;
+  const sides: Side[] = variant.first_person === "groom" ? ["groom", "bride"] : ["bride", "groom"];
   const people = sides.map((side) => ({
-    ...weddingData[side],
-    side,
-    role: side === "groom" ? "Chú rể" : "Cô dâu",
-    image: `/images/couple/${side}.jpg`,
-    description: side === "groom"
-      ? "Chàng trai tin rằng những điều đẹp nhất trong cuộc sống trở nên ý nghĩa hơn khi được sẻ chia cùng người mình yêu."
-      : "Cô gái tin vào những khoảnh khắc bình dị, những nụ cười chân thành và một hành trình dài được đồng hành bên người mình thương.",
+    firstName: couple[side].firstName, fullName: couple[side].fullName, side,
+    role: copy.labels[side], image: `/images/couple/${side}.jpg`,
+    description: side === "groom" ? copy.groomDescription : copy.brideDescription,
   }));
-  const event = weddingData.events[profile.side === "groom" ? 0 : 1];
-
+  const names = people.map((person) => person.fullName).join(" & ");
+  const date = new Date(event.starts_at);
+  const dateLocale = locale === "ko" ? "ko-KR" : "vi-VN";
+  const isoDate = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh", year: "numeric", month: "2-digit", day: "2-digit" }).format(date);
+  const displayDate = locale === "ko"
+    ? new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Ho_Chi_Minh", year: "numeric", month: "long", day: "numeric" }).format(date)
+    : isoDate.split("-").reverse().join(" · ");
+  const recipientName = options.recipientName?.trim().replace(/\s+/g, " ").slice(0, 120) ?? "";
   return {
-    id,
-    ...profile,
-    recipientName,
-    recipient: recipientName || profile.defaultRecipient,
-    people,
-    names: people.map((person) => person.fullName).join(" & "),
-    namesWithDot: people.map((person) => person.fullName).join(" · "),
-    families: sides.map((side, index) => ({
-      ...weddingData.family[side],
-      ...people[index],
-    })),
-    event,
-    // Chỉ hiển thị giờ đã được ghi rõ cho sự kiện của bên gửi thiệp.
-    timeline: [{
-      time: event.time,
-      title: event.type,
-      description: `${event.venue} · ${event.address}`,
-    }],
+    id: variant.id, path: variant.path, side: variant.host_side, firstPerson: variant.first_person,
+    locale, dateLocale, supportedLocales: variant.supported_locales,
+    recipientMode: variant.recipient_mode, recipientName,
+    recipient: recipientName || copy.defaultRecipient,
+    salutation: copy.salutation, message: copy.invitation,
+    label: copy.labels[event.event_kind === "reception" ? "receptionInvitation" : "weddingInvitation"],
+    copy, people, names, namesWithDot: people.map((person) => person.fullName).join(" · "),
+    families: sides.map((side, index) => ({ ...couple[side].family, ...people[index], title: copy.labels[side === "groom" ? "groomFamily" : "brideFamily"] })),
+    event: { id: event.id, kind: event.event_kind, side: event.id === "groom-wedding" ? copy.labels.groomFamily : event.id === "bride-wedding" ? copy.labels.brideFamily : copy.eventHeading, type: copy.eventTitle, isoDate, dateTime: event.starts_at, date: displayDate, time: new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Ho_Chi_Minh", hour: "2-digit", minute: "2-digit", hour12: false }).format(date), venue: event.venue, address: event.address, mapUrl: event.map_url },
+    timeline: [{ time: new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Ho_Chi_Minh", hour: "2-digit", minute: "2-digit", hour12: false }).format(date), title: copy.eventTitle, description: `${event.venue} · ${event.address}` }],
+    formsEnabled: options.formsEnabled ?? false, wishesEnabled: options.wishesEnabled ?? false,
+    guestToken: options.guestToken ?? "", invalidGuest: options.invalidGuest ?? false,
+    familyIntro: formatText(copy.familyIntro, { coupleNames: names }),
   };
 }
-
-export type Invitation = ReturnType<typeof getInvitation>;
+export function getInvitation(pathOrId: string, recipient?: string | string[], language?: string | string[]) {
+  const variant = findVariant(pathOrId.startsWith("/") ? pathOrId : `/${pathOrId}`) ?? findVariant(pathOrId);
+  if (!variant) throw new Error("Unknown invitation");
+  return buildInvitation(variant, events.find((event) => event.id === variant.event_id)!, chooseLocale(variant, language), { recipientName: firstParam(recipient) });
+}
+export type Invitation = ReturnType<typeof buildInvitation>;
 export type InvitationProps = { invitation: Invitation };

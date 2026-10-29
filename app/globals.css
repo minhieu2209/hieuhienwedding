@@ -298,3 +298,5 @@ body {
     animation: none !important;
   }
 }
+main[lang="ko"] .font-wedding { font-family: var(--font-wedding-ko), "Malgun Gothic", serif; }
+main[lang="ko"] { word-break: keep-all; overflow-wrap: anywhere; }

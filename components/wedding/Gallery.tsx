@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type { InvitationProps } from "@/data/invitations";
+import { formatText, type InvitationProps } from "@/data/invitations";
 import {
   useEffect,
   useRef,
@@ -195,11 +195,11 @@ export default function Gallery({ invitation }: InvitationProps) {
           <div className="text-center">
 
             <p className="text-[10px] uppercase tracking-[0.5em] text-[var(--wedding-primary)] md:text-xs">
-              Our Memories
+              {invitation.copy.labels.galleryEyebrow}
             </p>
 
             <h2 className="mt-5 font-wedding text-5xl text-[var(--wedding-primary-dark)] md:text-7xl">
-              Khoảnh khắc của chúng mình
+              {invitation.copy.labels.galleryTitle}
             </h2>
 
             <div className="mx-auto mt-7 flex items-center justify-center gap-3">
@@ -215,9 +215,7 @@ export default function Gallery({ invitation }: InvitationProps) {
             </div>
 
             <p className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-[var(--wedding-text-muted)] md:text-base md:leading-8">
-              Một vài khoảnh khắc chúng mình
-              muốn lưu giữ trong hành trình
-              đẹp nhất của hai người.
+              {invitation.copy.galleryIntro}
             </p>
 
           </div>
@@ -244,14 +242,12 @@ export default function Gallery({ invitation }: InvitationProps) {
                     }ms`,
                   }}
                   className={`gallery-reveal group relative overflow-hidden rounded-[24px] text-left md:rounded-[32px] ${layoutClasses[index]}`}
-                  aria-label={`Mở ảnh ${
-                    index + 1
-                  }`}
+                  aria-label={formatText(invitation.copy.labels.photoNumber, { number: index + 1 })}
                 >
 
                   <Image
                     src={image.src}
-                    alt={`${invitation.names} - Ảnh cưới ${index + 1}`}
+                    alt={formatText(invitation.copy.labels.photoAlt, { coupleNames: invitation.names, number: index + 1 })}
                     fill
                     sizes={
                       index === 0
@@ -270,7 +266,7 @@ export default function Gallery({ invitation }: InvitationProps) {
                   <div className="absolute bottom-4 right-4 translate-y-2 opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100 md:bottom-5 md:right-5">
 
                     <span className="text-[9px] uppercase tracking-[0.25em] text-white">
-                      View
+                      {invitation.copy.labels.viewPhoto}
                     </span>
 
                   </div>
@@ -286,10 +282,7 @@ export default function Gallery({ invitation }: InvitationProps) {
           <div className="mx-auto mt-20 max-w-3xl text-center">
 
             <p className="font-wedding text-3xl leading-relaxed text-[var(--wedding-primary-dark)] md:text-4xl">
-              “Có những khoảnh khắc chỉ
-              kéo dài vài giây, nhưng sẽ ở
-              lại trong ký ức suốt cả một
-              đời.”
+              {invitation.copy.coupleQuote}
             </p>
 
             <p className="mt-7 text-[9px] uppercase tracking-[0.4em] text-[var(--wedding-primary)]">
@@ -310,7 +303,7 @@ export default function Gallery({ invitation }: InvitationProps) {
           className="fixed inset-0 z-[100] flex items-center justify-center bg-[#101712]/95 p-4 backdrop-blur-md md:p-8"
           role="dialog"
           aria-modal="true"
-          aria-label="Wedding gallery"
+          aria-label={invitation.copy.labels.galleryTitle}
         >
 
           {/* CLOSE */}
@@ -319,7 +312,7 @@ export default function Gallery({ invitation }: InvitationProps) {
             type="button"
             onClick={closeImage}
             className="absolute right-5 top-5 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-xl text-white transition hover:bg-white/20 md:right-8 md:top-8"
-            aria-label="Đóng ảnh"
+            aria-label={invitation.copy.labels.closePhoto}
           >
             ×
           </button>
@@ -348,7 +341,7 @@ export default function Gallery({ invitation }: InvitationProps) {
             type="button"
             onClick={showPrevious}
             className="absolute left-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-2xl text-white transition hover:bg-white/20 md:left-8"
-            aria-label="Ảnh trước"
+            aria-label={invitation.copy.labels.previousPhoto}
           >
             ‹
           </button>
@@ -359,7 +352,7 @@ export default function Gallery({ invitation }: InvitationProps) {
             type="button"
             onClick={showNext}
             className="absolute right-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-2xl text-white transition hover:bg-white/20 md:right-8"
-            aria-label="Ảnh tiếp theo"
+            aria-label={invitation.copy.labels.nextPhoto}
           >
             ›
           </button>
@@ -374,7 +367,7 @@ export default function Gallery({ invitation }: InvitationProps) {
                   .src
               }
               alt={
-                `${invitation.names} - Ảnh cưới ${selectedIndex + 1}`
+                formatText(invitation.copy.labels.photoAlt, { coupleNames: invitation.names, number: selectedIndex + 1 })
               }
               fill
               sizes="100vw"
@@ -393,7 +386,7 @@ export default function Gallery({ invitation }: InvitationProps) {
             </p>
 
             <p className="mt-1 text-[8px] uppercase tracking-[0.35em] text-white/40">
-              Our Memories
+              {invitation.copy.labels.galleryEyebrow}
             </p>
 
           </div>

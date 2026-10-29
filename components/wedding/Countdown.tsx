@@ -69,19 +69,19 @@ export default function Countdown({ invitation }: InvitationProps) {
   const items = [
     {
       value: timeLeft.days,
-      label: "Ngày",
+      label: invitation.copy.labels.days,
     },
     {
       value: timeLeft.hours,
-      label: "Giờ",
+      label: invitation.copy.labels.hours,
     },
     {
       value: timeLeft.minutes,
-      label: "Phút",
+      label: invitation.copy.labels.minutes,
     },
     {
       value: timeLeft.seconds,
-      label: "Giây",
+      label: invitation.copy.labels.seconds,
     },
   ];
 
@@ -105,15 +105,12 @@ export default function Countdown({ invitation }: InvitationProps) {
 
         {/* EYEBROW */}
         <p className="text-[10px] uppercase tracking-[0.55em] text-white/55 md:text-xs">
-          Until Forever
+          {invitation.copy.labels.countdownEyebrow}
         </p>
 
         {/* TITLE */}
         <h2 className="mx-auto mt-5 max-w-3xl font-wedding text-5xl leading-tight md:text-7xl">
-          Ngày chúng mình
-          <span className="block text-[#dceae0]">
-            về chung một nhà
-          </span>
+          {invitation.copy.countdownHeading}
         </h2>
 
         {/* DECORATION */}
@@ -179,8 +176,7 @@ export default function Countdown({ invitation }: InvitationProps) {
 
         {/* QUOTE */}
         <p className="mx-auto mt-10 max-w-xl font-wedding text-2xl leading-relaxed text-white/85 md:text-3xl">
-          “Mỗi giây trôi qua là một chút gần hơn
-          tới ngày chúng mình gọi nhau là gia đình.”
+          {invitation.copy.countdownQuote}
         </p>
 
         {/* BOTTOM TEXT */}

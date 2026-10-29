@@ -1,6 +1,6 @@
 import type { InvitationProps } from "@/data/invitations";
 
-const weekDays = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+
 
 function LeafDecoration({
   className = "",
@@ -79,7 +79,7 @@ export default function SaveTheDate({ invitation }: InvitationProps) {
     Date.UTC(year, month, 0)
   ).getUTCDate();
 
-  const monthLabel = new Intl.DateTimeFormat("vi-VN", {
+  const monthLabel = new Intl.DateTimeFormat(invitation.dateLocale, {
     month: "long",
     timeZone: "UTC",
   }).format(new Date(Date.UTC(year, month - 1, 1)));
@@ -109,11 +109,11 @@ export default function SaveTheDate({ invitation }: InvitationProps) {
         {/* SECTION INTRO */}
         <div className="text-center">
           <p className="text-[10px] uppercase tracking-[0.5em] text-[var(--wedding-primary)] md:text-xs">
-            Our Special Day
+            {invitation.copy.labels.specialDay}
           </p>
 
           <h2 className="mt-5 font-wedding text-5xl leading-none text-[var(--wedding-primary-dark)] md:text-7xl">
-            Save The Date
+            {invitation.copy.labels.saveTheDate}
           </h2>
 
           <div className="mx-auto mt-7 flex items-center justify-center gap-3">
@@ -125,8 +125,7 @@ export default function SaveTheDate({ invitation }: InvitationProps) {
           </div>
 
           <p className="mx-auto mt-7 max-w-xl text-sm leading-7 text-[var(--wedding-text-muted)] md:text-base md:leading-8">
-            Chúng mình rất hạnh phúc khi được chia sẻ ngày đặc biệt này
-            cùng gia đình, bạn bè và những người thân yêu.
+            {invitation.copy.coupleIntro}
           </p>
         </div>
 
@@ -143,7 +142,7 @@ export default function SaveTheDate({ invitation }: InvitationProps) {
             <div className="pointer-events-none absolute -bottom-24 -right-24 h-64 w-64 rounded-full border border-white/10" />
 
             <p className="text-[10px] uppercase tracking-[0.45em] text-white/60">
-              Wedding Day
+              {invitation.event.type}
             </p>
 
             <p className="mt-8 font-wedding text-[86px] leading-none md:text-[120px]">
@@ -161,7 +160,7 @@ export default function SaveTheDate({ invitation }: InvitationProps) {
             </p>
 
             <p className="mt-8 max-w-xs text-sm leading-7 text-white/70">
-              Một ngày, một lời hẹn và một hành trình mới bắt đầu.
+              {invitation.copy.dayQuote}
             </p>
 
             {/* seal */}
@@ -189,17 +188,17 @@ export default function SaveTheDate({ invitation }: InvitationProps) {
           <div className="relative px-6 py-12 md:px-12 md:py-16">
             <div className="text-center">
               <p className="text-[10px] uppercase tracking-[0.4em] text-[var(--wedding-primary)]">
-                Mark Your Calendar
+                {invitation.copy.labels.calendarTitle}
               </p>
 
               <h3 className="mt-3 font-wedding text-3xl capitalize text-[var(--wedding-primary-dark)] md:text-4xl">
-                {monthLabel} {year}
+                {new Intl.DateTimeFormat(invitation.dateLocale, { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(Date.UTC(year, month - 1, 1)))}
               </h3>
             </div>
 
             <div className="mx-auto mt-9 max-w-md">
               <div className="grid grid-cols-7 text-center">
-                {weekDays.map((day) => (
+                {invitation.copy.weekdays.map((day) => (
                   <div
                     key={day}
                     className="pb-5 text-[10px] font-medium uppercase tracking-wider text-[var(--wedding-text-muted)]"

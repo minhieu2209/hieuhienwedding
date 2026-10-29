@@ -130,11 +130,11 @@ export default function Timeline({ invitation }: InvitationProps) {
         {/* HEADER */}
         <div className="text-center">
           <p className="text-[10px] uppercase tracking-[0.5em] text-[var(--wedding-primary)] md:text-xs">
-            Wedding Timeline
+            {invitation.copy.labels.timelineEyebrow}
           </p>
 
           <h2 className="mt-5 font-wedding text-5xl text-[var(--wedding-primary-dark)] md:text-7xl">
-            Hành trình ngày cưới
+            {invitation.copy.timelineHeading}
           </h2>
 
           <div className="mx-auto mt-7 flex items-center justify-center gap-3">
@@ -148,8 +148,7 @@ export default function Timeline({ invitation }: InvitationProps) {
           </div>
 
           <p className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-[var(--wedding-text-muted)] md:text-base md:leading-8">
-            Những khoảnh khắc chúng mình mong được sẻ chia cùng
-            gia đình và những người thân yêu trong ngày đặc biệt.
+            {invitation.copy.eventIntro}
           </p>
         </div>
 
@@ -257,7 +256,7 @@ export default function Timeline({ invitation }: InvitationProps) {
                       <div className="flex items-end justify-between gap-4">
                         <div>
                           <p className="text-[9px] uppercase tracking-[0.3em] text-[var(--wedding-primary)]">
-                            Moment 0{index + 1}
+                            {invitation.copy.labels.timelineEyebrow} 0{index + 1}
                           </p>
 
                           <h3 className="mt-2 font-wedding text-3xl text-[var(--wedding-primary-dark)]">
@@ -293,8 +292,7 @@ export default function Timeline({ invitation }: InvitationProps) {
           </div>
 
           <p className="font-wedding text-3xl leading-relaxed text-[var(--wedding-primary-dark)] md:text-4xl">
-            “Một ngày thật đẹp sẽ càng ý nghĩa hơn
-            khi có những người chúng mình yêu thương ở bên.”
+            {invitation.copy.closingQuote}
           </p>
         </div>
       </div>

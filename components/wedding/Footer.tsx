@@ -14,7 +14,7 @@ export default function Footer({ invitation }: InvitationProps) {
       <div className="relative mx-auto max-w-5xl text-center">
 
         <p className="text-[9px] uppercase tracking-[0.55em] text-white/40">
-          Thank You
+          {invitation.copy.labels.thankYou}
         </p>
 
         <h2 className="mt-6 font-wedding text-5xl leading-tight md:text-7xl">
@@ -38,13 +38,11 @@ export default function Footer({ invitation }: InvitationProps) {
         </div>
 
         <p className="mx-auto mt-8 max-w-2xl text-sm leading-8 text-white/65 md:text-base">
-          Cảm ơn bạn đã dành thời gian ghé thăm một góc nhỏ
-          trong câu chuyện của chúng mình.
+          {invitation.copy.footerThanks}
         </p>
 
         <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/55">
-          Sự hiện diện và những lời chúc yêu thương của bạn
-          sẽ là một phần thật đẹp trong ngày đặc biệt này.
+          {invitation.copy.wishesIntro}
         </p>
 
         <div className="mx-auto mt-12 flex h-24 w-24 rotate-[-7deg] items-center justify-center rounded-full border border-white/20 bg-white/5">
@@ -70,12 +68,12 @@ export default function Footer({ invitation }: InvitationProps) {
         </p>
 
         <p className="mx-auto mt-8 max-w-2xl font-wedding text-2xl leading-relaxed text-white/85 md:text-3xl">
-          “Hẹn gặp bạn trong ngày chúng mình bắt đầu một hành trình mới.”
+          {invitation.copy.closingQuote}
         </p>
 
         <div className="mt-20 border-t border-white/10 pt-7">
           <p className="text-[8px] uppercase tracking-[0.3em] text-white/25">
-            Made by groom
+            {invitation.copy.labels.madeByGroom}
           </p>
 
           <p className="mt-2 text-[9px] text-white/30">
