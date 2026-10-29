@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 import { issueLinks } from '../../scripts/issue-links.mjs';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 let tokens;
@@ -125,6 +125,9 @@ test('Issuing links is private, repeatable, and does not rotate already-issued l
   const dry=await issueLinks(options);expect(dry.pending).toBe(1);expect(dry.written).toBe(false);
   const first=await issueLinks({...options,write:true});expect(first.created).toBe(1);
   const entries=JSON.parse(await readFile(output,'utf8'));expect(entries).toHaveLength(1);expect(entries[0].status).toBe('ready');
+  // A privately saved SQL-issued link may have only a stable code initially.
+  // Recover the real UUID from that code and preserve the original raw token.
+  await writeFile(output,JSON.stringify(entries.map(row=>({...row,guestId:'pending:'+row.guestCode,status:'pending'}))));
   const second=await issueLinks({...options,write:true});expect(second.created).toBe(0);expect(second.kept).toBe(1);
   expect(JSON.parse(await readFile(output,'utf8'))[0].token).toBe(entries[0].token);
   const missing=await issueLinks({...options,output:join(directory,'lost-output.json'),write:true});expect(missing.created).toBe(0);expect(missing.skipped).toBe(3);

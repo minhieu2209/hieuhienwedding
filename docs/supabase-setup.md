@@ -42,12 +42,12 @@ Trong Vercel → Project → Settings → Environment Variables, cấu hình the
 | NEXT_PUBLIC_SUPABASE_URL | URL project đang dùng; máy chủ cũng có thể dùng biến này |
 | SUPABASE_URL | Tùy chọn URL riêng cho server/CLI; nếu có sẽ ưu tiên dùng |
 | SUPABASE_SERVICE_ROLE_KEY | Khóa máy chủ của đúng project, lưu bằng giao diện bảo mật |
-| WEDDING_DATABASE_ENABLED | Chỉ đặt true sau khi DB và trạng thái phát hành đã sẵn sàng |
+| WEDDING_DATABASE_ENABLED | Không bắt buộc: tự bật khi có URL và khóa máy chủ. Đặt false để chủ động tắt kết nối DB |
 | WEDDING_ALLOW_DRAFTS | false ở Production; có thể true trên local/Preview để đọc bản đang duyệt |
 
 Giữ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY nếu phần cũ hoặc công cụ khác vẫn dùng; ứng dụng thiệp mới không dùng khóa quản trị trong client bundle. Không cần gửi giá trị khóa vào chat.
 
-Nếu chưa bật DB hoặc thiếu cấu hình, trang đọc được bản dự phòng của đúng mẫu nhưng form không gửi được. Đây là chế độ xem thử, không phải đã kết nối dữ liệu thật. Vì bản mới chuyển form sang API, cần chuẩn bị cấu hình trước khi đưa lên main để tránh gián đoạn các form đang chạy.
+Nếu chủ động đặt WEDDING_DATABASE_ENABLED=false hoặc thiếu cấu hình, trang đọc được bản dự phòng của đúng mẫu nhưng form không gửi được. Đây là chế độ xem thử, không phải đã kết nối dữ liệu thật. Vì bản mới chuyển form sang API, cần chuẩn bị cấu hình trước khi đưa lên main để tránh gián đoạn các form đang chạy.
 
 DB mode có tác dụng với dữ liệu thật. Nếu đọc DB lỗi, thiệp hiển thị đúng bản dự phòng, không đoán danh tính khách và không báo thành công giả. Nếu một mẫu bị paused/chưa được duyệt thì API không cho ghi và trang DB mode không phát hành mẫu đó.
 

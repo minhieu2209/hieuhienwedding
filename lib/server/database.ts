@@ -2,7 +2,7 @@ import "server-only";
 import { createClient } from "@supabase/supabase-js";
 
 export function getDatabase() {
-  if (process.env.WEDDING_DATABASE_ENABLED !== "true") return null;
+  if (process.env.WEDDING_DATABASE_ENABLED === "false") return null;
   const url = process.env.SUPABASE_URL?.trim() || process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   if (!url || !key) return null;

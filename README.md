@@ -25,7 +25,7 @@ npm ci
 npm run dev
 ```
 
-Sao chép `.env.example` thành `.env.local` và điền giá trị qua cấu hình bảo mật khi cần. Thiệp có bản dự phòng để xem khi DB chưa bật; các form chỉ hoạt động sau khi schema, khóa máy chủ, trạng thái duyệt và mã khách đã được chuẩn bị.
+Sao chép `.env.example` thành `.env.local` và điền giá trị qua cấu hình bảo mật khi cần. Thiệp có bản dự phòng để xem khi chưa có khóa máy chủ; khi có URL và khóa, ứng dụng tự dùng DB trừ khi WEDDING_DATABASE_ENABLED=false; các form chỉ hoạt động sau khi schema, khóa máy chủ, trạng thái duyệt và mã khách đã được chuẩn bị.
 
 ## Thiết lập dữ liệu thật
 

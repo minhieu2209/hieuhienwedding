@@ -45,10 +45,13 @@ export async function issueLinks({ databaseUrl, key, baseUrl, output, write = fa
   for (const guest of guests) {
     const profile = profiles.find(row => row.id === guest.invitation_variant_id && row.recipient_mode === 'individual');
     if (!profile) throw new Error('Guest has an unknown or non-individual invitation group');
-    const saved = prepared.get(guest.id);
+    // SQL-based activation can precede knowing the database UUID. The stable
+    // private guest_code also lets us recover the saved token without rotating it.
+    const saved = prepared.get(guest.id) ?? previous.find(row => row.guestCode === guest.guest_code);
+    if (saved && saved.guestId !== guest.id) prepared.delete(saved.guestId);
     if (guest.is_active && guest.invite_token_hash) {
       if (saved?.token && hash(saved.token) === guest.invite_token_hash) {
-        prepared.set(guest.id, { ...saved, guestCode: guest.guest_code, displayName: guest.display_name, url: new URL(`${profile.path}?guest=${saved.token}`, baseUrl).href, status: 'ready' }); summary.kept++;
+        prepared.set(guest.id, { ...saved, guestId: guest.id, guestCode: guest.guest_code, displayName: guest.display_name, url: new URL(`${profile.path}?guest=${saved.token}`, baseUrl).href, status: 'ready' }); summary.kept++;
       } else { if (saved) prepared.set(guest.id, { ...saved, status: 'unavailable' }); summary.skipped++; }
       continue;
     }
