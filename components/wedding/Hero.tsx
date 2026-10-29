@@ -237,14 +237,14 @@ export default function Hero({ invitation }: InvitationProps) {
         </div>
 
         {/* PERSONAL INVITATION */}
-        <div className="hero-fade hero-delay-5 mx-auto mt-8 w-full max-w-xl rounded-[24px] border border-white/20 bg-black/15 px-5 py-6 backdrop-blur-sm">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-white/70">
+        <div className="hero-fade hero-delay-5 font-invitation mx-auto mt-8 w-full max-w-2xl rounded-[24px] border border-white/20 bg-black/15 px-6 py-7 backdrop-blur-sm md:px-10">
+          <p className="text-[10px] uppercase tracking-[0.25em] text-white/75 md:text-xs">
             {invitation.salutation}
           </p>
-          <p className="mt-3 break-words font-wedding text-2xl leading-relaxed text-white md:text-3xl">
+          <p className="mt-4 break-words text-2xl font-medium leading-relaxed text-white md:text-3xl">
             {invitation.recipient}
           </p>
-          <p className="mt-4 text-sm leading-7 text-white/85">
+          <p className="mt-5 text-sm italic leading-7 text-white/90 md:text-base md:leading-8">
             {invitation.message}
           </p>
           {/* <p className="mt-5 text-sm leading-7 text-white/80">
@@ -255,17 +255,6 @@ export default function Hero({ invitation }: InvitationProps) {
           </p> */}
         </div>
 
-        {/* SCROLL */}
-        <a
-          href="#save-the-date"
-          className="hero-fade hero-delay-5 absolute bottom-10 flex flex-col items-center gap-2"
-        >
-          <span className="text-[8px] uppercase tracking-[0.4em] text-white/55">
-            {invitation.copy.labels.discover}
-          </span>
-
-          <span className="scroll-line block h-10 w-px bg-white/45" />
-        </a>
       </div>
 
       {/* CURVED TRANSITION */}

@@ -300,3 +300,11 @@ body {
 }
 main[lang="ko"] .font-wedding { font-family: var(--font-wedding-ko), "Malgun Gothic", serif; }
 main[lang="ko"] { word-break: keep-all; overflow-wrap: anywhere; }
+
+.font-invitation {
+  font-family: var(--font-invitation), serif;
+}
+
+main[lang="ko"] .font-invitation {
+  font-family: var(--font-wedding-ko), serif;
+}

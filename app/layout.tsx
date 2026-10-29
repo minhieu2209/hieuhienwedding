@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Serif, Noto_Serif_KR } from "next/font/google";
+import { Lora, Noto_Serif, Noto_Serif_KR } from "next/font/google";
 import "./globals.css";
 
 const notoSerif = Noto_Serif({
@@ -9,6 +9,13 @@ const notoSerif = Noto_Serif({
 
 const koreanSerif = Noto_Serif_KR({
   weight: ["400", "600"], subsets: ["latin"], variable: "--font-wedding-ko", display: "swap", preload: false,
+});
+
+const lora = Lora({
+  subsets: ["latin", "vietnamese"],
+  style: ["normal", "italic"],
+  variable: "--font-invitation",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -23,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi">
-      <body className={`${notoSerif.variable} ${koreanSerif.variable}`}>{children}</body>
+      <body className={`${notoSerif.variable} ${koreanSerif.variable} ${lora.variable}`}>{children}</body>
     </html>
   );
 }
