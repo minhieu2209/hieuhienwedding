@@ -21,7 +21,7 @@ export default function Guestbook({ invitation }: InvitationProps) {
     useState<Wish[]>([]);
 
   const [name, setName] =
-    useState(invitation.id === "chu-re/cong-ty" ? "" : invitation.recipientName);
+    useState(invitation.id === "groom/NGV" ? "" : invitation.recipientName);
 
   const [message, setMessage] =
     useState("");
