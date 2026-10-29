@@ -34,6 +34,14 @@ npm run start
 
 Trong Terminal thứ hai, chạy `npm run test:smoke` để kiểm tra cả ba loại thiệp, tên khách, thứ tự gia đình, sự kiện, link cũ và URL không hợp lệ. Có thể đặt `TEST_BASE_URL` để kiểm tra một máy chủ khác. Bộ kiểm tra này không gửi RSVP hoặc ghi lời chúc vào Supabase.
 
+## Cấu hình Vercel Preview
+
+Trong Vercel → Project → Settings → Environment Variables, kiểm tra cả `NEXT_PUBLIC_SUPABASE_URL` và `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` đều được gán cho môi trường **Preview**, không chỉ Production. Dùng publishable key dành cho trình duyệt; không dùng service-role key. Sau khi đổi biến, cần redeploy vì Next.js đưa các biến `NEXT_PUBLIC_` vào mã trình duyệt ngay lúc build. Mở URL của deployment mới, vì URL deployment cũ không tự đổi theo cấu hình mới.
+
+Nếu cấu hình Supabase thiếu hoặc sai định dạng, thiệp vẫn hiển thị, nhưng các nút gửi RSVP và lời chúc bị vô hiệu hóa kèm thông báo. Trạng thái Vercel Ready chỉ xác nhận deployment hoàn tất, không xác nhận cấu hình dữ liệu hoặc chức năng gửi form đã hoạt động.
+
+Chạy `npm run test:config` bằng Node.js 24 để kiểm tra module Supabase với cấu hình thiếu URL, thiếu key, sai định dạng và cấu hình hợp lệ. Các kiểm tra dùng tiến trình riêng và không kết nối cơ sở dữ liệu.
+
 ## Getting Started
 
 First, run the development server:

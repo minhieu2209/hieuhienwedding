@@ -30,10 +30,12 @@ export default function Guestbook({ invitation }: InvitationProps) {
     useState(false);
 
   const [loadingWishes, setLoadingWishes] =
-    useState(true);
+    useState(Boolean(supabase));
 
   useEffect(() => {
     async function loadWishes() {
+      if (!supabase) return;
+
       setLoadingWishes(true);
 
       const { data, error } =
@@ -69,7 +71,8 @@ export default function Guestbook({ invitation }: InvitationProps) {
     if (
       !name.trim() ||
       !message.trim() ||
-      loading
+      loading ||
+      !supabase
     ) {
       return;
     }
@@ -253,7 +256,7 @@ export default function Guestbook({ invitation }: InvitationProps) {
 
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || !supabase}
                   className="group mt-9 flex w-full items-center justify-center gap-3 rounded-full bg-[var(--wedding-primary-dark)] px-6 py-4 text-[10px] uppercase tracking-[0.3em] text-white transition duration-300 hover:bg-[var(--wedding-primary)] disabled:cursor-not-allowed disabled:opacity-50"
                 >
 
@@ -268,6 +271,12 @@ export default function Guestbook({ invitation }: InvitationProps) {
                   )}
 
                 </button>
+
+                {!supabase && (
+                  <p role="status" className="mt-5 text-sm leading-6 text-[var(--wedding-text-muted)]">
+                    Gửi lời chúc trực tuyến hiện chưa khả dụng. Bạn có thể gửi lời chúc trực tiếp tới cô dâu và chú rể nhé.
+                  </p>
+                )}
 
               </form>
 
@@ -324,7 +333,7 @@ export default function Guestbook({ invitation }: InvitationProps) {
 
             {/* EMPTY */}
 
-            {!loadingWishes &&
+            {!loadingWishes && supabase &&
               wishes.length === 0 && (
                 <div className="rounded-[28px] border border-[var(--wedding-primary-light)] bg-white/70 p-8 text-center">
 

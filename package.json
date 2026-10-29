@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:smoke": "node --test tests/invitations.test.mjs"
+    "test:smoke": "node --test tests/invitations.test.mjs",
+    "test:config": "node --test tests/supabase-config.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",

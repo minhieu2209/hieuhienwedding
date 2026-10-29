@@ -20,7 +20,7 @@ export default function RSVP({ invitation }: InvitationProps) {
   ) {
     event.preventDefault();
 
-    if (loading) return;
+    if (loading || !supabase) return;
 
     setLoading(true);
 
@@ -419,7 +419,7 @@ export default function RSVP({ invitation }: InvitationProps) {
               {/* SUBMIT */}
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !supabase}
                 className="group mt-10 flex w-full items-center justify-center gap-3 rounded-full bg-[var(--wedding-primary-dark)] px-6 py-4 text-[10px] uppercase tracking-[0.3em] text-white transition duration-300 hover:bg-[var(--wedding-primary)] disabled:cursor-not-allowed disabled:opacity-50"
               >
 
@@ -434,6 +434,12 @@ export default function RSVP({ invitation }: InvitationProps) {
                 )}
 
               </button>
+
+              {!supabase && (
+                <p role="status" className="mt-5 text-center text-sm leading-6 text-[var(--wedding-text-muted)]">
+                  Xác nhận trực tuyến hiện chưa khả dụng. Bạn vui lòng liên hệ trực tiếp với cô dâu hoặc chú rể nhé.
+                </p>
+              )}
 
               <p className="mt-5 text-center text-[10px] leading-5 text-[var(--wedding-text-muted)]/60">
                 Thông tin phản hồi chỉ được {invitation.names} sử dụng
