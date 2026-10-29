@@ -36,7 +36,13 @@ test('Actual migrations and import preserve legacy data, identities, token hashe
   await db.exec("insert into wedding_rsvp(guest_name,attendance,guest_count) values ('Legacy large group','no',20)");
   await assert.rejects(db.exec("insert into wedding_rsvp(guest_name,attendance,guest_count) values ('Invalid legacy zero','no',0)"));
   await db.exec("insert into wedding_rsvp(guest_name,attendance,guest_count,invitation_variant_id,event_id,host_side,submission_id) values ('New declined','no',0,'groom-ngv','groom-wedding','groom',gen_random_uuid())");
-  await db.exec(await readFile(new URL('../supabase/manual/04_server_api_cutover.sql',import.meta.url),'utf8'));
-  await db.exec('set role anon');await assert.rejects(db.query('select * from wedding_guests'));await assert.rejects(db.query('select * from wedding_wishes'));await db.exec('reset role');
+  await db.exec('GRANT ALL ON wedding_rsvp,wedding_wishes TO anon,authenticated; GRANT USAGE,SELECT ON ALL SEQUENCES IN SCHEMA public TO anon,authenticated; GRANT SELECT(guest_name) ON wedding_wishes TO anon; ALTER TABLE wedding_wishes ENABLE ROW LEVEL SECURITY; CREATE POLICY old_wishes_read ON wedding_wishes FOR SELECT TO anon USING(true)');
+  const cutoverResult=await db.exec(await readFile(new URL('../supabase/manual/04_server_api_cutover.sql',import.meta.url),'utf8'));
+  const cutover=cutoverResult.at(-1).rows[0].cutover;
+  for(const [key,value] of Object.entries(cutover))if(key!=='restore_sql')assert.equal(value,true,key);
+  assert.ok(cutover.restore_sql.includes('GRANT SELECT (guest_name)'));
+  await db.exec('set role anon');await assert.rejects(db.query('select * from wedding_guests'));await assert.rejects(db.query('select * from wedding_wishes'));await assert.rejects(db.query('select guest_name from wedding_wishes'));await db.exec('reset role');
+  await db.exec(cutover.restore_sql);
+  await db.exec('set role anon');assert.equal((await db.query('select count(*)::int n from wedding_wishes')).rows[0].n,1);await db.exec('reset role');
  }finally{await db.close();}
 });

@@ -80,7 +80,7 @@ Link cá nhân có dạng `/groom/friends?guest=<token>`. Tên URL không đư�
 
 Khi ứng dụng mới đã được kiểm tra với DB thật, chạy `supabase/manual/04_server_api_cutover.sql`. Không chạy trước: form cũ còn gửi thẳng vào Supabase bằng public key sẽ không hoạt động sau bước này; các tab cũ cần tải lại ứng dụng mới.
 
-Bước này bật RLS và thu hồi quyền bảng/sequence trực tiếp của PUBLIC, anon, authenticated; API dùng khóa máy chủ tiếp tục hoạt động. Các policy cũ không bị xóa để tiện đối chiếu. Chỉ thêm policy hạn chế sẽ không vô hiệu hóa một policy permissive cũ; vì vậy phải xem cả grants lẫn policies.
+Bước này bật RLS và thu hồi quyền bảng/sequence trực tiếp của PUBLIC, anon, authenticated; API dùng khóa máy chủ tiếp tục hoạt động. Các policy cũ không bị xóa để tiện đối chiếu. File trả JSON cutover có các cờ kiểm tra và restore_sql chụp đúng các quyền bảng/sequence/cột trước khi thu hồi; lưu kết quả của lần chạy đầu để rollback khi cần. Chỉ thêm policy hạn chế sẽ không vô hiệu hóa một policy permissive cũ; vì vậy phải xem cả grants lẫn policies.
 
 Dữ liệu lời chúc cũ chưa phân loại có host_side=NULL, được giữ lại nhưng không tự đẩy sang sổ cô dâu/chú rể. Chỉ phân loại theo các id đã được chủ thiệp xác nhận. UncleLEE luôn ghi host_side=bride và event_id=groom-wedding.
 
