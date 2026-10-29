@@ -237,7 +237,7 @@ export default function Hero({ invitation }: InvitationProps) {
         </div>
 
         {/* PERSONAL INVITATION */}
-        <div className="hero-fade hero-delay-5 font-invitation mx-auto mt-8 w-full max-w-2xl rounded-[24px] border border-white/20 bg-black/15 px-6 py-7 backdrop-blur-sm md:px-10">
+        <div className="hero-fade hero-delay-5 font-invitation mx-auto mt-8 w-full max-w-5xl rounded-[24px] border border-white/20 bg-black/15 px-6 py-7 backdrop-blur-sm md:px-8">
           <p className="text-[10px] uppercase tracking-[0.25em] text-white/75 md:text-xs">
             {invitation.salutation}
           </p>
