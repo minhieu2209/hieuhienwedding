@@ -86,7 +86,7 @@ export default function Countdown({ invitation }: InvitationProps) {
   ];
 
   return (
-    <section className="relative overflow-hidden bg-[var(--wedding-primary-dark)] px-5 py-28 text-white md:px-6 md:py-36">
+    <section id="countdown" className="relative overflow-hidden bg-[var(--wedding-primary-dark)] px-5 py-16 text-white md:px-6 md:py-20">
 
       {/* BACKGROUND GLOW */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/5 blur-3xl" />
@@ -103,34 +103,10 @@ export default function Countdown({ invitation }: InvitationProps) {
 
       <div className="relative mx-auto max-w-6xl text-center">
 
-        {/* EYEBROW */}
-        <p className="text-[10px] uppercase tracking-[0.55em] text-white/55 md:text-xs">
-          {invitation.copy.labels.countdownEyebrow}
-        </p>
-
-        {/* TITLE */}
-        <h2 className="mx-auto mt-5 max-w-3xl font-wedding text-5xl leading-tight md:text-7xl">
-          {invitation.copy.countdownHeading}
-        </h2>
-
-        {/* DECORATION */}
-        <div className="mx-auto mt-8 flex items-center justify-center gap-4">
-          <span className="h-px w-10 bg-white/25" />
-
-          <span className="text-sm text-white/70">
-            ♡
-          </span>
-
-          <span className="h-px w-10 bg-white/25" />
-        </div>
-
-        {/* DATE */}
-        <p className="mt-7 text-xs uppercase tracking-[0.35em] text-white/60">
-          {invitation.event.date}
-        </p>
+        <h2 className="font-wedding text-4xl md:text-5xl">{invitation.copy.labels.countdownEyebrow}</h2>
 
         {/* COUNTDOWN */}
-        <div className="mx-auto mt-16 grid max-w-4xl grid-cols-4">
+        <div className="mx-auto mt-10 grid max-w-4xl grid-cols-4">
           {items.map((item, index) => (
             <div
               key={item.label}
@@ -157,32 +133,6 @@ export default function Countdown({ invitation }: InvitationProps) {
           ))}
         </div>
 
-        {/* MONOGRAM */}
-        <div className="mx-auto mt-16 flex h-24 w-24 rotate-[-8deg] items-center justify-center rounded-full border border-white/20 bg-white/5 backdrop-blur-sm">
-          <div className="text-center">
-            <p className="font-wedding text-xl font-light italic text-[#dceae0]/75">
-              H
-            </p>
-
-            <p className="my-1 text-xs text-[#dceae0]">
-              ♡
-            </p>
-
-            <p className="font-wedding text-xl font-light italic text-[#dceae0]/75">
-              H
-            </p>
-          </div>
-        </div>
-
-        {/* QUOTE */}
-        <p className="mx-auto mt-10 max-w-xl font-wedding text-2xl leading-relaxed text-white/85 md:text-3xl">
-          {invitation.copy.countdownQuote}
-        </p>
-
-        {/* BOTTOM TEXT */}
-        <p className="mt-8 text-[9px] uppercase tracking-[0.4em] text-white/35">
-          {invitation.namesWithDot}
-        </p>
 
       </div>
 

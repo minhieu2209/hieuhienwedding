@@ -21,11 +21,11 @@ for(const [path,first,side,date,venue,locale] of cases)test(`${path}: correct na
  await expect(page.locator('main')).toHaveAttribute('lang',locale);
  await expect(page.locator('h1 > span').first()).toHaveText(first);
  const content=await page.locator('main').textContent();expect(content).toContain(date);expect(content).toContain(venue);
- const family=page.locator('main > section').filter({has:page.getByRole('heading',{name:locale==='ko'?'소중한 소식을 전합니다':'Trân trọng báo tin',exact:true})});
+ const family=page.locator('#invitation');
  expect(await family.locator('article').first().textContent()).toContain(side==='groom'?'Nguyễn Văn Lộc':'Đào Tuấn');
  const day=path==='/bride/Partron'||path==='/bride/friends1'?'4':path==='/bride/friends'?'28':'29';
  expect(await page.locator('#save-the-date .grid-cols-7 > div > div').evaluateAll(nodes=>nodes.filter(node=>node.className.includes('rounded-full')).map(node=>node.textContent.trim()))).toEqual([day+'♥']);
- const countdown=page.locator('.tabular-nums');
+ const countdown=page.locator('#countdown .tabular-nums');
  await expect(countdown.first()).not.toHaveText('--');
  const digits=(await countdown.allTextContents()).map(Number);
  const starts=path==='/bride/Partron'||path==='/bride/friends1'?'2026-12-04T17:30:00+07:00':path==='/bride/friends'?'2026-11-28T10:00:00+07:00':'2026-11-29T10:00:00+07:00';
@@ -47,11 +47,11 @@ test('Partron toggles full Korean copy, keeps proper names and has no Vietnamese
 });
 test('Personal names come from Supabase and do not duplicate prefixes or trust khach',async({page,request})=>{
  await page.goto(`/groom/friends?guest=${tokens.token}&khach=Forged`);
- await expect(page.locator('main > section').first()).toContainText('Bạn mẫu & Gia Đình');
+ await expect(page.locator('#invitation')).toContainText('Bạn mẫu & Gia Đình');
  expect(await page.locator('main').textContent()).not.toContain('Bạn Bạn');
  expect(await page.locator('main').textContent()).not.toContain('Forged');
  await request.post('http://127.0.0.1:4711/__test/change',{data:{action:'rename',code:'GF-test',name:'Em Lan "mẫu"'}});
- await page.reload();await expect(page.locator('main > section').first()).toContainText('Em Lan "mẫu"');
+ await page.reload();await expect(page.locator('#invitation')).toContainText('Em Lan "mẫu"');
 });
 test('Wrong-group, missing and invalid tokens never enable individual submissions',async({page,request})=>{
  for(const query of ['',`?guest=${tokens.brideToken}`,'?guest=invalid']){
@@ -60,11 +60,11 @@ test('Wrong-group, missing and invalid tokens never enable individual submission
  const response=await request.post('/api/invitations/groom-friends/rsvp',{data:{submission_id:randomUUID(),guest:tokens.brideToken,guest_name:'Fake',attendance:'yes',guest_count:1}});
  expect(response.status()).toBe(403);
 });
-test('Both guestbooks are separate, and unclassified legacy wishes stay out',async({page})=>{
+test('The shared guestbook shows approved wishes from both sides and keeps unreviewed legacy wishes private',async({page})=>{
  await page.goto('/groom/NGV');await expect(page.getByText('Groom-only wish',{exact:true})).toBeVisible();
- expect(await page.locator('main').textContent()).not.toContain('Bride-only wish');
+ expect(await page.locator('main').textContent()).toContain('Bride-only wish');
  await page.goto('/UncleLEE');await expect(page.getByText('Bride-only wish',{exact:true})).toBeVisible();
- const text=await page.locator('main').textContent();expect(text).not.toContain('Groom-only wish');expect(text).not.toContain('Unclassified legacy wish');
+ const text=await page.locator('main').textContent();expect(text).toContain('Groom-only wish');expect(text).not.toContain('Unclassified legacy wish');
 });
 test('RSVP server binds the correct event and side, normalizes declined count, and supports retry/update',async({request})=>{
  const id=randomUUID();
@@ -76,11 +76,11 @@ test('RSVP server binds the correct event and side, normalizes declined count, a
  expect((await request.post('/api/invitations/groom-friends/rsvp',{data:{...body,submission_id:randomUUID(),attendance:'yes',guest_count:3}})).ok()).toBeTruthy();
  state=await (await request.get('http://127.0.0.1:4711/__test/state')).json();expect(state.rsvp).toHaveLength(1);expect(state.rsvp[0].guest_count).toBe(3);
 });
-test('UncleLEE wish stays in bride guestbook despite spoofed metadata; retry adds no duplicate',async({request})=>{
+test('UncleLEE wish retains bride metadata, enters moderation, and retry adds no duplicate',async({request})=>{
  const body={submission_id:randomUUID(),guest_name:'Bác Lee',message:'축하합니다',host_side:'groom',event_id:'bride-wedding'};
  for(let n=0;n<2;n++)expect((await request.post('/api/invitations/uncle-lee/wishes',{data:body})).ok()).toBeTruthy();
  const state=await (await request.get('http://127.0.0.1:4711/__test/state')).json();
- const rows=state.wishes.filter(row=>row.message==='축하합니다');expect(rows).toHaveLength(1);expect(rows[0]).toMatchObject({host_side:'bride',event_id:'groom-wedding'});
+ const rows=state.wishes.filter(row=>row.message==='축하합니다');expect(rows).toHaveLength(1);expect(rows[0]).toMatchObject({host_side:'bride',event_id:'groom-wedding',moderation_status:'pending'});
 });
 test('Form validation, body limits and same-origin checks reject invalid submissions',async({request})=>{
  const base={submission_id:randomUUID(),guest_name:'Name',attendance:'yes',guest_count:1};
@@ -92,7 +92,7 @@ test('Pagination with identical timestamps has no duplicates',async({request})=>
  await request.post('http://127.0.0.1:4711/__test/change',{data:{action:'paginate'}});
  const first=await (await request.get('/api/invitations/uncle-lee/wishes')).json();expect(first.wishes).toHaveLength(20);expect(first.next).toBeTruthy();
  const second=await (await request.get('/api/invitations/uncle-lee/wishes?cursor='+first.next)).json();
- const ids=[...first.wishes,...second.wishes].map(row=>String(row.id));expect(new Set(ids).size).toBe(ids.length);expect(ids).toHaveLength(26);
+ const ids=[...first.wishes,...second.wishes].map(row=>String(row.id));expect(new Set(ids).size).toBe(ids.length);expect(ids).toHaveLength(27);
 });
 test('Unapproved translations and paused variants cannot be published by URL',async({page,request})=>{
  await request.post('http://127.0.0.1:4711/__test/change',{data:{action:'draft-locale',id:'bride-partron',locale:'ko'}});
@@ -114,7 +114,7 @@ test('Mobile gallery, countdown, keyboard and real form UI work',async({page,req
  const image=page.getByRole('button',{name:'Mở ảnh 1',exact:true});await image.scrollIntoViewIfNeeded();await image.click();await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('ArrowRight');await expect(page.getByRole('dialog').getByRole('img')).toHaveAttribute('alt',/2$/);await page.keyboard.press('Escape');
  await page.locator('#guestName').fill('Lan thực tế');await page.getByLabel('Sẽ tham dự',{exact:true}).check();await page.locator('#guestCount').selectOption('2');await page.locator('form').filter({has:page.locator('#guestName')}).locator('button[type=submit]').click();
  await expect(page.getByRole('heading',{name:'Trân trọng cảm ơn',exact:true}).first()).toBeVisible();
- await page.locator('#wishName').fill('Lan');await page.locator('#wishMessage').fill('Chúc hạnh phúc!');await page.locator('form').filter({has:page.locator('#wishName')}).locator('button[type=submit]').click();await expect(page.getByText('Chúc hạnh phúc!',{exact:true})).toBeVisible();
+ await page.locator('#wishName').fill('Lan');await page.locator('#wishMessage').fill('Chúc hạnh phúc!');await page.locator('form').filter({has:page.locator('#wishName')}).locator('button[type=submit]').click();await expect(page.getByRole('status').filter({hasText:'Lời chúc sẽ hiển thị sau khi được duyệt'})).toBeVisible();await expect(page.locator('article').filter({hasText:'Chúc hạnh phúc!'})).toHaveCount(0);
  const state=await (await request.get('http://127.0.0.1:4711/__test/state')).json();expect(state.rsvp[0]).toMatchObject({guest_name:'Lan thực tế',guest_count:2,host_side:'bride'});expect(errors).toEqual([]);
 });
 test('Issuing links is private, repeatable, and does not rotate already-issued links',async({request})=>{

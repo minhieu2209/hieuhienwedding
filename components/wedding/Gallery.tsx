@@ -1,398 +1,85 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { formatText, type InvitationProps } from "@/data/invitations";
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
 
-const images = Array.from({ length: 6 }, (_, index) => ({
-  src: `/images/gallery/gallery-${index + 1}.jpg`,
-}));
+const images = Array.from({ length: 11 }, (_, index) => `/images/gallery/gallery-${index + 1}.jpg`);
 
-const layoutClasses = [
-  "col-span-2 row-span-2 md:col-span-7 md:row-span-4",
-  "col-span-1 row-span-1 md:col-span-5 md:row-span-2",
-  "col-span-1 row-span-1 md:col-span-5 md:row-span-2",
-  "col-span-1 row-span-2 md:col-span-4 md:row-span-3",
-  "col-span-1 row-span-2 md:col-span-4 md:row-span-3",
-  "col-span-2 row-span-2 md:col-span-4 md:row-span-3",
-];
-
-const directions = [
-  "left",
-  "right",
-  "up",
-  "down",
-];
-
-export default function Gallery({ invitation }: InvitationProps) {
-  const galleryRef =
-    useRef<HTMLDivElement | null>(null);
-
-  const [selectedIndex, setSelectedIndex] =
-    useState<number | null>(null);
-
-  const isOpen = selectedIndex !== null;
-
-  /*
-   * Theo dõi khi từng ảnh đi vào viewport
-   * để kích hoạt hiệu ứng reveal.
-   */
+export default function Gallery({ invitation: i }: InvitationProps) {
+  const c = i.copy;
+  const [page, setPage] = useState(0);
+  const [direction, setDirection] = useState("next");
+  const [selected, setSelected] = useState<number | null>(null);
+  const isOpen = selected !== null;
+  const touch = useRef<number | null>(null);
+  const album = useRef<HTMLDivElement>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
+  const trigger = useRef<HTMLButtonElement | null>(null);
+  function turn(delta: number) {
+    setDirection(delta > 0 ? "next" : "previous");
+    setPage(current => Math.max(0, Math.min(images.length - 1, current + delta)));
+  }
+  function openPhoto() {
+    trigger.current = document.activeElement as HTMLButtonElement;
+    setSelected(page);
+  }
   useEffect(() => {
-    if (
-      !galleryRef.current
-    ) {
-      return;
-    }
-
-    const elements =
-      galleryRef.current.querySelectorAll<HTMLElement>(
-        "[data-gallery-reveal]"
-      );
-
-    const observer =
-      new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) {
-              return;
-            }
-
-            entry.target.classList.add(
-              "gallery-is-visible"
-            );
-
-            observer.unobserve(
-              entry.target
-            );
-          });
-        },
-        {
-          threshold: 0.12,
-          rootMargin:
-            "0px 0px -5% 0px",
-        }
-      );
-
-    elements.forEach(
-      (element) => {
-        const direction =
-          directions[Math.floor(Math.random() * directions.length)];
-
-        element.classList.add(
-          `gallery-reveal-${direction}`
-        );
-
-        observer.observe(element);
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButton.current?.focus();
+    function keyboard(event: KeyboardEvent) {
+      if (event.key === "Escape") setSelected(null);
+      if (event.key === "ArrowRight") setSelected(current => current === null ? null : (current + 1) % images.length);
+      if (event.key === "ArrowLeft") setSelected(current => current === null ? null : (current + images.length - 1) % images.length);
+      if (event.key === "Tab") {
+        const buttons = [...(document.querySelector('[role="dialog"]')?.querySelectorAll<HTMLButtonElement>("button") ?? [])];
+        const first = buttons[0], last = buttons.at(-1);
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
       }
-    );
-
+    }
+    window.addEventListener("keydown", keyboard);
     return () => {
-      observer.disconnect();
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", keyboard);
+      trigger.current?.focus({ preventScroll: true });
     };
-  }, []);
-
-  /*
-   * Lightbox controls
-   */
-
-  function openImage(index: number) {
-    setSelectedIndex(index);
-  }
-
-  function closeImage() {
-    setSelectedIndex(null);
-  }
-
-  function showPrevious() {
-    setSelectedIndex((current) => {
-      if (current === null) {
-        return null;
-      }
-
-      return current === 0
-        ? images.length - 1
-        : current - 1;
-    });
-  }
-
-  function showNext() {
-    setSelectedIndex((current) => {
-      if (current === null) {
-        return null;
-      }
-
-      return current ===
-        images.length - 1
-        ? 0
-        : current + 1;
-    });
-  }
-
-  /*
-   * Keyboard control + khóa scroll
-   * khi lightbox đang mở.
-   */
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    function handleKeyDown(
-      event: KeyboardEvent
-    ) {
-      if (event.key === "Escape") {
-        closeImage();
-      }
-
-      if (event.key === "ArrowLeft") {
-        showPrevious();
-      }
-
-      if (event.key === "ArrowRight") {
-        showNext();
-      }
-    }
-
-    document.body.style.overflow =
-      "hidden";
-
-    window.addEventListener(
-      "keydown",
-      handleKeyDown
-    );
-
-    return () => {
-      document.body.style.overflow =
-        "";
-
-      window.removeEventListener(
-        "keydown",
-        handleKeyDown
-      );
-    };
+    // Navigation within the lightbox must not reset focus or the scroll lock.
   }, [isOpen]);
-
-  return (
-    <>
-      <section className="relative overflow-hidden bg-[var(--wedding-cream)] px-4 py-24 md:px-6 md:py-32">
-
-        {/* BACKGROUND DECORATION */}
-
-        <div className="pointer-events-none absolute -left-40 top-20 h-96 w-96 rounded-full border border-[var(--wedding-primary-light)] opacity-40" />
-
-        <div className="pointer-events-none absolute -right-40 bottom-16 h-96 w-96 rounded-full border border-[var(--wedding-primary-light)] opacity-40" />
-
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--wedding-primary-light)] opacity-10 blur-3xl" />
-
-        <div className="relative mx-auto max-w-7xl">
-
-          {/* HEADER */}
-
-          <div className="text-center">
-
-            <p className="text-[10px] uppercase tracking-[0.5em] text-[var(--wedding-primary)] md:text-xs">
-              {invitation.copy.labels.galleryEyebrow}
-            </p>
-
-            <h2 className="mt-5 font-wedding text-5xl text-[var(--wedding-primary-dark)] md:text-7xl">
-              {invitation.copy.labels.galleryTitle}
-            </h2>
-
-            <div className="mx-auto mt-7 flex items-center justify-center gap-3">
-
-              <span className="h-px w-9 bg-[var(--wedding-primary)] opacity-60" />
-
-              <span className="text-sm text-[var(--wedding-primary)]">
-                ♡
-              </span>
-
-              <span className="h-px w-9 bg-[var(--wedding-primary)] opacity-60" />
-
-            </div>
-
-            <p className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-[var(--wedding-text-muted)] md:text-base md:leading-8">
-              {invitation.copy.galleryIntro}
-            </p>
-
-          </div>
-
-          {/* GALLERY GRID */}
-
-          <div
-            ref={galleryRef}
-            className="mt-16 grid auto-rows-[145px] grid-cols-2 gap-3 md:auto-rows-[115px] md:grid-cols-12 md:gap-5"
-          >
-
-            {images.map(
-              (image, index) => (
-                <button
-                  key={image.src}
-                  type="button"
-                  onClick={() =>
-                    openImage(index)
-                  }
-                  data-gallery-reveal
-                  style={{
-                    transitionDelay: `${
-                      (index % 3) * 120
-                    }ms`,
-                  }}
-                  className={`gallery-reveal group relative overflow-hidden rounded-[24px] text-left md:rounded-[32px] ${layoutClasses[index]}`}
-                  aria-label={formatText(invitation.copy.labels.photoNumber, { number: index + 1 })}
-                >
-
-                  <Image
-                    src={image.src}
-                    alt={formatText(invitation.copy.labels.photoAlt, { coupleNames: invitation.names, number: index + 1 })}
-                    fill
-                    sizes={
-                      index === 0
-                        ? "(max-width: 768px) 100vw, 60vw"
-                        : "(max-width: 768px) 50vw, 35vw"
-                    }
-                    className="object-cover transition duration-1000 ease-out group-hover:scale-105"
-                  />
-
-                  {/* OVERLAY */}
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-60 transition duration-500 group-hover:opacity-80" />
-
-                  {/* VIEW LABEL */}
-
-                  <div className="absolute bottom-4 right-4 translate-y-2 opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100 md:bottom-5 md:right-5">
-
-                    <span className="text-[9px] uppercase tracking-[0.25em] text-white">
-                      {invitation.copy.labels.viewPhoto}
-                    </span>
-
-                  </div>
-
-                </button>
-              )
-            )}
-
-          </div>
-
-          {/* QUOTE */}
-
-          <div className="mx-auto mt-20 max-w-3xl text-center">
-
-            <p className="font-wedding text-3xl leading-relaxed text-[var(--wedding-primary-dark)] md:text-4xl">
-              {invitation.copy.coupleQuote}
-            </p>
-
-            <p className="mt-7 text-[9px] uppercase tracking-[0.4em] text-[var(--wedding-primary)]">
-              {invitation.namesWithDot}
-            </p>
-
-          </div>
-
+  const photoAlt = (index: number) => formatText(c.labels.photoAlt, { coupleNames: i.names, number: index + 1 });
+  return <>
+    <section id="album" className="overflow-hidden bg-[var(--wedding-bg)] px-5 py-20 md:px-10 md:py-24">
+      <div className="text-center">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--wedding-primary)]">{c.labels.galleryEyebrow}</p>
+        <h2 className="mt-4 font-wedding text-4xl text-[var(--wedding-primary-dark)] md:text-5xl">{c.labels.galleryTitle}</h2>
+      </div>
+      <div ref={album} role="group" aria-label={c.labels.galleryEyebrow} tabIndex={0}
+        className="album-book relative mx-auto mt-10 max-w-xl rounded-r-2xl bg-[#d6ddcf] p-3 pl-5 shadow-[0_20px_50px_rgba(41,54,46,0.16)] outline-offset-8 md:p-5 md:pl-8"
+        onKeyDown={event => { if (event.key === "ArrowRight") { event.preventDefault(); turn(1); } if (event.key === "ArrowLeft") { event.preventDefault(); turn(-1); } }}
+        onTouchStart={event => { touch.current = event.changedTouches[0].clientX; }}
+        onTouchEnd={event => { if (touch.current !== null) { const delta = touch.current - event.changedTouches[0].clientX; if (Math.abs(delta) > 45) turn(delta > 0 ? 1 : -1); } touch.current = null; }}>
+        <div className="pointer-events-none absolute inset-y-0 left-1 w-3 bg-gradient-to-r from-[#74856d]/30 to-transparent" />
+        <div key={page} className={`album-sheet album-turn-${direction} relative bg-[#fffcf8] p-2 pb-4 shadow-md md:p-4`}>
+          <button type="button" onClick={openPhoto} aria-label={formatText(c.labels.photoNumber, { number: page + 1 })} className="relative block aspect-[3/4] w-full bg-[#eeeee7] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#496b58]">
+            <Image src={images[page]} alt={photoAlt(page)} fill sizes="(max-width: 640px) 85vw, 520px" className="object-contain" />
+          </button>
+          <p aria-live="polite" aria-atomic="true" className="mt-4 text-center font-wedding text-sm tracking-[0.2em] text-[var(--wedding-text-muted)]">{String(page + 1).padStart(2, "0")} / {images.length}</p>
         </div>
-      </section>
-
-      {/* =========================
-          LIGHTBOX
-      ========================== */}
-
-      {selectedIndex !== null && (
-        <div
-          className="site-lightbox fixed inset-0 z-[100] flex items-center justify-center bg-[#101712]/95 p-4 backdrop-blur-md md:p-8"
-          role="dialog"
-          aria-modal="true"
-          aria-label={invitation.copy.labels.galleryTitle}
-        >
-
-          {/* CLOSE */}
-
-          <button
-            type="button"
-            onClick={closeImage}
-            className="absolute right-5 top-5 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-xl text-white transition hover:bg-white/20 md:right-8 md:top-8"
-            aria-label={invitation.copy.labels.closePhoto}
-          >
-            ×
-          </button>
-
-          {/* COUNTER */}
-
-          <div className="absolute left-5 top-6 z-20 text-[10px] uppercase tracking-[0.3em] text-white/60 md:left-8 md:top-8">
-
-            {String(
-              selectedIndex + 1
-            ).padStart(2, "0")}
-
-            <span className="mx-2 text-white/30">
-              /
-            </span>
-
-            {String(
-              images.length
-            ).padStart(2, "0")}
-
-          </div>
-
-          {/* PREVIOUS */}
-
-          <button
-            type="button"
-            onClick={showPrevious}
-            className="absolute left-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-2xl text-white transition hover:bg-white/20 md:left-8"
-            aria-label={invitation.copy.labels.previousPhoto}
-          >
-            ‹
-          </button>
-
-          {/* NEXT */}
-
-          <button
-            type="button"
-            onClick={showNext}
-            className="absolute right-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-2xl text-white transition hover:bg-white/20 md:right-8"
-            aria-label={invitation.copy.labels.nextPhoto}
-          >
-            ›
-          </button>
-
-          {/* IMAGE */}
-
-          <div className="relative h-[78vh] w-[90vw] max-w-full">
-
-            <Image
-              src={
-                images[selectedIndex]
-                  .src
-              }
-              alt={
-                formatText(invitation.copy.labels.photoAlt, { coupleNames: invitation.names, number: selectedIndex + 1 })
-              }
-              fill
-              sizes="(max-width: 812px) 100vw, 812px"
-              priority
-              className="object-contain"
-            />
-
-          </div>
-
-          {/* BOTTOM INFO */}
-
-          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-center md:bottom-7">
-
-            <p className="font-wedding text-xl text-white md:text-2xl">
-              {invitation.names}
-            </p>
-
-            <p className="mt-1 text-[8px] uppercase tracking-[0.35em] text-white/40">
-              {invitation.copy.labels.galleryEyebrow}
-            </p>
-
-          </div>
-
-        </div>
-      )}
-    </>
-  );
+      </div>
+      <div className="mx-auto mt-7 flex max-w-xl items-center justify-between gap-4">
+        <button type="button" onClick={() => turn(-1)} disabled={page === 0} aria-label={c.labels.previousPhoto} className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--wedding-primary-light)] text-2xl text-[var(--wedding-primary-dark)] transition hover:bg-[var(--wedding-surface)] disabled:opacity-25">←</button>
+        <span className="font-wedding text-sm text-[var(--wedding-text-muted)]">{i.namesWithDot}</span>
+        <button type="button" onClick={() => turn(1)} disabled={page === images.length - 1} aria-label={c.labels.nextPhoto} className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--wedding-primary-light)] text-2xl text-[var(--wedding-primary-dark)] transition hover:bg-[var(--wedding-surface)] disabled:opacity-25">→</button>
+      </div>
+    </section>
+    {selected !== null && <div role="dialog" aria-modal="true" aria-label={c.labels.galleryTitle} className="site-lightbox fixed inset-0 z-[100] flex items-center justify-center bg-[#101712]/95 p-4 backdrop-blur-md md:p-8">
+      <button ref={closeButton} type="button" onClick={() => setSelected(null)} aria-label={c.labels.closePhoto} className="absolute right-5 top-5 z-20 h-11 w-11 rounded-full border border-white/20 bg-white/10 text-xl text-white">×</button>
+      <p className="absolute left-5 top-7 text-xs tracking-widest text-white/70">{String(selected + 1).padStart(2, "0")} / {images.length}</p>
+      <button type="button" onClick={() => setSelected((selected + images.length - 1) % images.length)} aria-label={c.labels.previousPhoto} className="absolute left-3 top-1/2 z-20 h-11 w-11 rounded-full bg-black/30 text-3xl text-white">‹</button>
+      <div className="relative h-[78vh] w-full"><Image src={images[selected]} alt={photoAlt(selected)} fill sizes="(max-width: 812px) 100vw, 812px" className="object-contain" /></div>
+      <button type="button" onClick={() => setSelected((selected + 1) % images.length)} aria-label={c.labels.nextPhoto} className="absolute right-3 top-1/2 z-20 h-11 w-11 rounded-full bg-black/30 text-3xl text-white">›</button>
+    </div>}
+  </>;
 }

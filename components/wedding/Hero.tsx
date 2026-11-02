@@ -173,26 +173,7 @@ export default function Hero({ invitation }: InvitationProps) {
       <div className="pointer-events-none absolute bottom-6 right-6 h-12 w-12 border-b border-r border-white/55 md:bottom-10 md:right-10 md:h-16 md:w-16" />
 
       {/* CONTENT */}
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-6 pb-24 pt-20 text-center text-white">
-
-        {/* MONOGRAM */}
-       <div className="mx-auto mt-12 mb-5 flex h-20 w-20 rotate-[-7deg] items-center justify-center rounded-full border border-white/20 bg-white/5">
-  <div className="text-center">
-
-    <p className="font-wedding text-lg font-light italic text-[#dceae0]/75">
-      H
-    </p>
-
-    <p className="my-1 text-[10px] text-[#dceae0]">
-      ♡
-    </p>
-
-    <p className="font-wedding text-lg font-light italic text-[#dceae0]/75">
-      H
-    </p>
-
-  </div>
-</div>
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-end px-6 pb-24 pt-60 text-center text-white">
 
         {/* EYEBROW */}
         <p className="hero-fade hero-delay-1 text-[10px] uppercase tracking-[0.5em] text-white/75 md:text-xs">
@@ -210,7 +191,7 @@ export default function Hero({ invitation }: InvitationProps) {
 
         {/* NAMES */}
         <div className="hero-fade hero-delay-3 mt-7">
-  <h1 className="font-wedding text-[clamp(2.9rem,10vw,6.2rem)] leading-[0.94] tracking-tight drop-shadow-sm">
+  <h1 className="font-wedding text-[clamp(2.5rem,8vw,4.2rem)] leading-[0.94] tracking-tight drop-shadow-sm">
     <span className="block text-white/85">
       {invitation.people[0].fullName}
     </span>
@@ -236,24 +217,6 @@ export default function Hero({ invitation }: InvitationProps) {
           </p>
         </div>
 
-        {/* PERSONAL INVITATION */}
-        <div className="hero-fade hero-delay-5 font-invitation mx-auto mt-8 w-full max-w-5xl rounded-[24px] border border-white/20 bg-black/15 px-6 py-7 backdrop-blur-sm md:px-8">
-          <p className="text-[10px] uppercase tracking-[0.25em] text-white/75 md:text-xs">
-            {invitation.salutation}
-          </p>
-          <p className="mt-4 break-words text-2xl font-medium leading-relaxed text-white md:text-3xl">
-            {invitation.recipient}
-          </p>
-          <p className="mt-5 text-sm italic leading-7 text-white/90 md:text-base md:leading-8">
-            {invitation.message}
-          </p>
-          {/* <p className="mt-5 text-sm leading-7 text-white/80">
-            {invitation.event.time} · {invitation.event.date}
-            <span className="block text-xs">{invitation.copy.labels.vietnamTime}</span>
-            <span className="block">{invitation.event.venue}</span>
-            <span className="block">{invitation.event.address}</span>
-          </p> */}
-        </div>
 
       </div>
 

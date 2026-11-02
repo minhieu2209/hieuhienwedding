@@ -83,21 +83,22 @@ export async function submit(request: Request, variantId: string, action: "rsvp"
     }
     return Response.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   }
-  const payload = { ...metadata, guest_name: guestName, message: text(input.message, 2000) };
-  const fields = "id,guest_name,message,created_at";
+  // Every new wish enters moderation, regardless of any client-supplied status.
+  const payload = { ...metadata, guest_name: guestName, message: text(input.message, 2000), moderation_status: "pending" };
+  const fields = "id";
   const result = await db.from("wedding_wishes").insert(payload).select(fields).single();
-  if (!result.error) return Response.json({ wish: result.data }, { status: 201, headers: { "Cache-Control": "no-store" } });
+  if (!result.error) return Response.json({ ok: true }, { status: 201, headers: { "Cache-Control": "no-store" } });
   if (result.error.code !== "23505") throw new InvitationError("unavailable");
   const previous = await db.from("wedding_wishes").select(fields).eq("submission_id", submissionId).eq("invitation_variant_id", variant.id).maybeSingle();
   if (previous.error || !previous.data) throw new InvitationError("conflict", 409);
-  return Response.json({ wish: previous.data }, { headers: { "Cache-Control": "no-store" } });
+  return Response.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
 }
 
 export async function listWishes(request: Request, variantId: string) {
   const context = await databaseContext(variantId);
   if (!context.published) throw new InvitationError("not_found", 404);
   const url = new URL(request.url);
-  let query = context.db.from("wedding_wishes").select("id,guest_name,message,created_at").eq("host_side", context.variant.host_side).order("created_at", { ascending: false }).order("id", { ascending: false }).limit(21);
+  let query = context.db.from("wedding_wishes").select("id,guest_name,message,created_at").eq("moderation_status", "approved").order("created_at", { ascending: false }).order("id", { ascending: false }).limit(21);
   const encoded = url.searchParams.get("cursor");
   if (encoded) {
     if (encoded.length > 200) throw new InvitationError("invalid_form", 400);

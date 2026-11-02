@@ -42,21 +42,12 @@ export default function RSVP({ invitation: i }: InvitationProps) {
   return <section className="relative overflow-hidden bg-[var(--wedding-bg)] px-5 py-24 md:px-6 md:py-32">
     <div className="mx-auto max-w-6xl">
       <div className="text-center">
-        <p className="text-xs uppercase tracking-[0.3em] text-[var(--wedding-primary)]">{c.labels.rsvpTitle}</p>
         <h2 className="mt-5 font-wedding text-5xl text-[var(--wedding-primary-dark)] md:text-7xl">{c.labels.rsvpTitle}</h2>
-        <p className="mx-auto mt-7 max-w-2xl leading-8 text-[var(--wedding-text-muted)]">{c.rsvpIntro}</p>
       </div>
-      <div className="mx-auto mt-16 grid max-w-4xl overflow-hidden rounded-[38px] border border-[var(--wedding-primary-light)] bg-[var(--wedding-cream)] shadow-[0_28px_90px_rgba(73,107,88,0.10)] md:grid-cols-[0.72fr_1.28fr]">
-        <div className="flex flex-col items-center justify-center bg-[var(--wedding-primary-dark)] px-8 py-12 text-center text-white">
-          <span className="flex h-24 w-24 rotate-[-8deg] items-center justify-center rounded-full border border-white/25 font-wedding text-2xl">H ♡ H</span>
-          <h3 className="mt-10 font-wedding text-3xl">{i.names}</h3>
-          <p className="mt-7 text-sm leading-7 text-white/75">{i.event.time} · {i.event.date}</p>
-          <p className="mt-2 text-xs text-white/60">{c.labels.vietnamTime}</p>
-          <p className="mt-4 text-sm leading-7 text-white/75">{i.event.venue}</p>
-        </div>
+      <div className="mx-auto mt-9 max-w-xl overflow-hidden rounded-[38px] border border-[var(--wedding-primary-light)] bg-[var(--wedding-cream)] shadow-[0_28px_90px_rgba(73,107,88,0.10)]">
         <form onSubmit={handleSubmit} noValidate className="p-6 md:p-10">
           <label htmlFor="guestName" className="text-sm text-[var(--wedding-primary-dark)]">{c.labels.name}</label>
-          <input id="guestName" name="guestName" autoComplete="name" maxLength={120} required placeholder={c.labels.namePlaceholder} className={field} />
+          <input id="guestName" name="guestName" autoComplete="name" maxLength={120} defaultValue={i.recipientName} required placeholder={c.labels.namePlaceholder} className={field} />
           <label htmlFor="phone" className="mt-8 block text-sm text-[var(--wedding-primary-dark)]">{c.labels.phone}</label>
           <input id="phone" name="phone" type="tel" autoComplete="tel" maxLength={30} className={field} />
           <fieldset className="mt-9">
@@ -73,7 +64,7 @@ export default function RSVP({ invitation: i }: InvitationProps) {
             {[1, 2, 3, 4, 5].map((count) => <option key={count} value={count}>{formatText(c.labels.peopleCount, { count })}</option>)}
           </select>
           <label htmlFor="message" className="mt-8 block text-sm text-[var(--wedding-primary-dark)]">{c.labels.message}</label>
-          <textarea id="message" name="message" rows={4} maxLength={2000} className={field} />
+          <textarea id="message" name="message" rows={2} maxLength={2000} className={field} />
           <div aria-hidden="true" className="absolute -left-[10000px]"><input name="website" tabIndex={-1} autoComplete="off" /></div>
           <button type="submit" disabled={loading || !i.formsEnabled} className="mt-9 w-full rounded-full bg-[var(--wedding-primary-dark)] px-6 py-4 text-sm text-white transition hover:bg-[var(--wedding-primary)] disabled:cursor-not-allowed disabled:opacity-50">{loading ? c.labels.submitting : c.labels.submitRsvp}</button>
           {error && <p role="alert" className="mt-4 text-sm text-red-800">{error}</p>}

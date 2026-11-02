@@ -82,7 +82,7 @@ Khi ứng dụng mới đã được kiểm tra với DB thật, chạy `supabas
 
 Bước này bật RLS và thu hồi quyền bảng/sequence trực tiếp của PUBLIC, anon, authenticated; API dùng khóa máy chủ tiếp tục hoạt động. Các policy cũ không bị xóa để tiện đối chiếu. File trả JSON cutover có các cờ kiểm tra và restore_sql chụp đúng các quyền bảng/sequence/cột trước khi thu hồi; lưu kết quả của lần chạy đầu để rollback khi cần. Chỉ thêm policy hạn chế sẽ không vô hiệu hóa một policy permissive cũ; vì vậy phải xem cả grants lẫn policies.
 
-Dữ liệu lời chúc cũ chưa phân loại có host_side=NULL, được giữ lại nhưng không tự đẩy sang sổ cô dâu/chú rể. Chỉ phân loại theo các id đã được chủ thiệp xác nhận. UncleLEE luôn ghi host_side=bride và event_id=groom-wedding.
+Sổ lưu bút hiện dùng chung và chỉ hiển thị lời chúc đã duyệt. Áp dụng thêm migration `202611020001_moderated_guestbook.sql` và làm theo [hướng dẫn quản trị](guestbook-moderation.md). Lời chúc cũ, kể cả host_side=NULL, được giữ lại trong hàng chờ cho chủ thiệp duyệt; không tự gán nguồn khác. UncleLEE vẫn ghi host_side=bride và event_id=groom-wedding để đối chiếu.
 
 ## 8. Kiểm tra, quay lại và giới hạn
 

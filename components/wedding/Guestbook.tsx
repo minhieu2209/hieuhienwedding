@@ -46,9 +46,8 @@ export default function Guestbook({ invitation: i }: InvitationProps) {
     setSending(true); setError(""); setNotice("");
     submission.current ??= crypto.randomUUID();
     try {
-      const data = await sendForm(`/api/invitations/${i.id}/wishes`, { guest_name: name, message, guest: i.guestToken, submission_id: submission.current, website: String(new FormData(event.currentTarget).get("website") ?? "") });
-      setWishes((old) => [data.wish, ...old.filter((wish) => String(wish.id) !== String(data.wish.id))]);
-      setName(""); setMessage(""); submission.current = null; setNotice(c.labels.wishSuccess);
+      await sendForm(`/api/invitations/${i.id}/wishes`, { guest_name: name, message, guest: i.guestToken, submission_id: submission.current, website: String(new FormData(event.currentTarget).get("website") ?? "") });
+      setName(""); setMessage(""); submission.current = null; setNotice(i.locale === "ko" ? "축하 메시지를 보내 주셔서 감사합니다. 확인 후 방명록에 공개됩니다." : "Đã nhận lời chúc. Lời chúc sẽ hiển thị sau khi được duyệt.");
     } catch (cause) { setError(formError(c, cause instanceof Error ? cause.message : undefined)); }
     finally { setSending(false); }
   }
@@ -78,7 +77,7 @@ export default function Guestbook({ invitation: i }: InvitationProps) {
           <p className="mt-8 text-center font-wedding text-2xl text-[var(--wedding-primary-dark)]">H ♡ H</p>
         </div>
         <div>
-          <h3 className="font-wedding text-3xl text-[var(--wedding-primary-dark)]">{i.side === "bride" ? c.labels.guestbookBride : c.labels.guestbookGroom}</h3>
+          <h3 className="font-wedding text-3xl text-[var(--wedding-primary-dark)]">{c.labels.withLove}</h3>
           <p className="mt-3 text-sm text-[var(--wedding-text-muted)]">{formatText(c.labels.wishesCount, { count: wishes.length })}</p>
           {loadError && <div role="alert" className="mt-6 rounded-2xl border p-6"><p>{c.labels.loadError}</p><button type="button" className="mt-3 underline" onClick={() => { setLoading(true); setReload((value) => value + 1); }}>{c.labels.retry}</button></div>}
           {!loading && !loadError && i.wishesEnabled && wishes.length === 0 && <p className="mt-6 rounded-2xl border border-[var(--wedding-primary-light)] p-8 text-center text-[var(--wedding-text-muted)]">{c.labels.emptyWishes}</p>}

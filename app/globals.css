@@ -331,3 +331,19 @@ main[lang="ko"] { word-break: keep-all; overflow-wrap: anywhere; }
 main[lang="ko"] .font-invitation {
   font-family: var(--font-wedding-ko), serif;
 }
+
+.album-book { perspective: 1200px; }
+.album-sheet { transform-origin: left center; backface-visibility: hidden; }
+.album-turn-next { animation: albumTurnNext 600ms ease both; }
+.album-turn-previous { animation: albumTurnPrevious 600ms ease both; }
+@keyframes albumTurnNext {
+  from { transform: rotateY(-28deg); opacity: 0.5; }
+  to { transform: rotateY(0); opacity: 1; }
+}
+@keyframes albumTurnPrevious {
+  from { transform: rotateY(18deg); opacity: 0.5; }
+  to { transform: rotateY(0); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .album-sheet { animation: none; }
+}
