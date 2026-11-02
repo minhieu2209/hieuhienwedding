@@ -103,7 +103,7 @@ export default function Countdown({ invitation }: InvitationProps) {
 
       <div className="relative mx-auto max-w-6xl text-center">
 
-        <h2 className="font-wedding text-4xl md:text-5xl">{invitation.copy.labels.countdownEyebrow}</h2>
+        <h2 className="font-wedding text-3xl md:text-4xl">{invitation.copy.labels.countdownEyebrow}</h2>
 
         {/* COUNTDOWN */}
         <div className="mx-auto mt-10 grid max-w-4xl grid-cols-4">

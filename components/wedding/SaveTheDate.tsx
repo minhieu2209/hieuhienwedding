@@ -7,7 +7,7 @@ export default function SaveTheDate({ invitation: i }: InvitationProps) {
   const cells: (number | null)[] = [...Array(first).fill(null), ...Array.from({ length: days }, (_, n) => n + 1)];
   const monthLabel = new Intl.DateTimeFormat(i.dateLocale, { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(Date.UTC(year, month - 1, 1)));
   return <section id="save-the-date" className="bg-[var(--wedding-bg)] px-5 py-16 md:px-10 md:py-20">
-    <h2 className="text-center font-wedding text-4xl text-[var(--wedding-primary-dark)] md:text-5xl">{i.copy.labels.calendarTitle}</h2>
+    <h2 className="text-center font-wedding text-3xl text-[var(--wedding-primary-dark)] md:text-4xl">{i.copy.labels.calendarTitle}</h2>
     <div className="mx-auto mt-9 max-w-lg rounded-[32px] border border-[var(--wedding-primary-light)] bg-[var(--wedding-cream)] px-4 py-8 shadow-sm md:px-10">
       <h3 className="text-center font-wedding text-2xl capitalize text-[var(--wedding-primary-dark)]">{monthLabel}</h3>
       <div className="mt-7 grid grid-cols-7 text-center">

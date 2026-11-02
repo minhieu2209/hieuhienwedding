@@ -7,6 +7,7 @@ export default function WeddingDetails({ invitation: i }: InvitationProps) {
     <div className="text-center">
       <p className="text-xs uppercase tracking-[0.25em] text-[var(--wedding-primary)]">{i.salutation}</p>
       <h2 className="font-invitation mx-auto mt-5 max-w-2xl break-words text-2xl leading-relaxed text-[var(--wedding-primary-dark)] md:text-3xl">{i.recipient}</h2>
+      <p className="font-invitation mt-4 text-base leading-7 text-[var(--wedding-text-muted)] md:text-lg">{i.locale === "ko" ? "저희 가족과 함께 기쁨을 나눠 주세요." : "Đến chung vui cùng gia đình chúng tôi"}</p>
       <div aria-hidden="true" className="my-8 text-[var(--wedding-primary)]">──── ♡ ────</div>
     </div>
     <div className="grid grid-cols-2 gap-4 md:gap-8">
