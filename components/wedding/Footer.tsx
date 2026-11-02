@@ -17,10 +17,10 @@ export default function Footer({ invitation }: InvitationProps) {
           {invitation.copy.labels.thankYou}
         </p>
 
-        <h2 className="mt-6 font-wedding text-5xl leading-tight md:text-7xl">
+        <h2 className="mt-6 whitespace-nowrap font-wedding text-[clamp(1.25rem,5vw,2.5rem)] leading-tight">
           {invitation.people[0].fullName}
 
-          <span className="mx-4 inline-block font-light italic text-[#dceae0]">
+          <span className="mx-2 inline-block font-light italic text-[#dceae0] md:mx-3">
             &
           </span>
 
