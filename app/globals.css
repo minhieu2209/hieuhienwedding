@@ -28,6 +28,7 @@ body {
   font-family: var(--font-wedding), serif;
 }
 :root {
+  --site-max-width: 812px;
   --wedding-bg: #f6faf7;
   --wedding-surface: #eaf3ed;
 
@@ -46,9 +47,31 @@ html {
 }
 
 body {
-  background: var(--wedding-bg);
+  background: #ffffff;
   color: var(--wedding-text);
 }
+
+.site-frame {
+  position: relative;
+  width: 100%;
+  max-width: var(--site-max-width);
+  min-height: 100vh;
+  margin-inline: auto;
+  overflow-x: clip;
+  background: var(--wedding-bg);
+}
+
+/* Keep viewport-fixed controls aligned with the centered website while scrolling. */
+.site-fixed-right {
+  right: calc(max(0px, (100% - var(--site-max-width)) / 2) + var(--site-edge-offset, 1rem));
+}
+
+.site-lightbox {
+  width: 100%;
+  max-width: var(--site-max-width);
+  margin-inline: auto;
+}
+
 .hero-fade {
   opacity: 0;
   transform: translateY(20px);

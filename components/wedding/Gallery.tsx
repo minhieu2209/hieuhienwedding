@@ -300,7 +300,7 @@ export default function Gallery({ invitation }: InvitationProps) {
 
       {selectedIndex !== null && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-[#101712]/95 p-4 backdrop-blur-md md:p-8"
+          className="site-lightbox fixed inset-0 z-[100] flex items-center justify-center bg-[#101712]/95 p-4 backdrop-blur-md md:p-8"
           role="dialog"
           aria-modal="true"
           aria-label={invitation.copy.labels.galleryTitle}
@@ -359,7 +359,7 @@ export default function Gallery({ invitation }: InvitationProps) {
 
           {/* IMAGE */}
 
-          <div className="relative h-[78vh] w-[90vw] max-w-6xl">
+          <div className="relative h-[78vh] w-[90vw] max-w-full">
 
             <Image
               src={
@@ -370,7 +370,7 @@ export default function Gallery({ invitation }: InvitationProps) {
                 formatText(invitation.copy.labels.photoAlt, { coupleNames: invitation.names, number: selectedIndex + 1 })
               }
               fill
-              sizes="100vw"
+              sizes="(max-width: 812px) 100vw, 812px"
               priority
               className="object-contain"
             />

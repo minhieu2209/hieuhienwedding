@@ -140,7 +140,7 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
       ========================== */}
 
       <div
-        className={`fixed bottom-24 right-4 z-[89] w-[calc(100vw-32px)] max-w-[350px] origin-bottom-right transition-all duration-500 md:bottom-28 md:right-7 ${
+        className={`site-fixed-right fixed bottom-24 z-[89] w-[calc(min(100vw,var(--site-max-width))-32px)] max-w-[350px] origin-bottom-right transition-all duration-500 md:bottom-28 md:[--site-edge-offset:1.75rem] ${
           open
             ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
             : "pointer-events-none translate-y-4 scale-95 opacity-0"
@@ -429,7 +429,7 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
           FLOATING BUTTON
       ========================== */}
 
-      <div className="fixed bottom-5 right-5 z-[90] flex items-center gap-3 md:bottom-7 md:right-7">
+      <div className="site-fixed-right fixed bottom-5 z-[90] flex items-center gap-3 [--site-edge-offset:1.25rem] md:bottom-7 md:[--site-edge-offset:1.75rem]">
 
         {/* PLAY / PAUSE QUICK BUTTON */}
 

@@ -30,7 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi">
-      <body className={`${notoSerif.variable} ${koreanSerif.variable} ${lora.variable}`}>{children}</body>
+      <body className={`${notoSerif.variable} ${koreanSerif.variable} ${lora.variable}`}>
+        <div className="site-frame">{children}</div>
+      </body>
     </html>
   );
 }
