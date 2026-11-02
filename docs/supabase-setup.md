@@ -60,6 +60,10 @@ DB mode có tác dụng với dữ liệu thật. Nếu đọc DB lỗi, thiệp
 
 Mã nguồn có bộ nội dung ban đầu làm dự phòng. Khi đã bật DB, các thay đổi nội dung/ngày giờ/tên khách ở DB được đọc lại khi tải trang; không cần deploy chỉ để đổi tên khách. Đổi environment variables cần redeploy Vercel.
 
+### Công bố hai mẫu có tiếng Hàn
+
+Khi chủ thiệp xác nhận công bố nội dung hiện tại, chạy `supabase/manual/06_publish_korean.sql`. File kiểm tra đủ bản dịch trước khi công bố Partron (vi/ko) và UncleLEE (ko); không thay đổi ngôn ngữ mặc định hoặc link khách đã cấp. Kết quả `korean_activation` dự kiến có published=2, approved_translations=3. Partron vào thẳng tiếng Hàn bằng `/bride/Partron?lang=ko`; UncleLEE mặc định tiếng Hàn. Nội dung vẫn có thể được người dịch chỉnh lại sau khi công bố.
+
 ## 6. Cấp link và giữ file gốc riêng
 
 Đặt biến server trong môi trường máy cục bộ hoặc file `.env.local` được Git bỏ qua. Chọn base URL là tên miền dùng để gửi khách, không dùng URL của một deployment thử có thể bị thay thế.
