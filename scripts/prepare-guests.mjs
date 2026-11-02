@@ -36,8 +36,23 @@ export function parseCsv(source) {
 export function makeGuestSql(records) {
   if (!records.length) throw new Error('Guest list is empty');
   const literal = value => `'${value.replaceAll("'", "''")}'`;
-  const values = records.map(row => `(${[row.guest_code,row.display_name,row.invitation_variant_id].map(literal).join(',')})`).join(',\n');
-  return `-- Private guest data. Review before applying in Supabase SQL Editor.\nBEGIN;\nCREATE TEMP TABLE wedding_guest_import(guest_code text PRIMARY KEY,display_name text NOT NULL,invitation_variant_id text NOT NULL) ON COMMIT DROP;\nINSERT INTO wedding_guest_import VALUES\n${values};\nDO $block$ BEGIN\nIF EXISTS (SELECT 1 FROM wedding_guest_import i LEFT JOIN public.wedding_invitation_variants v ON v.id=i.invitation_variant_id WHERE v.id IS NULL OR v.recipient_mode <> 'individual') THEN RAISE EXCEPTION 'Unknown or non-individual invitation group'; END IF;\nIF EXISTS (SELECT 1 FROM wedding_guest_import i JOIN public.wedding_guests g USING(guest_code) WHERE i.invitation_variant_id <> g.invitation_variant_id) THEN RAISE EXCEPTION 'Existing guest_code belongs to a different group'; END IF;\nEND; $block$;\nINSERT INTO public.wedding_guests(guest_code,display_name,invitation_variant_id) SELECT guest_code,display_name,invitation_variant_id FROM wedding_guest_import ON CONFLICT(guest_code) DO UPDATE SET display_name=EXCLUDED.display_name,updated_at=now();\nCOMMIT;\n`;
+  const payload = JSON.stringify(records.map(row => ({ guest_code: row.guest_code, display_name: row.display_name, invitation_variant_id: row.invitation_variant_id })));
+  let tag = '$wedding_import$';
+  for (let n = 1; payload.includes(tag); n++) tag = `$wedding_import_${n}$`;
+  const incoming = 'jsonb_to_recordset(imported) AS i(guest_code text,display_name text,invitation_variant_id text)';
+  return `-- Private guest data. Review before applying in Supabase SQL Editor.
+-- One atomic statement; no temporary tables or shared SQL session required.
+DO ${tag}
+DECLARE imported jsonb := ${literal(payload)}::jsonb;
+BEGIN
+IF EXISTS (SELECT 1 FROM ${incoming} LEFT JOIN public.wedding_invitation_variants v ON v.id=i.invitation_variant_id WHERE v.id IS NULL OR v.recipient_mode <> 'individual') THEN RAISE EXCEPTION 'Unknown or non-individual invitation group'; END IF;
+IF EXISTS (SELECT 1 FROM ${incoming} JOIN public.wedding_guests g USING(guest_code) WHERE i.invitation_variant_id <> g.invitation_variant_id) THEN RAISE EXCEPTION 'Existing guest_code belongs to a different group'; END IF;
+INSERT INTO public.wedding_guests(guest_code,display_name,invitation_variant_id)
+SELECT guest_code,display_name,invitation_variant_id FROM ${incoming}
+ON CONFLICT(guest_code) DO UPDATE SET display_name=EXCLUDED.display_name,updated_at=now();
+END;
+${tag};
+`;
 }
 if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
   try {

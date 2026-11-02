@@ -25,7 +25,7 @@ Sửa nội dung ở `wedding_invitation_contents.content`; giữ đủ khóa nh
 
 Danh sách thật nằm ngoài Git trong `.local/guests.csv` và script đã chuẩn bị `.local/import-guests.sql` trong môi trường làm việc này. File mẫu không có tên khách thật nằm ở `scripts/guests-template.csv`.
 
-CSV cần guest_code,display_name,group_path. Giữ code khi sửa tên/sắp xếp dòng; thêm khách dùng code mới. Các nhóm cá nhân hợp lệ là groom/friends, bride/friends và bride/friends1.
+CSV cần guest_code,display_name,group_path. Giữ code khi sửa tên/sắp xếp dòng; thêm khách dùng code mới. Các nhóm cá nhân hợp lệ là groom/friends, bride/friends và bride/friends1. SQL được tạo dưới dạng một khối DO độc lập, không dùng bảng tạm và không phụ thuộc việc SQL Editor giữ nguyên phiên kết nối.
 
 ```bash
 npm run guests:prepare -- --file .local/guests.csv --output .local/import-guests.sql

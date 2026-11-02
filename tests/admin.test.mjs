@@ -23,6 +23,10 @@ test('Actual migrations and import preserve legacy data, identities, token hashe
   await db.exec(await readFile(new URL('../supabase/migrations/202610290002_invitation_seed.sql',import.meta.url),'utf8'));
   const rows=parseCsv(example);const sql=makeGuestSql(rows);await db.exec(sql);
   const first=(await db.query('select * from wedding_guests')).rows[0];assert.equal(first.display_name,rows[0].display_name);
+  const escapedName="Bạn $wedding_import$ $$ O'Neil";
+  await db.exec(makeGuestSql([{...rows[0],guest_code:'GF-escaped',display_name:escapedName}]));
+  assert.equal((await db.query("select display_name from wedding_guests where guest_code='GF-escaped'")).rows[0].display_name,escapedName);
+  await db.exec("delete from wedding_guests where guest_code='GF-escaped'");
   await db.exec("update wedding_guests set is_active=true,invite_token_hash=repeat('a',64)");
   await db.exec(sql);const next=(await db.query('select * from wedding_guests')).rows[0];assert.equal(next.id,first.id);assert.equal(next.invite_token_hash,'a'.repeat(64));assert.equal(next.is_active,true);
   await assert.rejects(db.exec(makeGuestSql([{...rows[0],invitation_variant_id:'bride-friends'}])));await db.exec('ROLLBACK');
