@@ -28,7 +28,7 @@ export const weddingData = {
     title: "Nhà Trai",
     father: "Nguyễn Văn Lộc",
     mother: "Nguyễn Thị Thoan",
-    address: "Nhà hàng Chen 01 Nam Định\n300 Trường Chinh, Nam Định, Ninh Bình"
+    address: "11K ngõ 114 Phù Nghĩa, Nam Định, Ninh Bình",
   },
 
   bride: {
@@ -61,28 +61,6 @@ events: [
     venue: "Tư gia Nhà gái",
     address: "Km 06, Thôn Làng Bạc, Xuân Quang, Lào Cai",
     mapUrl: "https://www.google.com/maps?q=22.3466555,104.2134899&entry=gps&shh=CAE&lucs=,94297699,94231188,94280568,100821555,47071704,94218641,94282134,100835694,100840646,94286869,100820247,100822504,100838877,121816461&g_ep=CAISEjI2LjQwLjMuOTg5Mjk1MzUwMBgAIIgnKoUBLDk0Mjk3Njk5LDk0MjMxMTg4LDk0MjgwNTY4LDEwMDgyMTU1NSw0NzA3MTcwNCw5NDIxODY0MSw5NDI4MjEzNCwxMDA4MzU2OTQsMTAwODQwNjQ2LDk0Mjg2ODY5LDEwMDgyMDI0NywxMDA4MjI1MDQsMTAwODM4ODc3LDEyMTgxNjQ2MUICVk4%3D&skid=892dc456-411b-4445-93a6-75b12085f0e8&g_st=ic",
-  },
-],
-timeline: [
-  {
-    time: "10:30",
-    title: "Đón khách",
-    description: "Chào đón gia đình, bạn bè và những người thân yêu.",
-  },
-  {
-    time: "11:00",
-    title: "Lễ Thành Hôn",
-    description: "Khoảnh khắc chúng mình chính thức bước sang một hành trình mới.",
-  },
-  {
-    time: "11:30",
-    title: "Khai tiệc",
-    description: "Cùng nâng ly và chia sẻ niềm vui trong ngày đặc biệt.",
-  },
-  {
-    time: "13:00",
-    title: "Chụp ảnh & Giao lưu",
-    description: "Lưu lại những khoảnh khắc đáng nhớ cùng mọi người.",
   },
 ],
 };
