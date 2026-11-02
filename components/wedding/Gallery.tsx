@@ -55,8 +55,9 @@ export default function Gallery({ invitation: i }: InvitationProps) {
         <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--wedding-primary)]">{c.labels.galleryEyebrow}</p>
         <h2 className="mt-4 font-wedding text-4xl text-[var(--wedding-primary-dark)] md:text-5xl">{c.labels.galleryTitle}</h2>
       </div>
-      <div ref={album} role="group" aria-label={c.labels.galleryEyebrow} tabIndex={0}
-        className="album-book relative mx-auto mt-10 max-w-xl rounded-r-2xl bg-[#d6ddcf] p-3 pl-5 shadow-[0_20px_50px_rgba(41,54,46,0.16)] outline-offset-8 md:p-5 md:pl-8"
+      <div className="relative mx-auto mt-10 max-w-xl">
+        <div ref={album} role="group" aria-label={c.labels.galleryEyebrow} tabIndex={0}
+        className="album-book relative rounded-r-2xl bg-[#d6ddcf] p-3 pl-5 shadow-[0_20px_50px_rgba(41,54,46,0.16)] outline-offset-8 md:p-5 md:pl-8"
         onKeyDown={event => { if (event.key === "ArrowRight") { event.preventDefault(); turn(1); } if (event.key === "ArrowLeft") { event.preventDefault(); turn(-1); } }}
         onTouchStart={event => { touch.current = event.changedTouches[0].clientX; }}
         onTouchEnd={event => { if (touch.current !== null) { const delta = touch.current - event.changedTouches[0].clientX; if (Math.abs(delta) > 45) turn(delta > 0 ? 1 : -1); } touch.current = null; }}>
@@ -67,11 +68,9 @@ export default function Gallery({ invitation: i }: InvitationProps) {
           </button>
           <p aria-live="polite" aria-atomic="true" className="mt-4 text-center font-wedding text-sm tracking-[0.2em] text-[var(--wedding-text-muted)]">{String(page + 1).padStart(2, "0")} / {images.length}</p>
         </div>
-      </div>
-      <div className="mx-auto mt-7 flex max-w-xl items-center justify-between gap-4">
-        <button type="button" onClick={() => turn(-1)} disabled={page === 0} aria-label={c.labels.previousPhoto} className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--wedding-primary-light)] text-2xl text-[var(--wedding-primary-dark)] transition hover:bg-[var(--wedding-surface)] disabled:opacity-25">←</button>
-        <span className="font-wedding text-sm text-[var(--wedding-text-muted)]">{i.namesWithDot}</span>
-        <button type="button" onClick={() => turn(1)} disabled={page === images.length - 1} aria-label={c.labels.nextPhoto} className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--wedding-primary-light)] text-2xl text-[var(--wedding-primary-dark)] transition hover:bg-[var(--wedding-surface)] disabled:opacity-25">→</button>
+        </div>
+        <button type="button" onClick={() => turn(-1)} disabled={page === 0} aria-label={c.labels.previousPhoto} className="absolute -left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--wedding-primary-light)] bg-[var(--wedding-cream)]/95 text-2xl text-[var(--wedding-primary-dark)] shadow-md transition hover:bg-[var(--wedding-surface)] disabled:opacity-25 md:-left-6 md:h-12 md:w-12">←</button>
+        <button type="button" onClick={() => turn(1)} disabled={page === images.length - 1} aria-label={c.labels.nextPhoto} className="absolute -right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--wedding-primary-light)] bg-[var(--wedding-cream)]/95 text-2xl text-[var(--wedding-primary-dark)] shadow-md transition hover:bg-[var(--wedding-surface)] disabled:opacity-25 md:-right-6 md:h-12 md:w-12">→</button>
       </div>
     </section>
     {selected !== null && <div role="dialog" aria-modal="true" aria-label={c.labels.galleryTitle} className="site-lightbox fixed inset-0 z-[100] flex items-center justify-center bg-[#101712]/95 p-4 backdrop-blur-md md:p-8">
