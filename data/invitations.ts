@@ -48,11 +48,15 @@ export function buildInvitation(variant: Variant, event: WeddingEvent, locale: L
     ? new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Ho_Chi_Minh", year: "numeric", month: "long", day: "numeric" }).format(date)
     : isoDate.split("-").reverse().join(" · ");
   const recipientName = options.recipientName?.trim().replace(/\s+/g, " ").slice(0, 120) ?? "";
+  const familyPronoun = variant.id === "uncle-lee" ? "chúng cháu" : variant.recipient_mode === "individual" ? "chúng mình" : "chúng em";
   return {
     id: variant.id, path: variant.path, side: variant.host_side, firstPerson: variant.first_person,
     locale, dateLocale, supportedLocales: variant.supported_locales,
     recipientMode: variant.recipient_mode, recipientName,
     recipient: recipientName || copy.defaultRecipient,
+    recipientWelcome: locale === "ko"
+      ? "저희 가족과 함께 기쁨을 나눠 주시면 감사하겠습니다."
+      : `Đến chung vui cùng gia đình ${familyPronoun}`,
     salutation: copy.salutation, message: copy.invitation,
     label: copy.labels[event.event_kind === "reception" ? "receptionInvitation" : "weddingInvitation"],
     copy, people, names, namesWithDot: people.map((person) => person.fullName).join(" · "),
