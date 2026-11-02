@@ -41,7 +41,7 @@ export const weddingData = {
 
 events: [
   {
-    type: "Lễ Thành Hôn",
+    type: "LỄ THÀNH HÔN",
     side: "Nhà Trai",
     time: "10:00",
     date: "29 · 11 · 2026",

@@ -10,26 +10,27 @@ export default function WeddingDetails({ invitation: i }: InvitationProps) {
       <p className="font-invitation mt-4 text-base leading-7 text-[var(--wedding-text-muted)] md:text-lg">{i.recipientWelcome}</p>
       <div aria-hidden="true" className="my-8 text-[var(--wedding-primary)]">──── ♡ ────</div>
     </div>
-    <div className="grid grid-cols-2 gap-4 md:gap-8">
-      {i.families.map(family => <article key={family.side} className="min-w-0 text-center">
-        <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--wedding-primary)] md:text-xs">{family.title}</p>
-        <div className="mt-4 grid min-h-24 content-start gap-3 text-sm leading-6 md:text-base">
-          <p><span className="text-[var(--wedding-text-muted)]">{c.labels.father}: </span><span className="font-wedding">{family.father}</span></p>
-          <p><span className="text-[var(--wedding-text-muted)]">{c.labels.mother}: </span><span className="font-wedding">{family.mother}</span></p>
-        </div>
-        <div className="relative mt-5 aspect-[3/4] overflow-hidden rounded-t-[120px] rounded-b-2xl border border-[var(--wedding-primary-light)]">
-          <Image src={family.image} alt={family.fullName} fill sizes="(max-width: 812px) 45vw, 350px" className="object-cover" />
-        </div>
-        <p className="mt-5 text-[10px] uppercase tracking-[0.15em] text-[var(--wedding-text-muted)]">{family.role}</p>
-        <h3 className="mt-2 font-wedding text-xl text-[var(--wedding-primary-dark)] md:text-3xl">{family.fullName}</h3>
-      </article>)}
+   <div className="grid grid-cols-2 gap-4 md:gap-8">
+  {i.families.map(family => <article key={family.side} className="min-w-0 text-center">
+    <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--wedding-primary)] md:text-xs">{family.title}</p>
+    <div className="mt-4 grid min-h-24 content-start gap-3 text-sm leading-6 md:text-base">
+      <p><span className="text-[var(--wedding-text-muted)]">{c.labels.father}: </span><span className="font-wedding text-lg text-[var(--wedding-text-muted)] md:text-xl">{family.father}</span></p>
+      <p><span className="text-[var(--wedding-text-muted)]">{c.labels.mother}: </span><span className="font-wedding text-lg text-[var(--wedding-text-muted)] md:text-xl">{family.mother}</span></p>
     </div>
+    <div className="relative mt-5 aspect-[3/4] overflow-hidden rounded-t-[120px] rounded-b-2xl border border-[var(--wedding-primary-light)]">
+      <Image src={family.image} alt={family.fullName} fill sizes="(max-width: 812px) 45vw, 350px" className="object-cover" />
+    </div>
+    <p className="mt-5 text-[10px] uppercase tracking-[0.15em] text-[var(--wedding-text-muted)]">{family.role}</p>
+    <h3 className="mt-2 font-wedding text-xl text-[var(--wedding-primary-dark)] md:text-3xl">{family.fullName}</h3>
+  </article>)}
+</div>
     <div className="mx-auto mt-14 max-w-xl rounded-[32px] border border-[var(--wedding-primary-light)] bg-[var(--wedding-bg)] px-5 py-10 text-center md:px-10">
       <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--wedding-primary)]">{c.labels.eventEyebrow}</p>
-      <h2 className="mt-4 font-wedding text-3xl text-[var(--wedding-primary-dark)] md:text-4xl">{i.event.type}</h2>
+      <h2 className="mt-4 font-wedding text-3xl uppercase text-[var(--wedding-primary-dark)] md:text-4xl">
+  {i.event.type}
+</h2>
       <p className="mt-6 text-xl font-medium tabular-nums text-[var(--wedding-primary-dark)]">{i.event.time}</p>
-      <p className="mt-2 font-wedding text-xl">{i.event.date}</p>
-      <p className="mt-1 text-xs text-[var(--wedding-text-muted)]">{c.labels.vietnamTime}</p>
+      <p className="mt-6 text-xl font-medium tabular-nums text-[var(--wedding-primary-dark)]">{i.event.date}</p>
       <div className="mx-auto my-6 h-px w-12 bg-[var(--wedding-primary-light)]" />
       <p className="font-wedding text-xl text-[var(--wedding-primary-dark)]">{i.event.venue}</p>
       <p className="mt-3 whitespace-pre-line text-sm leading-7 text-[var(--wedding-text-muted)]">{i.event.address}</p>
