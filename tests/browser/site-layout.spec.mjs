@@ -16,12 +16,12 @@ async function expectInsideFrame(locator, frame) {
   expect(bounds.x + bounds.width).toBeLessThanOrEqual(frame.right + 1);
 }
 
-for (const width of [320, 390, 812, 1440, 1920]) {
-  test(`centered site: ${width}px viewport keeps sections and floating UI in the frame`, async ({ page }) => {
+for (const width of [320, 390, 812, 1000, 1440, 1920]) {
+  test(`centered site: ${width}px viewport keeps the site centered and music at the viewport corner`, async ({ page }) => {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto('/bride/Partron');
     const frame = await frameBounds(page);
-    expect(frame.width).toBe(Math.min(812, frame.viewport));
+    expect(frame.width).toBe(Math.min(1000, frame.viewport));
     expect(Math.abs(frame.left - (frame.viewport - frame.width) / 2)).toBeLessThan(1);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
     await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(255, 255, 255)');
@@ -32,17 +32,21 @@ for (const width of [320, 390, 812, 1440, 1920]) {
     const language = page.getByRole('navigation', { name: 'Ngôn ngữ', exact: true });
     const music = page.getByRole('button', { name: 'Mở danh sách nhạc', exact: true });
     await expectInsideFrame(language, frame);
-    await expectInsideFrame(music, frame);
+    const viewport = { left: 0, right: frame.viewport };
+    await expectInsideFrame(music, viewport);
     const initialMusic = await music.boundingBox();
     await page.locator('footer').scrollIntoViewIfNeeded();
     expect(Math.abs((await music.boundingBox()).y - initialMusic.y)).toBeLessThan(1);
     await expectInsideFrame(language, frame);
-    await expectInsideFrame(music, frame);
+    await expectInsideFrame(music, viewport);
 
     await music.click();
-    const panel = page.locator('.site-fixed-right').filter({ has: page.getByRole('button', { name: 'Đóng danh sách nhạc', exact: true }) });
+    const panel = page.locator('[data-music-player=panel]');
     await expect(panel).toHaveCSS('opacity', '1');
-    await expectInsideFrame(panel, frame);
+    await expectInsideFrame(panel, viewport);
+    const musicBounds = await music.boundingBox();
+    expect(Math.abs(frame.viewport - (musicBounds.x + musicBounds.width) - (width >= 768 ? 28 : 20))).toBeLessThan(1);
+    if (width > 1000) expect(musicBounds.x + musicBounds.width).toBeGreaterThan(frame.right);
     await music.click();
 
     await page.getByRole('button', { name: 'Mở ảnh 1', exact: true }).click();
@@ -72,7 +76,7 @@ test('centered site: all seven invitations share the full-page frame', async ({ 
   for (const path of paths) {
     expect((await page.goto(path)).status()).toBe(200);
     const frame = await frameBounds(page);
-    expect(frame.width).toBe(812);
+    expect(frame.width).toBe(1000);
     await expectInsideFrame(page.locator('.premium-hero'), frame);
     await expectInsideFrame(page.locator('footer'), frame);
   }

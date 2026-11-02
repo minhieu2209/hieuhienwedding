@@ -18,7 +18,7 @@ export default function WeddingDetails({ invitation: i }: InvitationProps) {
       <p><span className="text-[var(--wedding-text-muted)]">{c.labels.mother}: </span><span className="font-wedding text-lg text-[var(--wedding-text-muted)] md:text-xl">{family.mother}</span></p>
     </div>
     <div className="relative mt-5 aspect-[3/4] overflow-hidden rounded-t-[120px] rounded-b-2xl border border-[var(--wedding-primary-light)]">
-      <Image src={family.image} alt={family.fullName} fill sizes="(max-width: 812px) 45vw, 350px" className="object-cover" />
+      <Image src={family.image} alt={family.fullName} fill sizes="(max-width: 1000px) 45vw, 450px" className="object-cover" />
     </div>
     <p className="mt-5 text-[10px] uppercase tracking-[0.15em] text-[var(--wedding-text-muted)]">{family.role}</p>
     <h3 className="mt-2 font-wedding text-xl text-[var(--wedding-primary-dark)] md:text-3xl">{family.fullName}</h3>

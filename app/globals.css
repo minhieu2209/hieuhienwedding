@@ -28,7 +28,7 @@ body {
   font-family: var(--font-wedding), serif;
 }
 :root {
-  --site-max-width: 812px;
+  --site-max-width: 1000px;
   --wedding-bg: #f6faf7;
   --wedding-surface: #eaf3ed;
 

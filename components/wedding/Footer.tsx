@@ -72,7 +72,7 @@ export default function Footer({ invitation }: InvitationProps) {
         </p>
 
         <div className="mt-20 border-t border-white/10 pt-7">
-          <p className="text-[8px] uppercase tracking-[0.3em] text-white/25">
+          <p className="text-[8px] tracking-[0.3em] text-white/25">
             {invitation.copy.labels.madeByGroom}
           </p>
 

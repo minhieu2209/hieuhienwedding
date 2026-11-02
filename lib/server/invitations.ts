@@ -33,9 +33,15 @@ function mergedCopy(base: Copy, value: unknown): Copy {
       Object.assign(result, { [key]: value[key] });
     }
   }
+  // Upgrade original stored defaults while retaining custom database translations.
+  const previousDefaults: Record<string, string[]> = {
+    musicHeading: ["Giai điệu ngày chung đôi", "소중한 날을 위한 음악"],
+    madeByGroom: ["Thiết kế bởi chú rể", "Thiết kế by chú rể", "신랑이 만든 초대장"],
+  };
   for (const key of Object.keys(result.labels)) {
     const label = value.labels[key];
     if (typeof label !== "string") throw new InvitationError("configuration");
+    if (previousDefaults[key]?.some(previous => previous.toLowerCase() === label.trim().toLowerCase())) continue;
     Object.assign(result.labels, { [key]: label });
   }
   return result;

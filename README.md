@@ -2,6 +2,8 @@
 
 Next.js 16 / React 19, giao diện xanh–kem, dữ liệu sự kiện và khách mời qua Supabase.
 
+Toàn bộ website căn giữa, tối đa 1000px và co về 100% trên mobile. Nút nhạc/popup bám góc dưới bên phải màn hình; nút ngôn ngữ và khung xem ảnh vẫn bám khổ website. Nhạc thử tự phát khi mở trang; nếu trình duyệt chặn âm thanh, lần chạm/nhấp hoặc phím đầu tiên sẽ kích hoạt lại. Sau khi người dùng chủ động tạm dừng, tương tác trang và việc đổi bài không tự bật nhạc trở lại.
+
 ## Bảy mẫu thiệp
 
 | Đường dẫn | Ngôn ngữ | Sự kiện | Sổ lưu bút |

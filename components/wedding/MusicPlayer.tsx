@@ -40,7 +40,7 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
   const audioRef =
     useRef<HTMLAudioElement | null>(null);
 
-  const shouldPlay = useRef(false);
+  const shouldPlay = useRef(true);
 
   const [playing, setPlaying] =
     useState(false);
@@ -51,26 +51,37 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
   const [currentTrack, setCurrentTrack] =
     useState(0);
 
-  /*
-   * Khi đổi bài:
-   * load bài mới và tiếp tục phát
-   * nếu playlist đang ở trạng thái playing.
-   */
+  // Try autoplay on arrival; browsers that require activation get a gesture fallback.
+  // The intent ref stays false after an explicit pause, including across track changes.
   useEffect(() => {
     const audio = audioRef.current;
-
     if (!audio) return;
-
-    audio.load();
-
-    if (shouldPlay.current) {
-      audio.play().catch((error) => {
-        console.error(
-          "Music playback error:",
-          error
-        );
-      });
+    let cancelled = false;
+    let starting = false;
+    const gestures = ["click", "touchend", "keydown"] as const;
+    function removeGestures() {
+      for (const gesture of gestures) document.removeEventListener(gesture, resumeOnInteraction);
     }
+    function resumeOnInteraction(event: Event) {
+      if (event.target instanceof Element && event.target.closest("[data-music-player]")) return;
+      if (event instanceof KeyboardEvent && (event.metaKey || event.ctrlKey || event.altKey)) return;
+      startPlayback();
+    }
+    function startPlayback() {
+      if (cancelled || starting || !shouldPlay.current) return;
+      starting = true;
+      audio!.play().then(removeGestures).catch((error: unknown) => {
+        if (cancelled || !shouldPlay.current) return;
+        if ((error as { name?: string })?.name === "NotAllowedError") {
+          for (const gesture of gestures) document.addEventListener(gesture, resumeOnInteraction);
+        }
+      }).finally(() => { starting = false; });
+    }
+
+    audio.addEventListener("play", removeGestures);
+    audio.load();
+    startPlayback();
+    return () => { cancelled = true; removeGestures(); audio.removeEventListener("play", removeGestures); };
   }, [currentTrack]);
 
   async function toggleMusic() {
@@ -140,13 +151,14 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
       ========================== */}
 
       <div
-        className={`site-fixed-right fixed bottom-24 z-[89] w-[calc(min(100vw,var(--site-max-width))-32px)] max-w-[350px] origin-bottom-right transition-all duration-500 md:bottom-28 md:[--site-edge-offset:1.75rem] ${
+        data-music-player="panel"
+        className={`fixed bottom-24 right-4 z-[89] w-[calc(100vw-32px)] max-w-[350px] origin-bottom-right transition-all duration-500 md:bottom-28 md:right-7 ${
           open
             ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
             : "pointer-events-none translate-y-4 scale-95 opacity-0"
         }`}
       >
-        <div className="overflow-hidden rounded-[30px] border border-white/50 bg-[var(--wedding-cream)]/95 shadow-[0_25px_80px_rgba(30,50,38,0.25)] backdrop-blur-xl">
+        <div className="max-h-[calc(100dvh-8rem)] overflow-y-auto overscroll-contain rounded-[30px] border border-white/50 bg-[var(--wedding-cream)]/95 shadow-[0_25px_80px_rgba(30,50,38,0.25)] backdrop-blur-xl">
 
           {/* PLAYER HEADER */}
 
@@ -158,14 +170,10 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
 
             <div className="relative">
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-start justify-between gap-3">
 
-                <div>
-                  <p className="text-[8px] uppercase tracking-[0.4em] text-white/45">
-                    {invitation.copy.labels.playlist}
-                  </p>
-
-                  <p className="mt-2 font-wedding text-2xl">
+                <div className="min-w-0">
+                  <p className="font-wedding text-xl leading-relaxed">
                     {invitation.copy.labels.musicHeading}
                   </p>
                 </div>
@@ -175,7 +183,7 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
                   onClick={() =>
                     setOpen(false)
                   }
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/5 text-lg text-white/70 transition hover:bg-white/10 hover:text-white"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-lg text-white/70 transition hover:bg-white/10 hover:text-white"
                   aria-label={invitation.copy.labels.closePlaylist}
                 >
                   ×
@@ -429,7 +437,7 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
           FLOATING BUTTON
       ========================== */}
 
-      <div className="site-fixed-right fixed bottom-5 z-[90] flex items-center gap-3 [--site-edge-offset:1.25rem] md:bottom-7 md:[--site-edge-offset:1.75rem]">
+      <div data-music-player="controls" className="fixed bottom-5 right-5 z-[90] flex items-center gap-3 md:bottom-7 md:right-7">
 
         {/* PLAY / PAUSE QUICK BUTTON */}
 
@@ -444,7 +452,11 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
                 : invitation.copy.labels.play
             }
           >
-            {playing ? "Ⅱ" : "▶"}
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
+              {playing
+                ? <path d="M9 7V17M15 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                : <path d="M9 6L18 12L9 18V6Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />}
+            </svg>
           </button>
         )}
 
@@ -452,9 +464,10 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
 
         <button
           type="button"
-          onClick={() =>
-            setOpen((current) => !current)
-          }
+          onClick={() => {
+            setOpen((current) => !current);
+            if (shouldPlay.current && !playing) audioRef.current?.play().catch(() => {});
+          }}
           className="group relative"
           aria-label={invitation.copy.labels.openPlaylist}
         >
