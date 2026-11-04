@@ -46,7 +46,7 @@ export default function Guestbook({ invitation: i }: InvitationProps) {
     setSending(true); setError(""); setNotice("");
     submission.current ??= crypto.randomUUID();
     try {
-      await sendForm(`/api/invitations/${i.id}/wishes`, { guest_name: name, message, guest: i.guestToken, submission_id: submission.current, website: String(new FormData(event.currentTarget).get("website") ?? "") });
+      await sendForm(`/api/invitations/${i.id}/wishes`, { guest_name: name, message, guest: i.guestCode, submission_id: submission.current, website: String(new FormData(event.currentTarget).get("website") ?? "") });
       setName(""); setMessage(""); submission.current = null; setNotice(i.locale === "ko" ? "축하 메시지를 보내 주셔서 감사합니다. 확인 후 방명록에 공개됩니다." : "Đã nhận lời chúc. Lời chúc sẽ hiển thị sau khi được duyệt.");
     } catch (cause) { setError(formError(c, cause instanceof Error ? cause.message : undefined)); }
     finally { setSending(false); }

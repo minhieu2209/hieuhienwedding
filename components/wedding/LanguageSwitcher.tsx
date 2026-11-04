@@ -6,6 +6,7 @@ export default function LanguageSwitcher({ invitation, query }: InvitationProps 
     {invitation.supportedLocales.map((locale) => {
       const params = new URLSearchParams();
       for (const key of ["guest", "khach"]) { const value = firstParam(query[key]); if (value) params.set(key, value); }
+      if (invitation.guestCode) params.set("guest", invitation.guestCode);
       params.set("lang", locale);
       return <Link key={locale} href={`${invitation.path}?${params}`} hrefLang={locale} lang={locale} title={locale === "vi" ? "Tiếng Việt" : "한국어"} aria-current={locale === invitation.locale ? "page" : undefined} className={`rounded-full px-4 py-2 ${locale === invitation.locale ? "bg-[#496b58] text-white" : "hover:bg-[#eaf3ed]"}`}>
         {locale === "vi" ? "VIE" : "KOR"}

@@ -26,7 +26,7 @@ export default function RSVP({ invitation: i }: InvitationProps) {
         guest_name: name, phone: String(data.get("phone") ?? ""), attendance,
         guest_count: attendance === "no" ? 0 : Number(data.get("guestCount")),
         message: String(data.get("message") ?? ""), website: String(data.get("website") ?? ""),
-        guest: i.guestToken, submission_id: submission.current,
+        guest: i.guestCode, submission_id: submission.current,
       });
       setSubmitted(true);
     } catch (cause) { setError(formError(c, cause instanceof Error ? cause.message : undefined)); }

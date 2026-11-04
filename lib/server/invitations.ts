@@ -4,7 +4,8 @@ import { buildInvitation, chooseLocale, defaultCouple, firstParam, getCopy, getI
 import { findVariant, type Variant, type WeddingEvent } from "@/data/invitation-catalog";
 import { getDatabase, InvitationError } from "./database";
 
-const tokenPattern = /^[A-Za-z0-9_-]{43}$/;
+const guestCodePattern = /^[A-Za-z0-9_-]{1,80}$/;
+const legacyTokenPattern = /^[A-Za-z0-9_-]{43}$/;
 function object(value: unknown): value is Record<string, unknown> { return typeof value === "object" && value !== null && !Array.isArray(value); }
 function validCouple(value: unknown): value is Couple {
   if (!object(value)) return false;
@@ -71,15 +72,22 @@ export async function databaseContext(pathOrId: string, query: InvitationSearchP
   const allApproved = variant.supported_locales.every((language) => reviews.data?.some((record: { locale: string; review_status: string }) => record.locale === language && record.review_status === "approved"));
   if ((!allApproved || copyResult.data.review_status !== "approved") && !allowDraft) throw new InvitationError("not_found", 404);
   const copy = mergedCopy(getCopy(variant.id, locale), copyResult.data.content);
-  const rawToken = firstParam(query.guest) ?? "";
+  const reference = firstParam(query.guest) ?? "";
   let guestId: string | null = null;
+  let guestCode = "";
   let recipientName = "";
-  if (variant.recipient_mode === "individual" && tokenPattern.test(rawToken)) {
-    const hash = createHash("sha256").update(rawToken).digest("hex");
-    const guest = await db.from("wedding_guests").select("id,display_name").eq("invitation_variant_id", variant.id).eq("invite_token_hash", hash).eq("is_active", true).maybeSingle();
+  if (variant.recipient_mode === "individual" && guestCodePattern.test(reference)) {
+    let guest = await db.from("wedding_guests").select("id,guest_code,display_name").eq("invitation_variant_id", variant.id).eq("guest_code", reference).eq("is_active", true).maybeSingle();
     if (guest.error) throw new InvitationError("unavailable");
-    if (guest.data && typeof guest.data.id === "string" && typeof guest.data.display_name === "string") {
+    // Keep already-sent links working; all new links and form submissions use guest_code.
+    if (!guest.data && legacyTokenPattern.test(reference)) {
+      const hash = createHash("sha256").update(reference).digest("hex");
+      guest = await db.from("wedding_guests").select("id,guest_code,display_name").eq("invitation_variant_id", variant.id).eq("invite_token_hash", hash).eq("is_active", true).maybeSingle();
+    }
+    if (guest.error) throw new InvitationError("unavailable");
+    if (guest.data && typeof guest.data.id === "string" && typeof guest.data.guest_code === "string" && typeof guest.data.display_name === "string") {
       guestId = guest.data.id;
+      guestCode = guest.data.guest_code;
       recipientName = guest.data.display_name;
     }
   }
@@ -89,8 +97,8 @@ export async function databaseContext(pathOrId: string, query: InvitationSearchP
     db, variant, guestId, published,
     invitation: buildInvitation(variant, eventResult.data, locale, {
       copy, couple: settingsResult.data.couple ?? defaultCouple, recipientName,
-      guestToken: guestId ? rawToken : "", formsEnabled, wishesEnabled: published,
-      invalidGuest: variant.recipient_mode === "individual" && Boolean(rawToken) && !guestId,
+      guestCode, formsEnabled, wishesEnabled: published,
+      invalidGuest: variant.recipient_mode === "individual" && Boolean(reference) && !guestId,
     }),
   };
 }

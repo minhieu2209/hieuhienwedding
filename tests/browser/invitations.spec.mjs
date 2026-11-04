@@ -121,19 +121,23 @@ test('Mobile gallery, countdown, keyboard and real form UI work',async({page,req
  await page.locator('#wishName').fill('Lan');await page.locator('#wishMessage').fill('Chúc hạnh phúc!');await page.locator('form').filter({has:page.locator('#wishName')}).locator('button[type=submit]').click();await expect(page.getByRole('status').filter({hasText:'Lời chúc sẽ hiển thị sau khi được duyệt'})).toBeVisible();await expect(page.locator('article').filter({hasText:'Chúc hạnh phúc!'})).toHaveCount(0);
  const state=await (await request.get('http://127.0.0.1:4711/__test/state')).json();expect(state.rsvp[0]).toMatchObject({guest_name:'Lan thực tế',guest_count:2,host_side:'bride'});expect(errors).toEqual([]);
 });
-test('Issuing links is private, repeatable, and does not rotate already-issued links',async({request})=>{
+test('Optional export uses guest codes, recovers without saved tokens and never changes database rows',async({request})=>{
  await request.post('http://127.0.0.1:4711/__test/change',{data:{action:'draft-guest'}});
  const directory=await mkdtemp(join(tmpdir(),'wedding-links-'));const output=join(directory,'links.json');
  try{
   const options={databaseUrl:'http://127.0.0.1:4711',key:'fixture-server-key-not-a-real-credential',baseUrl:'https://wedding.example',output};
-  const dry=await issueLinks(options);expect(dry.pending).toBe(1);expect(dry.written).toBe(false);
-  const first=await issueLinks({...options,write:true});expect(first.created).toBe(1);
-  const entries=JSON.parse(await readFile(output,'utf8'));expect(entries).toHaveLength(1);expect(entries[0].status).toBe('ready');
-  // A privately saved SQL-issued link may have only a stable code initially.
-  // Recover the real UUID from that code and preserve the original raw token.
-  await writeFile(output,JSON.stringify(entries.map(row=>({...row,guestId:'pending:'+row.guestCode,status:'pending'}))));
-  const second=await issueLinks({...options,write:true});expect(second.created).toBe(0);expect(second.kept).toBe(1);
-  expect(JSON.parse(await readFile(output,'utf8'))[0].token).toBe(entries[0].token);
-  const missing=await issueLinks({...options,output:join(directory,'lost-output.json'),write:true});expect(missing.created).toBe(0);expect(missing.skipped).toBe(3);
+  const before=(await (await request.get('http://127.0.0.1:4711/__test/state')).json()).guests;
+  const dry=await issueLinks(options);expect(dry).toEqual({ready:2,skipped:1,written:false});
+  const first=await issueLinks({...options,write:true});expect(first.ready).toBe(2);
+  const entries=JSON.parse(await readFile(output,'utf8'));expect(entries).toHaveLength(2);
+  for(const row of entries){expect(row.status).toBe('ready');expect(new URL(row.url).searchParams.get('guest')).toBe(row.guestCode);expect(row.token).toBeUndefined();}
+  const legacyUrl=`https://wedding.example/groom/friends?guest=${tokens.token}`;
+  await writeFile(output,JSON.stringify([{guestId:'pending:GF-test',guestCode:'GF-test',token:tokens.token,url:legacyUrl,status:'pending'}]));
+  const second=await issueLinks({...options,write:true});expect(second.ready).toBe(2);
+  const saved=JSON.parse(await readFile(output,'utf8')).find(row=>row.guestCode==='GF-test');
+  expect(saved.token).toBe(tokens.token);expect(saved.legacyUrl).toBe(legacyUrl);
+  expect(saved.url).toBe('https://wedding.example/groom/friends?guest=GF-test');
+  const missing=await issueLinks({...options,output:join(directory,'lost-output.json'),write:true});expect(missing.ready).toBe(2);expect(missing.skipped).toBe(1);
+  expect((await (await request.get('http://127.0.0.1:4711/__test/state')).json()).guests).toEqual(before);
  }finally{await rm(directory,{recursive:true,force:true});}
 });

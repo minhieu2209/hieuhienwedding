@@ -72,7 +72,7 @@ export async function submit(request: Request, variantId: string, action: "rsvp"
     const count = input.attendance === "no" ? 0 : input.guest_count;
     if (typeof count !== "number" || !Number.isInteger(count) || (input.attendance === "yes" && (count < 1 || count > 5))) throw new InvitationError("invalid_form", 400);
     const payload = { ...metadata, guest_name: guestName, phone: text(input.phone, 30, false) || null, attendance: input.attendance, guest_count: count, message: text(input.message, 2000, false) || null };
-    // A personal token permits updating only that guest's response for this event.
+    // Both current codes and legacy links bind responses to the same guest/event.
     const result = guestId
       ? await db.from("wedding_rsvp").upsert(payload, { onConflict: "guest_id,event_id" })
       : await db.from("wedding_rsvp").insert(payload);

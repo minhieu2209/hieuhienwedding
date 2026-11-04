@@ -30,7 +30,7 @@ export const defaultCouple: Couple = {
 };
 
 export function buildInvitation(variant: Variant, event: WeddingEvent, locale: Locale, options: {
-  copy?: Copy; couple?: Couple; recipientName?: string; guestToken?: string;
+  copy?: Copy; couple?: Couple; recipientName?: string; guestCode?: string;
   formsEnabled?: boolean; wishesEnabled?: boolean; invalidGuest?: boolean;
 } = {}) {
   const recipientName = options.recipientName?.trim().replace(/\s+/g, " ").slice(0, 120) ?? "";
@@ -67,7 +67,7 @@ export function buildInvitation(variant: Variant, event: WeddingEvent, locale: L
     event: { id: event.id, kind: event.event_kind, side: event.id === "groom-wedding" ? copy.labels.groomFamily : event.id === "bride-wedding" ? copy.labels.brideFamily : copy.eventHeading, type: event.id === "bride-wedding" ? (locale === "ko" ? "신부댁 예식" : "LỄ VU QUY") : copy.eventTitle, isoDate, dateTime: event.starts_at, date: displayDate, time: new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Ho_Chi_Minh", hour: "2-digit", minute: "2-digit", hour12: false }).format(date), venue: event.venue, address: event.address, mapUrl: event.map_url },
     timeline: [{ time: new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Ho_Chi_Minh", hour: "2-digit", minute: "2-digit", hour12: false }).format(date), title: copy.eventTitle, description: `${event.venue} · ${event.address}` }],
     formsEnabled: options.formsEnabled ?? false, wishesEnabled: options.wishesEnabled ?? false,
-    guestToken: options.guestToken ?? "", invalidGuest: options.invalidGuest ?? false,
+    guestCode: options.guestCode ?? "", invalidGuest: options.invalidGuest ?? false,
     familyIntro: formatText(copy.familyIntro, { coupleNames: names }),
   };
 }

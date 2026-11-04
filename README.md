@@ -37,7 +37,9 @@ Sao chép `.env.example` thành `.env.local` và điền giá trị qua cấu h�
 
 Đọc [hướng dẫn Supabase](docs/supabase-setup.md) trước khi chạy migration hoặc thay quyền truy cập. Migration không tự chạy khi build/deploy. Bản Hàn vẫn cần được duyệt trước khi phát hành; SQL seed để tất cả ở draft.
 
-Danh sách khách thật và file link cá nhân nằm ở `.local/` hoặc vị trí quản trị riêng, không commit. Dùng `scripts/guests-template.csv` làm mẫu và giữ guest_code ổn định. Có tiện ích chuẩn bị SQL import và cấp link; xem hướng dẫn chi tiết để tránh đổi link đã phát hành.
+Link cá nhân dùng trực tiếp `guest_code`, ví dụ `/groom/friends?guest=GF-0024`. Lấy mã trong bảng `wedding_guests`, dùng đúng nhóm thiệp và đặt `is_active=true`. Link token đã gửi trước đây vẫn hoạt động; RSVP/lời chúc từ cả hai dạng link gắn cùng UUID khách, giữ nguyên phản hồi đã có.
+
+Áp dụng `supabase/migrations/202611040001_guest_code_links.sql` một lần để thêm khách mới mà không cần token/hash. Dùng `scripts/guests-template.csv` làm mẫu; SQL nhập khách kích hoạt khách mới, cập nhật tên khách cũ và giữ trạng thái khóa của khách đã có. Tiện ích `guests:links` chỉ là công cụ xuất file tùy chọn, không thay đổi DB. Danh sách thật và bản lưu link riêng nằm ngoài Git.
 
 ## Kiểm tra
 

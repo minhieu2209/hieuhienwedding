@@ -23,6 +23,8 @@ Sửa nội dung ở `wedding_invitation_contents.content`; giữ đủ khóa nh
 
 ## 3. Nhập khách mà không đổi link cũ
 
+Chạy thêm `supabase/migrations/202611040001_guest_code_links.sql` một lần trước khi nhập khách mới. Migration cho phép khách hoạt động bằng `guest_code` mà không cần token/hash; không sửa dữ liệu khách, RSVP/lời chúc hoặc quyền bảng. Các hash cũ được giữ để link đã gửi tiếp tục mở được.
+
 Danh sách thật nằm ngoài Git trong `.local/guests.csv` và script đã chuẩn bị `.local/import-guests.sql` trong môi trường làm việc này. File mẫu không có tên khách thật nằm ở `scripts/guests-template.csv`.
 
 CSV cần guest_code,display_name,group_path. Giữ code khi sửa tên/sắp xếp dòng; thêm khách dùng code mới. Các nhóm cá nhân hợp lệ là groom/friends, bride/friends và bride/friends1. SQL được tạo dưới dạng một khối DO độc lập, không dùng bảng tạm và không phụ thuộc việc SQL Editor giữ nguyên phiên kết nối.
@@ -31,7 +33,7 @@ CSV cần guest_code,display_name,group_path. Giữ code khi sửa tên/sắp x�
 npm run guests:prepare -- --file .local/guests.csv --output .local/import-guests.sql
 ```
 
-Lệnh chỉ tạo SQL để duyệt, không kết nối DB; sẽ từ chối ghi đè file đã tồn tại. Sau khi duyệt, chạy file sinh ra trong SQL Editor. Nhập lại cập nhật tên nhưng giữ UUID và hash link; không xóa khách chỉ vì thiếu một dòng trong file. Việc chuyển một code sang nhóm khác bị từ chối để tránh thay đổi người nhận ngầm. Khách mới inactive cho đến khi cấp link.
+Lệnh chỉ tạo SQL, không kết nối DB; sẽ từ chối ghi đè file đã tồn tại. Chạy file sinh ra trong SQL Editor để nhập và kích hoạt khách mới bằng code. Nhập lại cập nhật tên nhưng giữ UUID, hash cũ và trạng thái is_active của khách đã có; không tự bật lại khách bị khóa hoặc xóa khách thiếu trong file. Việc chuyển một code sang nhóm khác bị từ chối.
 
 ## 4. Biến môi trường máy chủ
 
@@ -64,21 +66,29 @@ Mã nguồn có bộ nội dung ban đầu làm dự phòng. Khi đã bật DB, 
 
 Khi chủ thiệp xác nhận công bố nội dung hiện tại, chạy `supabase/manual/06_publish_korean.sql`. File kiểm tra đủ bản dịch trước khi công bố Partron (vi/ko) và UncleLEE (ko); không thay đổi ngôn ngữ mặc định hoặc link khách đã cấp. Kết quả `korean_activation` dự kiến có published=2, approved_translations=3. Partron vào thẳng tiếng Hàn bằng `/bride/Partron?lang=ko`; UncleLEE mặc định tiếng Hàn. Nội dung vẫn có thể được người dịch chỉnh lại sau khi công bố.
 
-## 6. Cấp link và giữ file gốc riêng
+## 6. Link cá nhân bằng guest_code
 
-Đặt biến server trong môi trường máy cục bộ hoặc file `.env.local` được Git bỏ qua. Chọn base URL là tên miền dùng để gửi khách, không dùng URL của một deployment thử có thể bị thay thế.
+Tra bảng `wedding_guests`, lấy `guest_code` và dùng đường dẫn đúng nhóm:
+
+- `groom-friends`: `/groom/friends?guest=GF-0001`.
+- `bride-friends`: `/bride/friends?guest=BF-0001`.
+- `bride-friends1`: `/bride/friends1?guest=BF1-0001`.
+
+Khách phải có `is_active=true`. Các mã hỗ trợ chữ Latin, số, dấu gạch ngang/gạch dưới, dài tối đa 80 ký tự và phân biệt hoa/thường. Đặt is_active=false để tắt cả link code và link token cũ của khách đó. Các thiệp nhóm NGV, UFC97, Partron và thiệp Bác Lee giữ nguyên đường dẫn hiện có.
+
+Tên và cách xưng hô lấy từ DB; tham số `?khach=` chỉ phục vụ bản dự phòng khi chưa dùng DB. RSVP/lời chúc từ link code hoặc token cũ đều liên kết cùng UUID khách, sự kiện và nhóm thiệp, nên phản hồi đã có được giữ nguyên. Số người điền RSVP độc lập với lời mời “và Gia Đình”.
+
+Không cần tạo token hoặc xuất file để dùng link. Nếu muốn xuất riêng, công cụ sau chỉ đọc DB và ghi file tùy chọn. Đặt biến server ở môi trường cục bộ hoặc `.env.local`; chọn base URL là tên miền chính dùng để gửi khách.
 
 ```bash
-# Mặc định chỉ đọc và báo số lượng dự kiến, không phát hành token.
+# Chỉ đọc và báo số link sẵn sàng/khách inactive.
 npm run guests:links -- --base-url https://TEN-MIEN-CUA-BAN --output .local/invitation-links.json
 
-# Chỉ sau khi duyệt danh sách mới thêm --write để kích hoạt link.
+# --write chỉ ghi JSON/CSV riêng tư, không cập nhật DB hoặc kích hoạt khách.
 npm run guests:links -- --base-url https://TEN-MIEN-CUA-BAN --output .local/invitation-links.json --write
 ```
 
-Tiện ích lưu token gốc ở file riêng trước khi kích hoạt trong DB; DB chỉ giữ hash. Có khóa file và ghi nguyên tử để tránh mất link khi lỗi mạng. Chạy lại giữ link đã cấp nếu còn file gốc; nếu không còn token gốc, tiện ích bỏ qua và không tự đổi link đang hoạt động. Cất giữ cả JSON và CSV xuất ra, không commit chúng.
-
-Link cá nhân có dạng `/groom/friends?guest=<token>`. Tên URL không được dùng làm danh tính; link `?khach=` cũ chỉ phục vụ xem bản dự phòng khi chưa dùng DB. Số người điền trong RSVP độc lập với lời mời “và Gia Đình”.
+Tiện ích tạo URL bằng guest_code, bỏ qua khách inactive và giữ thông tin link cũ trong bản lưu riêng nếu đã có. Mất file gốc vẫn có thể xuất lại link code từ DB. JSON/CSV có khóa file và ghi nguyên tử; không commit dữ liệu khách vào Git.
 
 ## 7. Chuyển quyền sau khi API mới sẵn sàng
 

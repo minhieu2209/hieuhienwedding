@@ -42,13 +42,14 @@ export function makeGuestSql(records) {
   const incoming = 'jsonb_to_recordset(imported) AS i(guest_code text,display_name text,invitation_variant_id text)';
   return `-- Private guest data. Review before applying in Supabase SQL Editor.
 -- One atomic statement; no temporary tables or shared SQL session required.
+-- Apply 202611040001_guest_code_links.sql first. New guests are active by code.
 DO ${tag}
 DECLARE imported jsonb := ${literal(payload)}::jsonb;
 BEGIN
 IF EXISTS (SELECT 1 FROM ${incoming} LEFT JOIN public.wedding_invitation_variants v ON v.id=i.invitation_variant_id WHERE v.id IS NULL OR v.recipient_mode <> 'individual') THEN RAISE EXCEPTION 'Unknown or non-individual invitation group'; END IF;
 IF EXISTS (SELECT 1 FROM ${incoming} JOIN public.wedding_guests g USING(guest_code) WHERE i.invitation_variant_id <> g.invitation_variant_id) THEN RAISE EXCEPTION 'Existing guest_code belongs to a different group'; END IF;
-INSERT INTO public.wedding_guests(guest_code,display_name,invitation_variant_id)
-SELECT guest_code,display_name,invitation_variant_id FROM ${incoming}
+INSERT INTO public.wedding_guests(guest_code,display_name,invitation_variant_id,is_active)
+SELECT guest_code,display_name,invitation_variant_id,true FROM ${incoming}
 ON CONFLICT(guest_code) DO UPDATE SET display_name=EXCLUDED.display_name,updated_at=now();
 END;
 ${tag};
@@ -61,6 +62,6 @@ if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.m
     const records = parseCsv(await readFile(values.file, 'utf8'));
     await mkdir(dirname(resolve(values.output)), { recursive: true });
     await writeFile(values.output, makeGuestSql(records), { flag: 'wx', mode: 0o600 });
-    console.log(`Prepared ${records.length} draft guests. No database changes. Existing output files are never overwritten.`);
+    console.log(`Prepared ${records.length} guests for code links. No database changes. Existing output files are never overwritten.`);
   } catch (error) { console.error(error.message); process.exitCode = 1; }
 }
