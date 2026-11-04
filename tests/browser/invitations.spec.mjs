@@ -35,7 +35,7 @@ for(const [path,first,side,date,venue,locale] of cases)test(`${path}: correct na
  expect(errors).toEqual([]);
 });
 test('Partron toggles full Korean copy, keeps proper names and has no Vietnamese UI prose',async({page})=>{
- await page.goto('/bride/Partron');await page.getByRole('link',{name:'한국어',exact:true}).click();
+ await page.goto('/bride/Partron');await page.getByRole('link',{name:'KOR',exact:true}).click();
  await expect(page.locator('main')).toHaveAttribute('lang','ko');
  await expect(page.locator('h1')).toContainText('Thu Hiền');
  const text=await page.locator('main').textContent();
@@ -43,7 +43,11 @@ test('Partron toggles full Korean copy, keeps proper names and has no Vietnamese
  expect(text).toContain('Nhà hàng Tam Giao');expect(text).toContain('2026년 12월 4일');expect(text).toContain('17:30');
  await expect(page.locator('#guestName')).toHaveAttribute('placeholder','회신하시는 분의 성함을 입력해 주세요');
  await expect(page.getByRole('navigation',{name:'언어'})).toBeVisible();
+ await expect(page.getByRole('link',{name:'KOR',exact:true})).toHaveAttribute('aria-current','page');
  await page.setViewportSize({width:390,height:844});await page.waitForTimeout(1400);await page.screenshot({path:'.local/partron-ko.png'});
+ await page.getByRole('link',{name:'VIE',exact:true}).click();
+ await expect(page.locator('main')).toHaveAttribute('lang','vi');
+ await expect(page.getByRole('link',{name:'VIE',exact:true})).toHaveAttribute('aria-current','page');
 });
 test('Personal names come from Supabase and do not duplicate prefixes or trust khach',async({page,request})=>{
  await page.goto(`/groom/friends?guest=${tokens.token}&khach=Forged`);

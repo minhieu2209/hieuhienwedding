@@ -28,7 +28,7 @@ body {
   font-family: var(--font-wedding), serif;
 }
 :root {
-  --site-max-width: 1000px;
+  --site-max-width: 812px;
   --wedding-bg: #f6faf7;
   --wedding-surface: #eaf3ed;
 
@@ -59,11 +59,6 @@ body {
   margin-inline: auto;
   overflow-x: clip;
   background: var(--wedding-bg);
-}
-
-/* Keep viewport-fixed controls aligned with the centered website while scrolling. */
-.site-fixed-right {
-  right: calc(max(0px, (100% - var(--site-max-width)) / 2) + var(--site-edge-offset, 1rem));
 }
 
 .site-lightbox {

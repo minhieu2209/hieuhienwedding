@@ -77,7 +77,7 @@ export default function Gallery({ invitation: i }: InvitationProps) {
       <button ref={closeButton} type="button" onClick={() => setSelected(null)} aria-label={c.labels.closePhoto} className="absolute right-5 top-5 z-20 h-11 w-11 rounded-full border border-white/20 bg-white/10 text-xl text-white">×</button>
       <p className="absolute left-5 top-7 text-xs tracking-widest text-white/70">{String(selected + 1).padStart(2, "0")} / {images.length}</p>
       <button type="button" onClick={() => setSelected((selected + images.length - 1) % images.length)} aria-label={c.labels.previousPhoto} className="absolute left-3 top-1/2 z-20 h-11 w-11 rounded-full bg-black/30 text-3xl text-white">‹</button>
-      <div className="relative h-[78vh] w-full"><Image src={images[selected]} alt={photoAlt(selected)} fill sizes="(max-width: 1000px) 100vw, 1000px" className="object-contain" /></div>
+      <div className="relative h-[78vh] w-full"><Image src={images[selected]} alt={photoAlt(selected)} fill sizes="(max-width: 812px) 100vw, 812px" className="object-contain" /></div>
       <button type="button" onClick={() => setSelected((selected + 1) % images.length)} aria-label={c.labels.nextPhoto} className="absolute right-3 top-1/2 z-20 h-11 w-11 rounded-full bg-black/30 text-3xl text-white">›</button>
     </div>}
   </>;
