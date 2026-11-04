@@ -292,6 +292,15 @@ body {
    MUSIC PLAYLIST
    ======================================== */
 
+.music-disc {
+  animation: musicDiscRotate 8s linear infinite;
+  animation-play-state: paused;
+}
+
+@keyframes musicDiscRotate {
+  to { transform: rotate(360deg); }
+}
+
 .music-bar {
   transform-origin: bottom;
   animation: musicEqualizer 0.75s ease-in-out infinite alternate;
@@ -316,9 +325,16 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .music-bar {
+  .music-bar,
+  .music-disc {
     animation: none !important;
   }
+}
+
+.guestbook-scroll {
+  scrollbar-color: var(--wedding-primary) var(--wedding-bg);
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
 }
 main[lang="ko"] .font-wedding { font-family: var(--font-wedding-ko), "Malgun Gothic", serif; }
 main[lang="ko"] { word-break: keep-all; overflow-wrap: anywhere; }

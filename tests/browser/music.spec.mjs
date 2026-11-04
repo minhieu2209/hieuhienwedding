@@ -22,6 +22,10 @@ test('Music autoplays when permitted; pause, track selection and the updated pop
   await mockPlayback(page);
   await page.goto('/groom/NGV');
   await expect.poll(() => page.evaluate(() => window.__music.starts)).toBe(1);
+  const disc = page.locator('[data-music-player=disc]');
+  await expect(disc).toHaveCSS('animation-play-state', 'running');
+  const initialRotation = await disc.evaluate(node => getComputedStyle(node).transform);
+  await expect.poll(() => disc.evaluate(node => getComputedStyle(node).transform)).not.toBe(initialRotation);
   await expect(page.getByText('Made by groom', { exact: true })).toHaveCSS('text-transform', 'none');
   await page.getByRole('button', { name: 'Mở danh sách nhạc', exact: true }).click();
   const panel = page.locator('[data-music-player=panel]');
@@ -29,6 +33,10 @@ test('Music autoplays when permitted; pause, track selection and the updated pop
   await expect(panel.getByText('Danh sách nhạc', { exact: true })).toHaveCount(0);
   await panel.getByRole('button', { name: 'Tạm dừng', exact: true }).click();
   await expect.poll(() => page.locator('audio').evaluate(audio => audio.paused)).toBe(true);
+  await expect(disc).toHaveCSS('animation-play-state', 'paused');
+  const pausedRotation = await disc.evaluate(node => getComputedStyle(node).transform);
+  await page.waitForTimeout(150);
+  expect(await disc.evaluate(node => getComputedStyle(node).transform)).toBe(pausedRotation);
   await panel.getByRole('button', { name: 'Bài tiếp theo', exact: true }).click();
   await expect(page.locator('audio')).toHaveAttribute('src', '/music/MotDoi.mp3');
   expect(await page.evaluate(() => window.__music.starts)).toBe(1);
@@ -39,6 +47,7 @@ test('Music autoplays when permitted; pause, track selection and the updated pop
   await panel.getByRole('button', { name: /Lễ Đường/ }).click();
   await expect(page.locator('audio')).toHaveAttribute('src', '/music/LeDuong.mp3');
   await expect.poll(() => page.evaluate(() => window.__music.starts)).toBe(2);
+  await expect(disc).toHaveCSS('animation-play-state', 'running');
   await page.locator('audio').evaluate(audio => audio.dispatchEvent(new Event('ended')));
   await expect(page.locator('audio')).toHaveAttribute('src', '/music/BeautifulInWhite.mp3');
   await expect.poll(() => page.evaluate(() => window.__music.starts)).toBe(3);
@@ -51,6 +60,7 @@ for (const gesture of ['page', 'music button']) {
     await page.goto('/groom/NGV');
     await expect.poll(() => page.evaluate(() => window.__music.attempts.length)).toBe(1);
     expect(await page.evaluate(() => window.__music.starts)).toBe(0);
+    await expect(page.locator('[data-music-player=disc]')).toHaveCSS('animation-play-state', 'paused');
     if (gesture === 'page') await page.locator('h1').click();
     else await page.getByRole('button', { name: 'Mở danh sách nhạc', exact: true }).click();
     await expect.poll(() => page.evaluate(() => window.__music.starts)).toBe(1);
@@ -72,4 +82,12 @@ test('Real MP3 playback starts when the browser allows autoplay', async () => {
     await page.goto('http://127.0.0.1:3100/groom/NGV');
     await expect.poll(() => page.locator('audio').evaluate(audio => !audio.paused && audio.currentTime > 0), { timeout: 15000 }).toBe(true);
   } finally { await browser.close(); }
+});
+
+test('Reduced motion keeps the music disc still while playback continues', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await mockPlayback(page);
+  await page.goto('/groom/NGV');
+  await expect.poll(() => page.evaluate(() => window.__music.starts)).toBe(1);
+  await expect(page.locator('[data-music-player=disc]')).toHaveCSS('animation-name', 'none');
 });

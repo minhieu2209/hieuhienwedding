@@ -196,11 +196,8 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
               <div className="mt-7 flex items-center gap-4">
 
                 <div
-                  className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 ${
-                    playing
-                      ? "music-spin-slow"
-                      : ""
-                  }`}
+                  className="music-disc flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10"
+                  style={{ animationPlayState: playing ? "running" : "paused" }}
                 >
                   <span className="font-wedding text-base">
                      H ♡ H
@@ -477,16 +474,12 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
           )}
 
           <span className="relative flex h-14 w-14 items-center justify-center rounded-full border border-white/60 bg-[var(--wedding-primary-dark)] text-white shadow-[0_12px_35px_rgba(30,50,38,0.25)] transition duration-300 group-hover:scale-105">
+            <span data-music-player="disc" className="music-disc flex items-center justify-center" style={{ animationPlayState: playing ? "running" : "paused" }}>
 
-            {open ? (
-              <span className="text-xl">
-                ×
-              </span>
-            ) : (
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
-                className="h-5 w-5"
+                className={`h-5 w-5 ${open ? "invisible" : ""}`}
                 aria-hidden="true"
               >
                 <path
@@ -513,7 +506,8 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
                   strokeWidth="1.6"
                 />
               </svg>
-            )}
+            </span>
+            {open && <span className="absolute inset-0 flex items-center justify-center text-xl">×</span>}
 
           </span>
         </button>

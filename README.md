@@ -4,6 +4,8 @@ Next.js 16 / React 19, giao diện xanh–kem, dữ liệu sự kiện và khác
 
 Toàn bộ website căn giữa, tối đa 812px và co về 100% trên mobile. Nút nhạc/popup bám góc dưới bên phải màn hình; nút ngôn ngữ VIE/KOR bám góc trên bên phải màn hình. Khung xem ảnh vẫn bám khổ website. Nhạc thử tự phát khi mở trang; nếu trình duyệt chặn âm thanh, lần chạm/nhấp hoặc phím đầu tiên sẽ kích hoạt lại. Sau khi người dùng chủ động tạm dừng, tương tác trang và việc đổi bài không tự bật nhạc trở lại.
 
+Biểu tượng nhạc và đĩa trong popup xoay khi phát, đứng yên khi tạm dừng và tiếp tục từ góc đang dừng khi phát lại; tôn trọng cài đặt giảm chuyển động của thiết bị. Danh sách lời chúc cuộn trong vùng riêng (tối đa 512px trên mobile, 640px trên desktop); nút tải thêm nằm bên ngoài vùng cuộn để vẫn dễ sử dụng khi có nhiều lời chúc.
+
 ## Bảy mẫu thiệp
 
 | Đường dẫn | Ngôn ngữ | Sự kiện | Sổ lưu bút |
