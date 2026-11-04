@@ -27,22 +27,22 @@ test('Invitation moves below a minimal Hero, family portraits follow parents and
  await expect(page.locator('#countdown').getByRole('heading')).toHaveText('Cùng đếm ngược');
 });
 
-test('All eleven album pages can be turned and the last photo opens in the lightbox',async({page})=>{
+test('All 21 album pages can be turned and the last photo opens in the lightbox',async({page})=>{
  await page.goto('/groom/NGV');
  const album=page.locator('#album');
  await expect(album.getByRole('button',{name:'Ảnh trước',exact:true})).toBeDisabled();
  await album.screenshot({path:'.local/redesign-album.png'});
- for(let n=1;n<=11;n++){
+ for(let n=1;n<=21;n++){
   await expect(album.getByRole('img')).toHaveAttribute('alt',new RegExp(n+'$'));
-  if(n<11)await album.getByRole('button',{name:'Ảnh tiếp theo',exact:true}).click();
+  if(n<21)await album.getByRole('button',{name:'Ảnh tiếp theo',exact:true}).click();
  }
  await expect(album.getByRole('button',{name:'Ảnh tiếp theo',exact:true})).toBeDisabled();
- await album.getByRole('button',{name:'Mở ảnh 11',exact:true}).click();
- await expect(page.getByRole('dialog').getByRole('img')).toHaveAttribute('alt',/11$/);
+ await album.getByRole('button',{name:'Mở ảnh 21',exact:true}).click();
+ await expect(page.getByRole('dialog').getByRole('img')).toHaveAttribute('alt',/21$/);
  await page.keyboard.press('Escape');
- await expect(album.getByRole('button',{name:'Mở ảnh 11',exact:true})).toBeFocused();
+ await expect(album.getByRole('button',{name:'Mở ảnh 21',exact:true})).toBeFocused();
  await album.getByRole('group').focus();await page.keyboard.press('ArrowLeft');
- await expect(album.getByRole('img')).toHaveAttribute('alt',/10$/);
+ await expect(album.getByRole('img')).toHaveAttribute('alt',/20$/);
 });
 
 test('Only an allowlisted, authenticated administrator can publish or hide wishes in the shared book',async({page,request,context})=>{

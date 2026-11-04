@@ -2,13 +2,17 @@ import { test, expect, chromium } from '@playwright/test';
 
 async function mockPlayback(page, blocked = false) {
   await page.addInitScript(({ blocked }) => {
-    window.__music = { attempts: [], starts: 0 };
+    window.__music = { attempts: [], starts: 0, activated: false };
+    // CDP evaluation can grant browser activation; only real DOM input unlocks this mock.
+    for (const name of ['click', 'touchend', 'keydown']) document.addEventListener(name, event => {
+      if (event.isTrusted) window.__music.activated = true;
+    }, { capture: true });
     const paused = new WeakMap();
     Object.defineProperty(HTMLMediaElement.prototype, 'paused', { configurable: true, get() { return paused.get(this) ?? true; } });
     HTMLMediaElement.prototype.load = function () {};
     HTMLMediaElement.prototype.play = function () {
       window.__music.attempts.push(this.getAttribute('src'));
-      if (blocked && !navigator.userActivation.isActive) return Promise.reject(new DOMException('Activation required', 'NotAllowedError'));
+      if (blocked && !window.__music.activated) return Promise.reject(new DOMException('Activation required', 'NotAllowedError'));
       paused.set(this, false);
       window.__music.starts++;
       this.dispatchEvent(new Event('play'));
@@ -21,6 +25,8 @@ async function mockPlayback(page, blocked = false) {
 test('Music autoplays when permitted; pause, track selection and the updated popup work', async ({ page }) => {
   await mockPlayback(page);
   await page.goto('/groom/NGV');
+  await expect(page.locator('audio')).toHaveAttribute('autoplay', '');
+  await expect(page.locator('audio')).toHaveAttribute('preload', 'auto');
   await expect.poll(() => page.evaluate(() => window.__music.starts)).toBe(1);
   const disc = page.locator('[data-music-player=disc]');
   await expect(disc).toHaveCSS('animation-play-state', 'running');
@@ -33,6 +39,7 @@ test('Music autoplays when permitted; pause, track selection and the updated pop
   await expect(panel.getByText('Danh sách nhạc', { exact: true })).toHaveCount(0);
   await panel.getByRole('button', { name: 'Tạm dừng', exact: true }).click();
   await expect.poll(() => page.locator('audio').evaluate(audio => audio.paused)).toBe(true);
+  await expect(page.locator('audio')).not.toHaveAttribute('autoplay');
   await expect(disc).toHaveCSS('animation-play-state', 'paused');
   const pausedRotation = await disc.evaluate(node => getComputedStyle(node).transform);
   await page.waitForTimeout(150);
@@ -60,6 +67,8 @@ for (const gesture of ['page', 'music button']) {
     await page.goto('/groom/NGV');
     await expect.poll(() => page.evaluate(() => window.__music.attempts.length)).toBe(1);
     expect(await page.evaluate(() => window.__music.starts)).toBe(0);
+    await expect(page.locator('audio')).not.toHaveAttribute('autoplay');
+    await expect(page.locator('audio')).toHaveAttribute('preload', 'metadata');
     await expect(page.locator('[data-music-player=disc]')).toHaveCSS('animation-play-state', 'paused');
     if (gesture === 'page') await page.locator('h1').click();
     else await page.getByRole('button', { name: 'Mở danh sách nhạc', exact: true }).click();
@@ -75,10 +84,10 @@ for (const gesture of ['page', 'music button']) {
   });
 }
 
-test('Real MP3 playback starts when the browser allows autoplay', async () => {
+test('Real MP3 autoplay starts from server HTML without waiting for JavaScript when the browser permits it', async () => {
   const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined, headless: true, args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
   try {
-    const page = await browser.newPage();
+    const page = await browser.newPage({ javaScriptEnabled: false });
     await page.goto('http://127.0.0.1:3100/groom/NGV');
     await expect.poll(() => page.locator('audio').evaluate(audio => !audio.paused && audio.currentTime > 0), { timeout: 15000 }).toBe(true);
   } finally { await browser.close(); }

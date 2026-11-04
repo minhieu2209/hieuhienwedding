@@ -1,4 +1,6 @@
 import type { InvitationProps } from "@/data/invitations";
+import heroCover from "@/public/images/hero/hero-cover.jpg";
+import WeddingImage from "./WeddingImage";
 
 function BotanicalBranch({
   className = "",
@@ -135,12 +137,9 @@ export default function Hero({ invitation }: InvitationProps) {
     <section className="premium-hero relative min-h-screen overflow-hidden bg-[#dfe9e2]">
 
       {/* BACKGROUND IMAGE */}
-      <div
-        className="premium-hero-image absolute inset-0 bg-cover bg-[center_30%]"
-        style={{
-          backgroundImage: "url('/images/hero/hero-cover.jpg')",
-        }}
-      />
+      <div className="premium-hero-image absolute inset-0">
+        <WeddingImage src={heroCover} alt="" fill preload sizes="(max-width: 812px) max(100vw, 67vh), max(812px, 67vh)" className="object-cover object-[center_30%]" />
+      </div>
 
       {/* OVERLAYS */}
       <div className="absolute inset-0 bg-black/5" />

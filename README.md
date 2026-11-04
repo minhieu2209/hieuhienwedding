@@ -6,6 +6,10 @@ Toàn bộ website căn giữa, tối đa 812px và co về 100% trên mobile. N
 
 Biểu tượng nhạc và đĩa trong popup xoay khi phát, đứng yên khi tạm dừng và tiếp tục từ góc đang dừng khi phát lại; tôn trọng cài đặt giảm chuyển động của thiết bị. Danh sách lời chúc cuộn trong vùng riêng (tối đa 512px trên mobile, 640px trên desktop); nút tải thêm nằm bên ngoài vùng cuộn để vẫn dễ sử dụng khi có nhiều lời chúc.
 
+Nhạc có autoplay và preload ngay trong HTML để bắt đầu sớm khi trình duyệt cho phép, không đợi JavaScript khởi tạo. Nếu trình duyệt chặn tự phát âm thanh, lần chạm/nhấp đầu tiên vẫn là điều kiện bắt buộc. Tạm dừng chủ động sẽ tắt autoplay cho đến khi người xem bấm phát hoặc chọn bài.
+
+Ảnh Hero được tải ưu tiên qua Next Image thay vì tải nguyên ảnh nền lớn. Ảnh thường dùng chất lượng 90, ảnh phóng lớn dùng 95; nếu dịch vụ tối ưu ảnh lỗi, ảnh gốc được dùng làm dự phòng. Album giữ các ảnh đã xem, tải sẵn trang kế tiếp khi tới gần album và không gỡ ảnh khỏi trang khi lật lại. Hiệu ứng lật chạy trên khung cố định và tôn trọng cài đặt giảm chuyển động.
+
 ## Bảy mẫu thiệp
 
 | Đường dẫn | Ngôn ngữ | Sự kiện | Sổ lưu bút |

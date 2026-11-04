@@ -1,25 +1,45 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { formatText, type InvitationProps } from "@/data/invitations";
+import WeddingImage from "./WeddingImage";
 
 const images = Array.from({ length: 21 }, (_, index) => `/images/gallery/gallery-${index + 1}.jpg`);
 
 export default function Gallery({ invitation: i }: InvitationProps) {
   const c = i.copy;
-  const [page, setPage] = useState(0);
-  const [direction, setDirection] = useState("next");
+  const [{ page, direction, retained }, setAlbum] = useState({ page: 0, direction: "next", retained: [0, 1] });
+  const [nearAlbum, setNearAlbum] = useState(false);
   const [selected, setSelected] = useState<number | null>(null);
   const isOpen = selected !== null;
   const touch = useRef<number | null>(null);
   const album = useRef<HTMLDivElement>(null);
+  const sheet = useRef<HTMLDivElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   const trigger = useRef<HTMLButtonElement | null>(null);
   function turn(delta: number) {
-    setDirection(delta > 0 ? "next" : "previous");
-    setPage(current => Math.max(0, Math.min(images.length - 1, current + delta)));
+    setAlbum(current => {
+      const next = Math.max(0, Math.min(images.length - 1, current.page + delta));
+      if (next === current.page) return current;
+      return { page: next, direction: delta > 0 ? "next" : "previous", retained: [...new Set([...current.retained, next - 1, next, next + 1])].filter(index => index >= 0 && index < images.length) };
+    });
   }
+  useEffect(() => {
+    if (!album.current) return;
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) { setNearAlbum(true); observer.disconnect(); }
+    }, { rootMargin: "400px" });
+    observer.observe(album.current);
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    if (!sheet.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const animation = sheet.current.animate([
+      { transform: `rotateY(${direction === "next" ? -28 : 18}deg)`, opacity: 0.5 },
+      { transform: "rotateY(0deg)", opacity: 1 },
+    ], { duration: 600, easing: "ease" });
+    return () => animation.cancel();
+  }, [page, direction]);
   function openPhoto() {
     trigger.current = document.activeElement as HTMLButtonElement;
     setSelected(page);
@@ -64,9 +84,9 @@ export default function Gallery({ invitation: i }: InvitationProps) {
         onTouchStart={event => { touch.current = event.changedTouches[0].clientX; }}
         onTouchEnd={event => { if (touch.current !== null) { const delta = touch.current - event.changedTouches[0].clientX; if (Math.abs(delta) > 45) turn(delta > 0 ? 1 : -1); } touch.current = null; }}>
         <div className="pointer-events-none absolute inset-y-0 left-1 w-3 bg-gradient-to-r from-[#74856d]/30 to-transparent" />
-        <div key={page} className={`album-sheet album-turn-${direction} relative bg-[#fffcf8] p-2 pb-4 shadow-md md:p-4`}>
+        <div ref={sheet} className="album-sheet relative bg-[#fffcf8] p-2 pb-4 shadow-md md:p-4">
           <button type="button" onClick={openPhoto} aria-label={formatText(c.labels.photoNumber, { number: page + 1 })} className="relative block aspect-[3/4] w-full bg-[#eeeee7] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#496b58]">
-            <Image src={images[page]} alt={photoAlt(page)} fill sizes="(max-width: 640px) 85vw, 520px" className="object-contain" />
+            {retained.map(index => <WeddingImage key={index} src={images[index]} alt={photoAlt(index)} fill hidden={index !== page} loading={nearAlbum ? "eager" : "lazy"} sizes="(max-width: 640px) 85vw, 520px" className="object-contain" />)}
           </button>
           <p aria-live="polite" aria-atomic="true" className="mt-4 text-center font-wedding text-sm tracking-[0.2em] text-[var(--wedding-text-muted)]">{String(page + 1).padStart(2, "0")} / {images.length}</p>
         </div>
@@ -79,7 +99,7 @@ export default function Gallery({ invitation: i }: InvitationProps) {
       <button ref={closeButton} type="button" onClick={() => setSelected(null)} aria-label={c.labels.closePhoto} className="absolute right-5 top-5 z-20 h-11 w-11 rounded-full border border-white/20 bg-white/10 text-xl text-white">×</button>
       <p className="absolute left-5 top-7 text-xs tracking-widest text-white/70">{String(selected + 1).padStart(2, "0")} / {images.length}</p>
       <button type="button" onClick={() => setSelected((selected + images.length - 1) % images.length)} aria-label={c.labels.previousPhoto} className="absolute left-3 top-1/2 z-20 h-11 w-11 rounded-full bg-black/30 text-3xl text-white">‹</button>
-      <div className="relative h-[78vh] w-full"><Image src={images[selected]} alt={photoAlt(selected)} fill sizes="(max-width: 812px) 100vw, 812px" className="object-contain" /></div>
+      <div className="relative h-[78vh] w-full"><WeddingImage src={images[selected]} alt={photoAlt(selected)} fill quality={95} loading="eager" sizes="(max-width: 812px) 100vw, 812px" className="object-contain" /></div>
       <button type="button" onClick={() => setSelected((selected + 1) % images.length)} aria-label={c.labels.nextPhoto} className="absolute right-3 top-1/2 z-20 h-11 w-11 rounded-full bg-black/30 text-3xl text-white">›</button>
     </div>}
   </>;

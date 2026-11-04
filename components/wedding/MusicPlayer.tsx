@@ -41,6 +41,7 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
     useRef<HTMLAudioElement | null>(null);
 
   const shouldPlay = useRef(true);
+  const [shouldAutoPlay, setShouldAutoPlay] = useState(true);
 
   const [playing, setPlaying] =
     useState(false);
@@ -70,16 +71,24 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
     function startPlayback() {
       if (cancelled || starting || !shouldPlay.current) return;
       starting = true;
-      audio!.play().then(removeGestures).catch((error: unknown) => {
+      audio!.play().then(() => {
+        if (cancelled || !shouldPlay.current) return;
+        setShouldAutoPlay(true);
+        removeGestures();
+      }).catch((error: unknown) => {
         if (cancelled || !shouldPlay.current) return;
         if ((error as { name?: string })?.name === "NotAllowedError") {
+          // Release native autoplay's pending load before waiting for a gesture.
+          audio!.autoplay = false;
+          audio!.preload = "metadata";
+          audio!.load();
+          setShouldAutoPlay(false);
           for (const gesture of gestures) document.addEventListener(gesture, resumeOnInteraction);
         }
       }).finally(() => { starting = false; });
     }
 
     audio.addEventListener("play", removeGestures);
-    audio.load();
     startPlayback();
     return () => { cancelled = true; removeGestures(); audio.removeEventListener("play", removeGestures); };
   }, [currentTrack]);
@@ -92,10 +101,12 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
     try {
       if (playing) {
         shouldPlay.current = false;
+        setShouldAutoPlay(false);
         audio.pause();
         setPlaying(false);
       } else {
         shouldPlay.current = true;
+        setShouldAutoPlay(true);
         await audio.play();
         setPlaying(true);
       }
@@ -125,6 +136,7 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
 
   function selectTrack(index: number) {
     shouldPlay.current = true;
+    setShouldAutoPlay(true);
     if (index === currentTrack) {
       audioRef.current?.play().catch(() => setPlaying(false));
     } else {
@@ -139,11 +151,12 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
       <audio
         ref={audioRef}
         src={tracks[currentTrack].src}
-        preload="metadata"
+        autoPlay={shouldAutoPlay}
+        preload={shouldAutoPlay ? "auto" : "metadata"}
         onEnded={nextTrack}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
-        onError={() => { shouldPlay.current = false; setPlaying(false); }}
+        onError={() => { shouldPlay.current = false; setShouldAutoPlay(false); setPlaying(false); }}
       />
 
       {/* =========================
