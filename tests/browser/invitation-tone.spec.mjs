@@ -30,9 +30,9 @@ test('Both companies retain chúng em and Anh/Chị/Em despite the Em keyword',a
  }
 });
 
-test('UFC 97 uses the exact recipient address Anh Em throughout the invitation',async({page})=>{
+test('UFC 97 uses chúng em and addresses Anh Em throughout the invitation',async({page})=>{
  await page.goto('/groom/UFC97');
- await expectVoice(page,'Anh Chị','Anh Em');
+ await expectVoice(page,'chúng em','Anh Em');
 });
 
 for(const [name,expected] of [['Anh khách mẫu','Chúng em đã nhận được phản hồi. Cảm ơn Anh đã dành thời gian xác nhận.'],['Em khách mẫu','Anh Chị đã nhận được phản hồi. Cảm ơn Em đã dành thời gian xác nhận.'],['Các bạn CKLS','Chúng mình đã nhận được phản hồi. Cảm ơn Các bạn đã dành thời gian xác nhận.']]){

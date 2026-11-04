@@ -14,10 +14,10 @@ export function invitationVoice(recipient: string, invitationId?: string): Invit
   const name = recipient.normalize("NFC");
   if (invitationId === "uncle-lee") return { self: "chúng cháu", addressee: "Bác" };
   if (invitationId === "groom-ngv" || invitationId === "bride-partron") return { self: "chúng em", addressee: "Anh/Chị/Em" };
+  if (invitationId === "groom-ufc97") return { self: "chúng em", addressee: "Anh Em" };
   const junior = containsWord(name, "em");
   const friend = containsWord(name, "bạn");
   const self = junior ? "Anh Chị" : friend ? "chúng mình" : "chúng em";
-  if (invitationId === "groom-ufc97") return { self, addressee: "Anh Em" };
   if (containsWord(name, "CKLS")) return { self, addressee: "Các bạn" };
   if (junior) return { self, addressee: "Em" };
   if (friend) return { self, addressee: "Bạn" };

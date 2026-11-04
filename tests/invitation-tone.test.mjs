@@ -20,8 +20,8 @@ test('Both company exceptions precede recipient keywords',()=>{
  for(const id of ['groom-ngv','bride-partron'])assert.deepEqual(invitationVoice('Toàn thể Anh/Chị/Em công ty',id),{self:'chúng em',addressee:'Anh/Chị/Em'});
 });
 
-test('UFC 97 addresses Anh Em while following the speaker keyword rule',()=>{
- assert.deepEqual(invitationVoice('Toàn thể Anh/Em đội bóng UFC 97','groom-ufc97'),{self:'Anh Chị',addressee:'Anh Em'});
+test('UFC 97 always uses chúng em and addresses Anh Em',()=>{
+ assert.deepEqual(invitationVoice('Toàn thể Anh/Em đội bóng UFC 97','groom-ufc97'),{self:'chúng em',addressee:'Anh Em'});
 });
 
 test('CKLS addresses Các bạn, independently of casing and position',()=>{
