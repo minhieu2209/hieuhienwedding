@@ -1,14 +1,28 @@
 import type { Copy } from "./invitations";
 import type { Locale } from "./invitation-catalog";
 
-export type InvitationVoice = { self: "chúng mình" | "chúng em" | "chúng cháu" };
+export type InvitationVoice = {
+  self: "chúng mình" | "chúng em" | "Anh Chị" | "chúng cháu";
+  addressee: string;
+};
+
+function containsWord(text: string, word: string) {
+  return new RegExp(`(^|[^\\p{L}\\p{N}_])${word}(?=$|[^\\p{L}\\p{N}_])`, "iu").test(text);
+}
 
 export function invitationVoice(recipient: string, invitationId?: string): InvitationVoice {
-  if (invitationId === "uncle-lee") return { self: "chúng cháu" };
-  // Match complete words anywhere, including slash-separated group addresses.
-  // Do not classify by invitation variant or by unrelated words in the prose.
-  const friendly = /(^|[^\p{L}\p{N}_])(?:bạn|em)(?=$|[^\p{L}\p{N}_])/iu.test(recipient.normalize("NFC"));
-  return { self: friendly ? "chúng mình" : "chúng em" };
+  const name = recipient.normalize("NFC");
+  if (invitationId === "uncle-lee") return { self: "chúng cháu", addressee: "Bác" };
+  if (invitationId === "groom-ngv" || invitationId === "bride-partron") return { self: "chúng em", addressee: "Anh/Chị/Em" };
+  const junior = containsWord(name, "em");
+  const friend = containsWord(name, "bạn");
+  const self = junior ? "Anh Chị" : friend ? "chúng mình" : "chúng em";
+  if (invitationId === "groom-ufc97") return { self, addressee: "Anh Em" };
+  if (containsWord(name, "CKLS")) return { self, addressee: "Các bạn" };
+  if (junior) return { self, addressee: "Em" };
+  if (friend) return { self, addressee: "Bạn" };
+  const address = name.trim().match(/^(anh|chị)(?=$|[^\p{L}\p{N}_])/iu)?.[1].toLocaleLowerCase("vi-VN");
+  return { self: "chúng em", addressee: address === "anh" ? "Anh" : address === "chị" ? "Chị" : "Anh/Chị" };
 }
 
 const narrativeFields = [
@@ -17,7 +31,15 @@ const narrativeFields = [
   "groomDescription", "brideDescription", "coupleQuote", "dayQuote", "eventIntro",
   "closingQuote", "countdownQuote", "countdownHeading", "timelineHeading",
 ] as const;
-const pronouns = /(^|[^\p{L}\p{N}_])(chúng\s+(?:mình|em|tôi|cháu))(?![\p{L}\p{N}_])/giu;
+// These paragraphs address the recipient. Descriptions and quotes may use
+// 'bạn' as a noun, so only their self-reference is adapted.
+const addressedFields = new Set<keyof Copy>([
+  "invitation", "coupleIntro", "galleryIntro", "rsvpIntro", "rsvpThanks",
+  "wishesIntro", "footerThanks", "eventIntro", "closingQuote", "countdownQuote",
+  "privacyNotice",
+]);
+// A single pass protects 'em' inside 'chúng em' from becoming a recipient term.
+const pronouns = /(^|[^\p{L}\p{N}_])(chúng\s+(?:mình|em|tôi|cháu)|anh\s*\/\s*chị\s*\/\s*em|anh\s*\/\s*em|anh\s*\/\s*chị|chị\s*\/\s*em|các\s+(?:bạn|em)|bạn|bác)(?![\p{L}\p{N}_])/giu;
 
 function matchCase(source: string, replacement: string) {
   if (source === source.toLocaleUpperCase("vi-VN")) return replacement.toLocaleUpperCase("vi-VN");
@@ -28,10 +50,12 @@ function matchCase(source: string, replacement: string) {
 export function personalizeInvitationCopy(base: Copy, voice: InvitationVoice, locale: Locale): Copy {
   const copy = structuredClone(base);
   if (locale !== "vi") return copy;
-  // Only adapt the couple's self-reference in authored invitation prose.
-  // Preserve greetings, recipient addresses, names, labels and guestbook messages.
+  // Recipient names, event details, labels and guestbook messages stay untouched.
   for (const field of narrativeFields) {
-    copy[field] = copy[field].replace(pronouns, (_match, prefix: string, source: string) => prefix + matchCase(source, voice.self));
+    copy[field] = copy[field].replace(pronouns, (match, prefix: string, source: string) => {
+      if (/^chúng\s/iu.test(source)) return prefix + matchCase(source, voice.self);
+      return addressedFields.has(field) ? prefix + matchCase(source, voice.addressee) : match;
+    });
   }
   return copy;
 }
