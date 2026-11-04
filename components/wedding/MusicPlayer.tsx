@@ -202,8 +202,8 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
                       : ""
                   }`}
                 >
-                  <span className="font-wedding text-xl">
-                    H ♡ H
+                  <span className="font-wedding text-base">
+                     H ♡ H
                   </span>
                 </div>
 

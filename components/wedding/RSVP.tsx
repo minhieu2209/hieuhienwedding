@@ -42,7 +42,9 @@ export default function RSVP({ invitation: i }: InvitationProps) {
   return <section className="relative overflow-hidden bg-[var(--wedding-bg)] px-5 py-24 md:px-6 md:py-32">
     <div className="mx-auto max-w-6xl">
       <div className="text-center">
-        <h2 className="mt-5 font-wedding text-5xl text-[var(--wedding-primary-dark)] md:text-7xl">{c.labels.rsvpTitle}</h2>
+        <h2 className="mt-5 font-wedding text-4xl text-[var(--wedding-primary-dark)] md:text-5xl">
+  {c.labels.rsvpTitle}
+</h2>
       </div>
       <div className="mx-auto mt-9 max-w-xl overflow-hidden rounded-[38px] border border-[var(--wedding-primary-light)] bg-[var(--wedding-cream)] shadow-[0_28px_90px_rgba(73,107,88,0.10)]">
         <form onSubmit={handleSubmit} noValidate className="p-6 md:p-10">

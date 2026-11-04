@@ -240,6 +240,10 @@ body {
   will-change: transform, opacity;
 }
 
+.font-gallery {
+  font-family: var(--font-gallery), cursive;
+}
+
 /* Slide from left */
 
 .gallery-reveal-left {

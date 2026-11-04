@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { formatText, type InvitationProps } from "@/data/invitations";
 
-const images = Array.from({ length: 11 }, (_, index) => `/images/gallery/gallery-${index + 1}.jpg`);
+const images = Array.from({ length: 21 }, (_, index) => `/images/gallery/gallery-${index + 1}.jpg`);
 
 export default function Gallery({ invitation: i }: InvitationProps) {
   const c = i.copy;
@@ -53,7 +53,9 @@ export default function Gallery({ invitation: i }: InvitationProps) {
     <section id="album" className="overflow-hidden bg-[var(--wedding-bg)] px-5 py-20 md:px-10 md:py-24">
       <div className="text-center">
         <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--wedding-primary)]">{c.labels.galleryEyebrow}</p>
-        <h2 className="mt-4 font-wedding text-4xl text-[var(--wedding-primary-dark)] md:text-5xl">{c.labels.galleryTitle}</h2>
+        <h2 className="mt-4 font-gallery text-5xl font-normal leading-relaxed text-[var(--wedding-primary-dark)] md:text-5xl">
+          {c.labels.galleryTitle}
+        </h2>
       </div>
       <div className="relative mx-auto mt-10 max-w-xl">
         <div ref={album} role="group" aria-label={c.labels.galleryEyebrow} tabIndex={0}

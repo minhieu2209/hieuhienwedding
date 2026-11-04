@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import { Lora, Noto_Serif, Noto_Serif_KR } from "next/font/google";
+import { Great_Vibes } from "next/font/google";
 import "./globals.css";
+
+const greatVibes = Great_Vibes({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-gallery",
+  display: "swap",
+});
 
 const notoSerif = Noto_Serif({
   subsets: ["latin", "vietnamese"],
@@ -30,9 +38,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi">
-      <body className={`${notoSerif.variable} ${koreanSerif.variable} ${lora.variable}`}>
+      <body className={`${notoSerif.variable} ${koreanSerif.variable} ${lora.variable} ${greatVibes.variable}`}>
         <div className="site-frame">{children}</div>
       </body>
     </html>
   );
 }
+

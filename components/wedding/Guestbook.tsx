@@ -57,7 +57,9 @@ export default function Guestbook({ invitation: i }: InvitationProps) {
     <div className="mx-auto max-w-6xl">
       <div className="text-center">
         <p className="text-xs tracking-[0.25em] text-[var(--wedding-primary)]">{i.names}</p>
-        <h2 className="mt-5 font-wedding text-5xl text-[var(--wedding-primary-dark)] md:text-7xl">{c.labels.wishesTitle}</h2>
+        <h2 className="mt-5 font-wedding text-4xl text-[var(--wedding-primary-dark)] md:text-5xl">
+  {c.labels.wishesTitle}
+</h2>
         <p className="mx-auto mt-7 max-w-2xl leading-8 text-[var(--wedding-text-muted)]">{c.wishesIntro}</p>
       </div>
       <div className="mt-16 grid gap-12 lg:grid-cols-[0.78fr_1.22fr]">
