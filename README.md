@@ -53,3 +53,7 @@ Browser tests cần Chromium: chạy `npx playwright install chromium`, hoặc t
 ## Thay đổi nội dung
 
 Khi DB đã bật, nội dung lấy từ wedding_invitation_contents, ngày giờ từ wedding_events, tên khách từ wedding_guests. `data/invitation-copy.json` và `data/invitation-catalog.ts` là bản mặc định/dự phòng. Mỗi nhóm có toàn bộ lời dẫn và nhãn riêng, hỗ trợ cách xưng hô tương ứng. Không sửa tên khách vào code.
+
+### Xưng hô theo người nhận
+
+Tên người/nhóm nhận có nguyên từ “bạn” hoặc “em” ở bất kỳ vị trí nào thì thiệp tự xưng “chúng mình”; không có cả hai thì dùng “chúng em”. Không phân biệt hoa/thường và áp dụng cùng quy tắc cho cá nhân lẫn tập thể, kể cả “Anh/Em” hay “Anh/Chị/Em”. Riêng UncleLEE giữ cách xưng hô đặc biệt và bản tiếng Hàn hiện có. Câu mời, lời dẫn, cảm ơn RSVP và phần kết dùng thống nhất cách tự xưng; tên khách, lời chào và lời chúc khách đã gửi được giữ nguyên.

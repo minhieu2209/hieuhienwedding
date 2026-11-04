@@ -1,6 +1,7 @@
 import { weddingData } from "./wedding";
 import records from "./invitation-copy.json";
 import { events, findVariant, type Locale, type Side, type Variant, type WeddingEvent } from "./invitation-catalog";
+import { invitationVoice, personalizeInvitationCopy } from "./invitation-tone";
 
 export type Copy = (typeof records)[number]["content"];
 export type InvitationSearchParams = Record<string, string | string[] | undefined>;
@@ -32,7 +33,11 @@ export function buildInvitation(variant: Variant, event: WeddingEvent, locale: L
   copy?: Copy; couple?: Couple; recipientName?: string; guestToken?: string;
   formsEnabled?: boolean; wishesEnabled?: boolean; invalidGuest?: boolean;
 } = {}) {
-  const copy = options.copy ?? getCopy(variant.id, locale);
+  const recipientName = options.recipientName?.trim().replace(/\s+/g, " ").slice(0, 120) ?? "";
+  const baseCopy = options.copy ?? getCopy(variant.id, locale);
+  const recipient = recipientName || baseCopy.defaultRecipient;
+  const voice = invitationVoice(recipient, variant.id);
+  const copy = personalizeInvitationCopy(baseCopy, voice, locale);
   const couple = options.couple ?? defaultCouple;
   const sides: Side[] = variant.first_person === "groom" ? ["groom", "bride"] : ["bride", "groom"];
   const people = sides.map((side) => ({
@@ -47,16 +52,14 @@ export function buildInvitation(variant: Variant, event: WeddingEvent, locale: L
   const displayDate = locale === "ko"
     ? new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Ho_Chi_Minh", year: "numeric", month: "long", day: "numeric" }).format(date)
     : isoDate.split("-").reverse().join(" · ");
-  const recipientName = options.recipientName?.trim().replace(/\s+/g, " ").slice(0, 120) ?? "";
-  const familyPronoun = variant.id === "uncle-lee" ? "chúng cháu" : variant.recipient_mode === "individual" ? "chúng mình" : "chúng em";
   return {
     id: variant.id, path: variant.path, side: variant.host_side, firstPerson: variant.first_person,
     locale, dateLocale, supportedLocales: variant.supported_locales,
     recipientMode: variant.recipient_mode, recipientName,
-    recipient: recipientName || copy.defaultRecipient,
+    recipient,
     recipientWelcome: locale === "ko"
       ? "저희 가족과 함께 기쁨을 나눠 주시면 감사하겠습니다."
-      : `Đến chung vui cùng gia đình ${familyPronoun}`,
+      : `Đến chung vui cùng gia đình ${voice.self}`,
     salutation: copy.salutation, message: copy.invitation,
     label: copy.labels[event.event_kind === "reception" ? "receptionInvitation" : "weddingInvitation"],
     copy, people, names, namesWithDot: people.map((person) => person.fullName).join(" · "),
