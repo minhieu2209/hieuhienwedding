@@ -10,8 +10,8 @@ export default function WeddingDetails({ invitation: i }: InvitationProps) {
       <p className="font-invitation mt-4 text-base leading-7 text-[var(--wedding-text-muted)] md:text-lg">{i.recipientWelcome}</p>
       <div aria-hidden="true" className="my-8 text-[var(--wedding-primary)]">──── ♡ ────</div>
     </div>
-   <div className="grid grid-cols-2 gap-4 md:gap-8">
-  {i.families.map(family => <article key={family.side} className="min-w-0 text-center">
+   <div className="grid grid-cols-2 gap-x-4 md:gap-x-8">
+  {i.families.map(family => <article key={family.side} className="row-span-5 grid min-w-0 grid-rows-subgrid text-center">
     <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--wedding-primary)] md:text-xs">{family.title}</p>
     <div className="mt-4 grid min-h-24 content-start gap-3 text-sm leading-6 md:text-base">
       <p><span className="text-[var(--wedding-text-muted)]">{c.labels.father}: </span><span className="font-wedding text-lg text-[var(--wedding-text-muted)] md:text-xl">{family.father}</span></p>
