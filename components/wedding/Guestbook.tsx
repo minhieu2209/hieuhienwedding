@@ -83,7 +83,7 @@ export default function Guestbook({ invitation: i }: InvitationProps) {
           <p className="mt-3 text-sm text-[var(--wedding-text-muted)]">{formatText(c.labels.wishesCount, { count: wishes.length })}</p>
           {loadError && <div role="alert" className="mt-6 rounded-2xl border p-6"><p>{c.labels.loadError}</p><button type="button" className="mt-3 underline" onClick={() => { setLoading(true); setReload((value) => value + 1); }}>{c.labels.retry}</button></div>}
           {!loading && !loadError && i.wishesEnabled && wishes.length === 0 && <p className="mt-6 rounded-2xl border border-[var(--wedding-primary-light)] p-8 text-center text-[var(--wedding-text-muted)]">{c.labels.emptyWishes}</p>}
-          <div role="region" aria-label={c.labels.wishesTitle} tabIndex={0} className="guestbook-scroll mt-6 grid max-h-[32rem] gap-5 overflow-x-hidden overflow-y-auto overscroll-contain rounded-2xl p-1 pr-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--wedding-primary)] md:max-h-[40rem] md:grid-cols-2">
+          <div role="region" aria-label={c.labels.wishesTitle} tabIndex={0} className="guestbook-scroll mt-6 grid max-h-[32rem] grid-cols-1 gap-5 overflow-x-hidden overflow-y-auto overscroll-contain rounded-2xl p-1 pr-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--wedding-primary)] md:max-h-[40rem]">
             {wishes.map((wish) => <article key={wish.id} className="min-w-0 rounded-[28px] border border-[var(--wedding-primary-light)] bg-white/85 p-6 shadow-sm">
               <p className="font-wedding text-4xl text-[var(--wedding-primary)]">“</p>
               <p className="whitespace-pre-wrap break-words text-sm leading-7">{wish.message}</p>
