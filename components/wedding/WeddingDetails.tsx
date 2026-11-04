@@ -11,9 +11,9 @@ export default function WeddingDetails({ invitation: i }: InvitationProps) {
       <div aria-hidden="true" className="my-8 text-[var(--wedding-primary)]">──── ♡ ────</div>
     </div>
    <div className="grid grid-cols-2 gap-x-4 md:gap-x-8">
-  {i.families.map(family => <article key={family.side} className="row-span-5 grid min-w-0 grid-rows-subgrid text-center">
+  {i.families.map(family => <article key={family.side} className="row-span-6 grid min-w-0 grid-rows-subgrid text-center">
     <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--wedding-primary)] md:text-xs">{family.title}</p>
-    <div className="mt-4 grid min-h-24 content-start gap-3 text-sm leading-6 md:text-base">
+    <div className="row-span-2 mt-4 grid min-h-24 grid-rows-subgrid gap-y-3 text-sm leading-6 md:text-base">
       <p><span className="text-[var(--wedding-text-muted)]">{c.labels.father}: </span><span className="font-wedding text-lg text-[var(--wedding-text-muted)] md:text-xl">{family.father}</span></p>
       <p><span className="text-[var(--wedding-text-muted)]">{c.labels.mother}: </span><span className="font-wedding text-lg text-[var(--wedding-text-muted)] md:text-xl">{family.mother}</span></p>
     </div>
