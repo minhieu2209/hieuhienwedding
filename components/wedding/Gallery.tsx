@@ -34,11 +34,24 @@ export default function Gallery({ invitation: i }: InvitationProps) {
   }, []);
   useEffect(() => {
     if (!sheet.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const animation = sheet.current.animate([
-      { transform: `rotateY(${direction === "next" ? 28 : 18}deg)`, opacity: 0.5 },
-      { transform: "rotateY(0deg)", opacity: 1 },
-    ], { duration: 600, easing: "ease" });
-    return () => animation.cancel();
+
+const startAngle = direction === "next" ? 28 : -18;
+
+const animation = sheet.current.animate([
+  {
+    transform: `rotateY(${startAngle}deg)`,
+    opacity: 0.5
+  },
+  {
+    transform: "rotateY(0deg)",
+    opacity: 1
+  },
+], {
+  duration: 600,
+  easing: "ease"
+});
+
+return () => animation.cancel();
   }, [page, direction]);
   function openPhoto() {
     trigger.current = document.activeElement as HTMLButtonElement;
@@ -72,7 +85,7 @@ export default function Gallery({ invitation: i }: InvitationProps) {
   return <>
     <section id="album" className="overflow-hidden bg-[var(--wedding-bg)] px-5 py-20 md:px-10 md:py-24">
       <div className="text-center">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--wedding-primary)]">{c.labels.galleryEyebrow}</p>
+        <p className="text-[15px] uppercase tracking-[0.3em] text-[var(--wedding-primary)]">{c.labels.galleryEyebrow}</p>
         <h2 className="mt-4 font-gallery text-5xl font-normal leading-relaxed text-[var(--wedding-primary-dark)] md:text-5xl">
           {c.labels.galleryTitle}
         </h2>
