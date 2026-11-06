@@ -46,9 +46,9 @@ for(const [name,expected] of [['Anh khách mẫu','Chúng em đã nhận đượ
  });
 }
 
-test('UncleLEE keeps the existing Korean invitation wording',async({page})=>{
+test('UncleLEE uses the reviewed Korean recipient and keeps its established welcome',async({page})=>{
  await page.goto('/UncleLEE');
- await expect(page.locator('#invitation h2').first()).toContainText('Bác Lee');
+ await expect(page.locator('#invitation h2').first()).toHaveText('이준석 선생님께');
  await expect(page.locator('#invitation h2').first().locator('xpath=following-sibling::p[1]')).toHaveText('저희 가족과 함께 기쁨을 나눠 주시면 감사하겠습니다.');
  const content=await page.locator('main').textContent();
  expect(content).not.toContain('chúng mình');expect(content).not.toContain('chúng em');

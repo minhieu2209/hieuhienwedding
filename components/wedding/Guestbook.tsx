@@ -1,6 +1,6 @@
 "use client";
 import { type FormEvent, useEffect, useRef, useState } from "react";
-import { formatText, type InvitationProps } from "@/data/invitations";
+import { type InvitationProps } from "@/data/invitations";
 import { formError, sendForm } from "@/lib/form-client";
 type Wish = { id: string | number; guest_name: string; message: string; created_at: string };
 export default function Guestbook({ invitation: i }: InvitationProps) {

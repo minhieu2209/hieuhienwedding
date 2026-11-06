@@ -19,6 +19,7 @@ await db.exec(await readFile(new URL('../supabase/manual/04_server_api_cutover.s
 async function reset() {
  await db.exec('TRUNCATE wedding_rsvp,wedding_wishes,wedding_guests,wedding_invitation_contents,wedding_invitation_variants,wedding_events,wedding_settings RESTART IDENTITY');
  await db.exec(seed);
+ await db.exec(await readFile(new URL('../supabase/manual/07_apply_reviewed_korean.sql', import.meta.url), 'utf8'));
  await db.exec("UPDATE wedding_invitation_variants SET publication_status='published'; UPDATE wedding_invitation_contents SET review_status='approved';");
  await db.query('INSERT INTO wedding_guests(guest_code,display_name,invitation_variant_id,invite_token_hash,is_active) VALUES ($1,$2,$3,$4,true),($5,$6,$7,$8,true)', ['GF-test','Bạn mẫu & Gia Đình','groom-friends',createHash('sha256').update(token).digest('hex'),'BF-test','Lan mẫu','bride-friends',createHash('sha256').update(brideToken).digest('hex')]);
  await db.exec("INSERT INTO wedding_wishes(guest_name,message,host_side,moderation_status) VALUES ('Fixture groom','Groom-only wish','groom','approved'),('Fixture bride','Bride-only wish','bride','approved'),('Legacy guest','Unclassified legacy wish',NULL,'pending');");

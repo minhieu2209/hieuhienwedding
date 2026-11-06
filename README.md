@@ -62,6 +62,8 @@ Browser tests cần Chromium: chạy `npx playwright install chromium`, hoặc t
 
 Khi DB đã bật, nội dung lấy từ wedding_invitation_contents, ngày giờ từ wedding_events, tên khách từ wedding_guests. `data/invitation-copy.json` và `data/invitation-catalog.ts` là bản mặc định/dự phòng. Mỗi nhóm có toàn bộ lời dẫn và nhãn riêng, hỗ trợ cách xưng hô tương ứng. Không sửa tên khách vào code.
 
+Bản Hàn Partron và UncleLEE đã được cập nhật từ file dịch chủ thiệp gửi ngày 06/11/2026: 26 trường có chỉnh sửa. Sau khi Vercel triển khai bản code này, chạy `supabase/manual/07_apply_reviewed_korean.sql` để áp các trường đó vào Supabase; kết quả dự kiến `updated_invitations=2`, `reviewed_fields=26`, `all_reviewed_fields_match=true`. File giữ các trường tùy chỉnh khác, bản Việt, sự kiện, khách, RSVP và lời chúc. Chữ N trong câu đếm ngược được chuẩn hóa thành `{days}` để hiển thị số ngày thực; đoạn cảm ơn giữ các dòng trống theo bản dịch. Cỡ chữ không thay đổi.
+
 ### Xưng hô theo người nhận
 
 Tên người/nhóm nhận có nguyên từ “Em” ở bất kỳ vị trí nào thì thiệp tự xưng “Anh Chị”, gọi người nhận là “Em”; có “bạn” thì dùng “chúng mình” / “Bạn”; còn lại tự xưng “chúng em” và gọi theo danh xưng Anh/Chị. Không phân biệt hoa/thường; nếu có cả “Em” và “bạn” thì ưu tiên “Em” (như GF-0022).

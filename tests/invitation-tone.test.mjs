@@ -7,10 +7,10 @@ const friend=records.find(row=>row.variant_id==='groom-friends'&&row.locale==='v
 const company=records.find(row=>row.variant_id==='groom-ngv'&&row.locale==='vi').content;
 
 for(const recipient of ['Bạn mẫu','Các bạn trong lớp','Chị và BẠN mẫu','Bạn mẫu']){
- test(`Bạn uses chúng mình/Bạn: ${recipient}`,()=>assert.deepEqual(invitationVoice(recipient),{self:'chúng mình',addressee:'Bạn'}));
+ test(`Bạn uses chúng mình/Bạn: ${recipient}`,()=>assert.deepEqual(invitationVoice(recipient),{self:'chúng mình',addressee:'bạn'}));
 }
 for(const recipient of ['Em mẫu','Nhóm các em','Anh và em mẫu','  EM mẫu  ','Anh và bạn Em mẫu','Em mẫu và Bạn đồng hành']){
- test(`Em uses Anh Chị/Em: ${recipient}`,()=>assert.deepEqual(invitationVoice(recipient),{self:'Anh Chị',addressee:'Em'}));
+ test(`Em uses Anh Chị/Em: ${recipient}`,()=>assert.deepEqual(invitationVoice(recipient),{self:'Anh Chị',addressee:'em'}));
 }
 for(const [recipient,addressee] of [['Anh mẫu','Anh'],['Chị mẫu','Chị'],['Tập thể công ty','Anh/Chị'],['Khách mẫu','Anh/Chị'],['Minh Anh','Anh/Chị'],['Email nhóm','Anh/Chị'],['Xem thiệp','Anh/Chị'],['Emilia','Anh/Chị'],['Diem','Anh/Chị'],['','Anh/Chị']]){
  test(`Other recipients use chúng em: ${recipient}`,()=>assert.deepEqual(invitationVoice(recipient),{self:'chúng em',addressee}));
@@ -25,7 +25,7 @@ test('UFC 97 always uses chúng em and addresses Anh Em',()=>{
 });
 
 test('CKLS addresses Các bạn, independently of casing and position',()=>{
- for(const [name,self] of [['Các bạn mình "CKLS thân yêu"','chúng mình'],['Nhóm ckls','chúng em'],['Các Em CKLS','Anh Chị']])assert.deepEqual(invitationVoice(name,'groom-friends'),{self,addressee:'Các bạn'});
+ for(const [name,self] of [['Các bạn mình "CKLS thân yêu"','chúng mình'],['Nhóm ckls','chúng em'],['Các Em CKLS','Anh Chị']])assert.deepEqual(invitationVoice(name,'groom-friends'),{self,addressee:'các bạn'});
 });
 
 test('Both speaker and addressee adapt across invitation, RSVP, guestbook introduction and closing without request leakage',()=>{
@@ -35,12 +35,12 @@ test('Both speaker and addressee adapt across invitation, RSVP, guestbook introd
   assert.ok(!junior[key].toLowerCase().includes('chúng mình'),key);
   assert.ok(junior[key].includes('Anh Chị'),key);
  }
- assert.equal(junior.rsvpThanks,'Anh Chị đã nhận được phản hồi. Cảm ơn Em đã dành thời gian xác nhận.');
- assert.ok(junior.wishesIntro.includes('của Em'));
- assert.ok(junior.footerThanks.includes('cảm ơn Em'));
+ assert.equal(junior.rsvpThanks,'Anh Chị đã nhận được phản hồi. Cảm ơn em đã dành thời gian xác nhận.');
+ assert.ok(junior.wishesIntro.includes('của em'));
+ assert.ok(junior.footerThanks.includes('cảm ơn em'));
  assert.deepEqual(junior.labels,friend.labels);assert.equal(junior.salutation,friend.salutation);assert.equal(junior.defaultRecipient,friend.defaultRecipient);
  const buddy=personalizeInvitationCopy(friend,invitationVoice('Bạn mẫu'),'vi');
- assert.ok(buddy.rsvpThanks.startsWith('Chúng mình'));assert.ok(buddy.rsvpThanks.includes('Cảm ơn Bạn'));
+ assert.ok(buddy.rsvpThanks.startsWith('Chúng mình'));assert.ok(buddy.rsvpThanks.includes('Cảm ơn bạn'));
  assert.deepEqual(friend,snapshot);
  const companySnapshot=structuredClone(company);
  const staff=personalizeInvitationCopy(company,invitationVoice(company.defaultRecipient,'groom-ngv'),'vi');
@@ -50,13 +50,13 @@ test('Both speaker and addressee adapt across invitation, RSVP, guestbook introd
 test('CKLS prose says Các bạn once and keeps friend nouns in descriptions',()=>{
  const base=structuredClone(friend);base.footerThanks='Chúng mình cảm ơn các bạn. Hẹn gặp bạn!';base.groomDescription='Những người bạn đồng hành cùng chúng mình.';
  const result=personalizeInvitationCopy(base,invitationVoice('Các bạn CKLS'),'vi');
- assert.equal(result.footerThanks,'Chúng mình cảm ơn Các bạn. Hẹn gặp Các bạn!');
+ assert.equal(result.footerThanks,'Chúng mình cảm ơn các bạn. Hẹn gặp các bạn!');
  assert.equal(result.groomDescription,base.groomDescription);
 });
 
 test('Vietnamese replacements protect self-references from recipient replacements',()=>{
  const base=structuredClone(friend);base.footerThanks='CHÚNG EM, chúng tôi; Chúng mình! Cảm ơn bạn.';
- assert.equal(personalizeInvitationCopy(base,invitationVoice('Em mẫu'),'vi').footerThanks,'ANH CHỊ, Anh Chị; Anh Chị! Cảm ơn Em.');
+ assert.equal(personalizeInvitationCopy(base,invitationVoice('Em mẫu'),'vi').footerThanks,'ANH CHỊ, Anh Chị; Anh Chị! Cảm ơn em.');
 });
 
 test('Korean copy remains unchanged',()=>{

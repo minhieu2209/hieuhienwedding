@@ -37,7 +37,7 @@ export default function Footer({ invitation }: InvitationProps) {
           <span className="h-px w-10 bg-white/20" />
         </div>
 
-        <p className="mx-auto mt-8 max-w-2xl text-sm leading-8 text-white/65 md:text-base">
+        <p className="mx-auto mt-8 max-w-2xl whitespace-pre-line text-sm leading-8 text-white/65 md:text-base">
           {invitation.copy.footerThanks}
         </p>
 

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-for (const [width, path, title, more] of [[390, '/groom/NGV', 'Sổ lưu bút', 'Xem thêm lời chúc'], [1440, '/groom/NGV', 'Sổ lưu bút', 'Xem thêm lời chúc'], [390, '/bride/Partron?lang=ko', '축하 메시지', '축하 메시지 더 보기']]) {
+for (const [width, path, title, more] of [[390, '/groom/NGV', 'Sổ lưu bút', 'Xem thêm lời chúc'], [1440, '/groom/NGV', 'Sổ lưu bút', 'Xem thêm lời chúc'], [390, '/bride/Partron?lang=ko', '축하 메시지', '더 보기']]) {
   test(`${path} ${width}px: many wishes scroll independently and pagination stays usable`, async ({ page, request }) => {
     await request.post('http://127.0.0.1:4711/__test/reset');
     await request.post('http://127.0.0.1:4711/__test/change', { data: { action: 'paginate' } });

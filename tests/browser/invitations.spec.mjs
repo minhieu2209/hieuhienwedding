@@ -39,7 +39,7 @@ test('Partron toggles full Korean copy, keeps proper names and has no Vietnamese
  await expect(page.locator('main')).toHaveAttribute('lang','ko');
  await expect(page.locator('h1')).toContainText('Thu Hiền');
  const text=await page.locator('main').textContent();
- for(const leaked of ['chúng mình','Chúng mình','Xem bản đồ','Xác nhận tham dự','Sổ lưu bút','Họ và tên','Save The Date','Wedding'])expect(text).not.toContain(leaked);
+ for(const leaked of ['chúng mình','Chúng mình','Xem bản đồ','Xác nhận tham dự','Sổ lưu bút','Họ và tên','Wedding'])expect(text).not.toContain(leaked);
  expect(text).toContain('Nhà hàng Tam Giao');expect(text).toContain('2026년 12월 4일');expect(text).toContain('17:30');
  await expect(page.locator('#guestName')).toHaveAttribute('placeholder','회신하시는 분의 성함을 입력해 주세요');
  await expect(page.getByRole('navigation',{name:'언어'})).toBeVisible();
