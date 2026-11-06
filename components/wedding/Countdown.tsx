@@ -126,7 +126,7 @@ export default function Countdown({ invitation }: InvitationProps) {
                   : "--"}
               </p>
 
-              <p className="mt-4 text-[13px] uppercase tracking-[0.2em] text-white/45 md:text-[10px] md:tracking-[0.35em]">
+              <p className="mt-4 text-[14px] uppercase tracking-[0.2em] text-white/45 md:tracking-[0.35em]">
                 {item.label}
               </p>
             </div>

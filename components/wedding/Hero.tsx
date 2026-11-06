@@ -175,7 +175,7 @@ export default function Hero({ invitation }: InvitationProps) {
       <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-end px-6 pb-24 pt-60 text-center text-white">
 
         {/* EYEBROW */}
-        <p className="hero-fade hero-delay-1 text-[10px] uppercase tracking-[0.5em] text-white/75 md:text-xs">
+        <p className="hero-fade hero-delay-1 text-[13px] uppercase tracking-[0.5em] text-white/75 md:text-xs">
           {invitation.label}
         </p>
 
