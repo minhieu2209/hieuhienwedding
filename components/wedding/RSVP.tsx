@@ -50,8 +50,8 @@ export default function RSVP({ invitation: i }: InvitationProps) {
         <form onSubmit={handleSubmit} noValidate className="p-6 md:p-10">
           <label htmlFor="guestName" className="text-sm text-[var(--wedding-primary-dark)]">{c.labels.name}</label>
           <input id="guestName" name="guestName" autoComplete="name" maxLength={120} defaultValue={i.recipientName} required placeholder={c.labels.namePlaceholder} className={field} />
-          <label htmlFor="phone" className="mt-8 block text-sm text-[var(--wedding-primary-dark)]">{c.labels.phone}</label>
-          <input id="phone" name="phone" type="tel" autoComplete="tel" maxLength={30} className={field} />
+            {/* <label htmlFor="phone" className="mt-8 block text-sm text-[var(--wedding-primary-dark)]">{c.labels.phone}</label>
+            <input id="phone" name="phone" type="tel" autoComplete="tel" maxLength={30} className={field} /> */}
           <fieldset className="mt-9">
             <legend className="text-sm text-[var(--wedding-primary-dark)]">{c.labels.attendance}</legend>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -65,8 +65,8 @@ export default function RSVP({ invitation: i }: InvitationProps) {
           <select id="guestCount" name="guestCount" defaultValue="1" disabled={attendance === "no"} className={field}>
             {[1, 2, 3, 4, 5].map((count) => <option key={count} value={count}>{formatText(c.labels.peopleCount, { count })}</option>)}
           </select>
-          <label htmlFor="message" className="mt-8 block text-sm text-[var(--wedding-primary-dark)]">{c.labels.message}</label>
-          <textarea id="message" name="message" rows={2} maxLength={2000} className={field} />
+          {/* <label htmlFor="message" className="mt-8 block text-sm text-[var(--wedding-primary-dark)]">{c.labels.message}</label>
+          <textarea id="message" name="message" rows={2} maxLength={2000} className={field} /> */}
           <div aria-hidden="true" className="absolute -left-[10000px]"><input name="website" tabIndex={-1} autoComplete="off" /></div>
           <button type="submit" disabled={loading || !i.formsEnabled} className="mt-9 w-full rounded-full bg-[var(--wedding-primary-dark)] px-6 py-4 text-sm text-white transition hover:bg-[var(--wedding-primary)] disabled:cursor-not-allowed disabled:opacity-50">{loading ? c.labels.submitting : c.labels.submitRsvp}</button>
           {error && <p role="alert" className="mt-4 text-sm text-red-800">{error}</p>}

@@ -56,11 +56,11 @@ export default function Guestbook({ invitation: i }: InvitationProps) {
   return <section className="bg-[var(--wedding-cream)] px-5 py-24 md:px-6 md:py-32">
     <div className="mx-auto max-w-6xl">
       <div className="text-center">
-        <p className="text-xs tracking-[0.25em] text-[var(--wedding-primary)]">{i.names}</p>
-        <h2 className="mt-5 font-wedding text-4xl text-[var(--wedding-primary-dark)] md:text-5xl">
+        {/* <p className="text-xs tracking-[0.25em] text-[var(--wedding-primary)]">{i.names}</p> */}
+        {/* <h2 className="mt-5 font-wedding text-4xl text-[var(--wedding-primary-dark)] md:text-5xl">
   {c.labels.wishesTitle}
-</h2>
-        <p className="mx-auto mt-7 max-w-2xl leading-8 text-[var(--wedding-text-muted)]">{c.wishesIntro}</p>
+</h2> */}
+        {/* <p className="mx-auto mt-7 max-w-2xl leading-8 text-[var(--wedding-text-muted)]">{c.wishesIntro}</p> */}
       </div>
       <div className="mt-16 grid gap-12 lg:grid-cols-[0.78fr_1.22fr]">
         <div className="h-fit rounded-[34px] border border-[var(--wedding-primary-light)] bg-[var(--wedding-bg)] p-6 shadow-lg md:p-8">
@@ -79,8 +79,9 @@ export default function Guestbook({ invitation: i }: InvitationProps) {
           <p className="mt-8 text-center font-wedding text-2xl text-[var(--wedding-primary-dark)]">H ♡ H</p>
         </div>
         <div className="min-w-0">
-          <h3 className="font-wedding text-3xl text-[var(--wedding-primary-dark)]">{c.labels.withLove}</h3>
-          <p className="mt-3 text-sm text-[var(--wedding-text-muted)]">{formatText(c.labels.wishesCount, { count: wishes.length })}</p>
+          <p className="mx-auto mt-7 max-w-2xl leading-8 text-[var(--wedding-text-muted)]">{c.wishesIntro}</p>
+          {/* <h3 className="font-wedding text-3xl text-[var(--wedding-primary-dark)]">{c.labels.withLove}</h3> */}
+          {/* <p className="mt-3 text-sm text-[var(--wedding-text-muted)]">{formatText(c.labels.wishesCount, { count: wishes.length })}</p> */}
           {loadError && <div role="alert" className="mt-6 rounded-2xl border p-6"><p>{c.labels.loadError}</p><button type="button" className="mt-3 underline" onClick={() => { setLoading(true); setReload((value) => value + 1); }}>{c.labels.retry}</button></div>}
           {!loading && !loadError && i.wishesEnabled && wishes.length === 0 && <p className="mt-6 rounded-2xl border border-[var(--wedding-primary-light)] p-8 text-center text-[var(--wedding-text-muted)]">{c.labels.emptyWishes}</p>}
           <div role="region" aria-label={c.labels.wishesTitle} tabIndex={0} className="guestbook-scroll mt-6 grid max-h-[32rem] grid-cols-1 gap-5 overflow-x-hidden overflow-y-auto overscroll-contain rounded-2xl p-1 pr-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--wedding-primary)] md:max-h-[40rem]">

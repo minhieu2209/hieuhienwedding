@@ -35,7 +35,7 @@ export default function Gallery({ invitation: i }: InvitationProps) {
   useEffect(() => {
     if (!sheet.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const animation = sheet.current.animate([
-      { transform: `rotateY(${direction === "next" ? -28 : 18}deg)`, opacity: 0.5 },
+      { transform: `rotateY(${direction === "next" ? 28 : 18}deg)`, opacity: 0.5 },
       { transform: "rotateY(0deg)", opacity: 1 },
     ], { duration: 600, easing: "ease" });
     return () => animation.cancel();

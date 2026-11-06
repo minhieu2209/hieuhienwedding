@@ -18,9 +18,9 @@ export function invitationVoice(recipient: string, invitationId?: string): Invit
   const junior = containsWord(name, "em");
   const friend = containsWord(name, "bạn");
   const self = junior ? "Anh Chị" : friend ? "chúng mình" : "chúng em";
-  if (containsWord(name, "CKLS")) return { self, addressee: "Các bạn" };
-  if (junior) return { self, addressee: "Em" };
-  if (friend) return { self, addressee: "Bạn" };
+  if (containsWord(name, "CKLS")) return { self, addressee: "các bạn" };
+  if (junior) return { self, addressee: "em" };
+  if (friend) return { self, addressee: "bạn" };
   const address = name.trim().match(/^(anh|chị)(?=$|[^\p{L}\p{N}_])/iu)?.[1].toLocaleLowerCase("vi-VN");
   return { self: "chúng em", addressee: address === "anh" ? "Anh" : address === "chị" ? "Chị" : "Anh/Chị" };
 }

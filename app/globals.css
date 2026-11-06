@@ -349,3 +349,44 @@ main[lang="ko"] .font-invitation {
 
 .album-book { perspective: 1200px; }
 .album-sheet { transform-origin: left center; }
+/* ========================================
+   MUSIC TITLE MARQUEE
+   ======================================== */
+
+.music-marquee {
+  display: flex;
+  width: max-content;
+  gap: 40px;
+
+  animation: musicMarquee 10s linear infinite;
+
+  will-change: transform;
+}
+
+@keyframes musicMarquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  12% {
+    transform: translateX(0);
+  }
+
+  88% {
+    transform: translateX(
+      calc(-50% - 20px)
+    );
+  }
+
+  100% {
+    transform: translateX(
+      calc(-50% - 20px)
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music-marquee {
+    animation: none;
+  }
+}

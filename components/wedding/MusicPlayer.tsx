@@ -10,31 +10,133 @@ import {
 
 const tracks = [
   {
+    title: "Một Đời x Người Tốt Nhất Cho Em",
+    artist: "14 Casper",
+    src: "/music/MotDoiXNguoiTotNhatChoEm.mp3",
+  },
+  {
     title: "Hoa và Váy",
     artist: "Quốc Thiên",
     src: "/music/HoaVaVay.mp3",
   },
-  {
-    title: "Một Đời",
-    artist: "14 Casper,Bon Nghiêm,buitruonglinh",
-    src: "/music/MotDoi.mp3",
-  },
+  // {
+  //   title: "Một Đời",
+  //   artist: "14 Casper,Bon Nghiêm,buitruonglinh",
+  //   src: "/music/MotDoi.mp3",
+  // },
   {
     title: "Lễ Đường",
     artist: "Kai Đinh",
     src: "/music/LeDuong.mp3",
   },
-  {
-    title: "Beautiful In White",
-    artist: "Shane Filan",
-    src: "/music/BeautifulInWhite.mp3",
-  },
-  {
-    title: "Váy cưới",
-    artist: "Kai Đinh & Erik",
-    src: "/music/VayCuoi.mp3",
-  },
+  // {
+  //   title: "Beautiful In White",
+  //   artist: "Shane Filan",
+  //   src: "/music/BeautifulInWhite.mp3",
+  // },
+  // {
+  //   title: "Váy cưới",
+  //   artist: "Kai Đinh & Erik",
+  //   src: "/music/VayCuoi.mp3",
+  // },
 ];
+function MarqueeText({
+  text,
+  className = "",
+}: {
+  text: string;
+  className?: string;
+}) {
+  const containerRef =
+    useRef<HTMLDivElement | null>(null);
+
+  const measureRef =
+    useRef<HTMLSpanElement | null>(null);
+
+  const [shouldScroll, setShouldScroll] =
+    useState(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const textElement = measureRef.current;
+
+    if (!container || !textElement) return;
+
+    function checkOverflow() {
+      const containerWidth =
+        container.clientWidth;
+
+      const textWidth =
+        textElement.offsetWidth;
+
+      setShouldScroll(
+        textWidth > containerWidth
+      );
+    }
+
+    // đo ngay
+    checkOverflow();
+
+    // đo lại sau khi browser render
+    const frame =
+      requestAnimationFrame(
+        checkOverflow
+      );
+
+    // đo lại khi font load xong
+    document.fonts?.ready.then(() => {
+      checkOverflow();
+    });
+
+    // theo dõi cả container và text
+    const observer =
+      new ResizeObserver(() => {
+        checkOverflow();
+      });
+
+    observer.observe(container);
+    observer.observe(textElement);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [text]);
+
+  return (
+    <div
+      ref={containerRef}
+      className={`relative w-full overflow-hidden whitespace-nowrap ${className}`}
+    >
+      {/* Invisible text dùng để đo */}
+      <span
+        ref={measureRef}
+        className="pointer-events-none invisible absolute inline-block whitespace-nowrap"
+      >
+        {text}
+      </span>
+
+      {shouldScroll ? (
+        <div className="music-marquee">
+          <span className="inline-block shrink-0">
+            {text}
+          </span>
+
+          <span
+            aria-hidden="true"
+            className="inline-block shrink-0"
+          >
+            {text}
+          </span>
+        </div>
+      ) : (
+        <span className="block truncate">
+          {text}
+        </span>
+      )}
+    </div>
+  );
+}
 
 export default function MusicPlayer({ invitation }: InvitationProps) {
   const audioRef =
@@ -185,11 +287,11 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
 
               <div className="flex items-start justify-between gap-3">
 
-                <div className="min-w-0">
+                {/* <div className="min-w-0">
                   <p className="font-wedding text-xl leading-relaxed">
                     {invitation.copy.labels.musicHeading}
                   </p>
-                </div>
+                </div> */}
 
                 <button
                   type="button"
@@ -217,23 +319,16 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
                   </span>
                 </div>
 
-                <div className="min-w-0">
+<div className="min-w-0 flex-1 overflow-hidden">
+  <MarqueeText
+    text={tracks[currentTrack].title}
+    className="font-wedding text-2xl"
+  />
 
-                  <p className="truncate font-wedding text-2xl">
-                    {
-                      tracks[currentTrack]
-                        .title
-                    }
-                  </p>
-
-                  <p className="mt-1 truncate text-[9px] uppercase tracking-[0.25em] text-white/45">
-                    {
-                      tracks[currentTrack]
-                        .artist
-                    }
-                  </p>
-
-                </div>
+  <p className="mt-1 truncate text-[9px] uppercase tracking-[0.25em] text-white/45">
+    {tracks[currentTrack].artist}
+  </p>
+</div>
 
               </div>
 
@@ -399,23 +494,20 @@ export default function MusicPlayer({ invitation }: InvitationProps) {
 
                     {/* INFO */}
 
-                    <div className="min-w-0 flex-1">
+<div className="min-w-0 flex-1 overflow-hidden">
+  <MarqueeText
+    text={track.title}
+    className={`font-wedding text-xl ${
+      active
+        ? "text-[var(--wedding-primary-dark)]"
+        : "text-[var(--wedding-text)]"
+    }`}
+  />
 
-                      <p
-                        className={`truncate font-wedding text-xl ${
-                          active
-                            ? "text-[var(--wedding-primary-dark)]"
-                            : "text-[var(--wedding-text)]"
-                        }`}
-                      >
-                        {track.title}
-                      </p>
-
-                      <p className="mt-1 truncate text-[8px] uppercase tracking-[0.2em] text-[var(--wedding-text-muted)]">
-                        {track.artist}
-                      </p>
-
-                    </div>
+  <p className="mt-1 truncate text-[8px] uppercase tracking-[0.2em] text-[var(--wedding-text-muted)]">
+    {track.artist}
+  </p>
+</div>
 
                     {active && (
                       <span className="text-xs text-[var(--wedding-primary)]">
