@@ -41,9 +41,9 @@ export default function Footer({ invitation }: InvitationProps) {
           {invitation.copy.footerThanks}
         </p>
 
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/55">
+        {/* <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/55">
           {invitation.copy.wishesIntro}
-        </p>
+        </p> */}
 
         <div className="mx-auto mt-12 flex h-24 w-24 rotate-[-7deg] items-center justify-center rounded-full border border-white/20 bg-white/5">
           <div className="text-center">
