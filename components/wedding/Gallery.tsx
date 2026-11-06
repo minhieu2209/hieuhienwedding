@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { formatText, type InvitationProps } from "@/data/invitations";
 import WeddingImage from "./WeddingImage";
 
-const images = Array.from({ length: 21 }, (_, index) => `/images/gallery/gallery-${index + 1}.jpg`);
+const images = Array.from({ length: 20 }, (_, index) => `/images/gallery/gallery-${index + 1}.jpg`);
 
 export default function Gallery({ invitation: i }: InvitationProps) {
   const c = i.copy;
