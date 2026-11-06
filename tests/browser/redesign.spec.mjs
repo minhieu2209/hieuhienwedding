@@ -27,22 +27,45 @@ test('Invitation moves below a minimal Hero, family portraits follow parents and
  await expect(page.locator('#countdown').getByRole('heading')).toHaveText('Cùng đếm ngược');
 });
 
-test('All 21 album pages can be turned and the last photo opens in the lightbox',async({page})=>{
+test('All 20 album photos load with distinct versioned URLs instead of reusing stale cached paths',async({page})=>{
+ test.setTimeout(180_000);
+ const legacyRequests=[];
+ await page.route('**/*',route=>{
+  const url=new URL(route.request().url());
+  const source=url.pathname==='/_next/image'?url.searchParams.get('url'):url.pathname;
+  if(/^\/images\/gallery\/gallery-\d+\.jpg$/.test(source??'')){
+   legacyRequests.push(source);
+   return route.abort(); // Simulate an unusable old cached image at the reused URL.
+  }
+  return route.continue();
+ });
  await page.goto('/groom/NGV');
  const album=page.locator('#album');
  await expect(album.getByRole('button',{name:'Ảnh trước',exact:true})).toBeDisabled();
+ await album.scrollIntoViewIfNeeded();
  await album.screenshot({path:'.local/redesign-album.png'});
- for(let n=1;n<=21;n++){
-  await expect(album.getByRole('img')).toHaveAttribute('alt',new RegExp(n+'$'));
-  if(n<21)await album.getByRole('button',{name:'Ảnh tiếp theo',exact:true}).click();
+ const sources=new Set();
+ for(let n=1;n<=20;n++){
+  const image=album.getByRole('img');
+  await expect(image).toHaveAttribute('alt',new RegExp(n+'$'));
+  await expect.poll(()=>image.evaluate(node=>node.complete&&node.naturalWidth>0),{timeout:20_000}).toBe(true);
+  const source=new URL(await image.evaluate(node=>node.currentSrc)).searchParams.get('url');
+  expect(source).toMatch(new RegExp(`^/_next/static/media/gallery-${n}\\.[\\w-]+\\.jpg$`));
+  sources.add(source);
+  if(n<20)await album.getByRole('button',{name:'Ảnh tiếp theo',exact:true}).click();
  }
+ expect(sources.size).toBe(20);
  await expect(album.getByRole('button',{name:'Ảnh tiếp theo',exact:true})).toBeDisabled();
- await album.getByRole('button',{name:'Mở ảnh 21',exact:true}).click();
- await expect(page.getByRole('dialog').getByRole('img')).toHaveAttribute('alt',/21$/);
+ await album.getByRole('button',{name:'Mở ảnh 20',exact:true}).click();
+ const enlarged=page.getByRole('dialog').getByRole('img');
+ await expect(enlarged).toHaveAttribute('alt',/20$/);
+ await expect.poll(()=>enlarged.evaluate(node=>node.complete&&node.naturalWidth>0),{timeout:20_000}).toBe(true);
+ expect(sources.has(new URL(await enlarged.evaluate(node=>node.currentSrc)).searchParams.get('url'))).toBe(true);
  await page.keyboard.press('Escape');
- await expect(album.getByRole('button',{name:'Mở ảnh 21',exact:true})).toBeFocused();
+ await expect(album.getByRole('button',{name:'Mở ảnh 20',exact:true})).toBeFocused();
  await album.getByRole('group').focus();await page.keyboard.press('ArrowLeft');
- await expect(album.getByRole('img')).toHaveAttribute('alt',/20$/);
+ await expect(album.getByRole('img')).toHaveAttribute('alt',/19$/);
+ expect(legacyRequests).toEqual([]);
 });
 
 test('Only an allowlisted, authenticated administrator can publish or hide wishes in the shared book',async({page,request,context})=>{

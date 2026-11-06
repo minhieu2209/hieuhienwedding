@@ -51,7 +51,7 @@ test('An unavailable optimizer falls back to the original image instead of leavi
   test.setTimeout(60_000);
   await page.route('**/_next/image?*', route => {
     const url = new URL(route.request().url());
-    return url.searchParams.get('url') === '/images/gallery/gallery-1.jpg'
+    return /^\/_next\/static\/media\/gallery-1\.[\w-]+\.jpg$/.test(url.searchParams.get('url') ?? '')
       ? route.fulfill({ status: 500, body: 'Temporary image optimization failure' })
       : route.continue();
   });
@@ -59,6 +59,6 @@ test('An unavailable optimizer falls back to the original image instead of leavi
   const album = page.locator('#album');
   await album.scrollIntoViewIfNeeded();
   const image = album.getByRole('img');
-  await expect(image).toHaveAttribute('src', '/images/gallery/gallery-1.jpg');
+  await expect(image).toHaveAttribute('src', /^\/_next\/static\/media\/gallery-1\.[\w-]+\.jpg$/);
   await expectDecoded(image);
 });
