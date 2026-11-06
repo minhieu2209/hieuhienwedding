@@ -64,10 +64,10 @@ function MarqueeText({
 
     function checkOverflow() {
       const containerWidth =
-        container.clientWidth;
+        containerRef.current?.clientWidth ?? 0;
 
       const textWidth =
-        textElement.offsetWidth;
+        measureRef.current?.offsetWidth ?? 0;
 
       setShouldScroll(
         textWidth > containerWidth
