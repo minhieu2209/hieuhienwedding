@@ -12,7 +12,7 @@ const tracks = [
   {
     title: "Một Đời x Người Tốt Nhất Cho Em",
     artist: "14 Casper",
-    src: "/music/MotDoiXNguoiTotNhatChoEm.mp3",
+    src: "/music/MotDoixNguoiTotNhatChoEm.mp3",
   },
   {
     title: "Hoa và Váy",
