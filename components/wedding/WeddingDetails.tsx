@@ -5,7 +5,7 @@ export default function WeddingDetails({ invitation: i }: InvitationProps) {
   const c = i.copy;
   return <section id="invitation" className="relative overflow-hidden bg-[var(--wedding-cream)] px-5 py-20 md:px-10 md:py-24">
     <div className="text-center">
-      <p className="text-md uppercase tracking-[0.25em] text-[var(--wedding-primary)]">{i.salutation}</p>
+      {i.id !== "uncle-lee" && <p className="text-md uppercase tracking-[0.25em] text-[var(--wedding-primary)]">{i.salutation}</p>}
       <h2 className="font-invitation mx-auto mt-5 max-w-2xl break-words text-2xl leading-relaxed text-[var(--wedding-primary-dark)] md:text-3xl">{i.recipient}</h2>
       <p className="font-invitation mt-4 text-base leading-7 text-[var(--wedding-text-muted)] md:text-lg">{i.recipientWelcome}</p>
       <div aria-hidden="true" className="my-8 text-[var(--wedding-primary)]">──── ♡ ────</div>
