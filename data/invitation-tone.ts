@@ -16,9 +16,14 @@ export function invitationVoice(recipient: string, invitationId?: string): Invit
   if (invitationId === "groom-ngv" || invitationId === "bride-partron") return { self: "chúng em", addressee: "Anh/Chị/Em" };
   if (invitationId === "groom-ufc97") return { self: "chúng em", addressee: "Anh Em" };
   const junior = containsWord(name, "em");
+  // Mixed-age groups follow the first Anh/Chị/Em instead of any later "Em".
+  // Without "Em", retain the existing friend and personal-name rules.
+  const firstTitle = junior ? name.match(/(^|[^\p{L}\p{N}_])(anh|chị|em)(?=$|[^\p{L}\p{N}_])/iu)?.[2].toLocaleLowerCase("vi-VN") : undefined;
+  const elder = firstTitle === "anh" ? "Anh" : firstTitle === "chị" ? "Chị" : undefined;
   const friend = containsWord(name, "bạn");
-  const self = junior ? "Anh Chị" : friend ? "chúng mình" : "chúng em";
+  const self = elder ? "chúng em" : junior ? "Anh Chị" : friend ? "chúng mình" : "chúng em";
   if (containsWord(name, "CKLS")) return { self, addressee: "các bạn" };
+  if (elder) return { self, addressee: elder };
   if (junior) return { self, addressee: "em" };
   if (friend) return { self, addressee: "bạn" };
   const address = name.trim().match(/^(anh|chị)(?=$|[^\p{L}\p{N}_])/iu)?.[1].toLocaleLowerCase("vi-VN");

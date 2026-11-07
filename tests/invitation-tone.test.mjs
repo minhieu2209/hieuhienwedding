@@ -9,9 +9,37 @@ const company=records.find(row=>row.variant_id==='groom-ngv'&&row.locale==='vi')
 for(const recipient of ['Bạn mẫu','Các bạn trong lớp','Chị và BẠN mẫu','Bạn mẫu']){
  test(`Bạn uses chúng mình/Bạn: ${recipient}`,()=>assert.deepEqual(invitationVoice(recipient),{self:'chúng mình',addressee:'bạn'}));
 }
-for(const recipient of ['Em mẫu','Nhóm các em','Anh và em mẫu','  EM mẫu  ','Anh và bạn Em mẫu','Em mẫu và Bạn đồng hành']){
+for(const recipient of ['Em mẫu','Nhóm các em','  EM mẫu  ','Em mẫu và Bạn đồng hành']){
  test(`Em uses Anh Chị/Em: ${recipient}`,()=>assert.deepEqual(invitationVoice(recipient),{self:'Anh Chị',addressee:'em'}));
 }
+
+test('Mixed Anh/Chị/Em groups follow the first whole title, including case and punctuation',()=>{
+ for(const [recipient,self,addressee] of [
+  ['Anh An, Chị Bình và Em Cường','chúng em','Anh'],
+  ['Chị Bình, Anh An và Em Cường','chúng em','Chị'],
+  ['Em Cường, Anh An và Chị Bình','Anh Chị','em'],
+  ['Anh/Chị/Em','chúng em','Anh'],
+  ['Chị / Em / Anh','chúng em','Chị'],
+  ['Em / Chị / Anh','Anh Chị','em'],
+  ['  ANH An và em Cường  ','chúng em','Anh'],
+  ['Gia đình Chị Bình và Em Cường','chúng em','Chị'],
+  ['Anh và em mẫu','chúng em','Anh'],
+  ['Anh và bạn Em mẫu','chúng em','Anh'],
+ ])assert.deepEqual(invitationVoice(recipient,'groom-friends'),{self,addressee},recipient);
+});
+
+test('The first mixed-group title controls both speakers and recipients throughout invitation copy',()=>{
+ for(const [name,address] of [['Anh An, Chị Bình và Em Cường','Anh'],['Chị Bình, Em Cường và Anh An','Chị']]){
+  const copy=personalizeInvitationCopy(friend,invitationVoice(name,'groom-friends'),'vi');
+  assert.equal(copy.rsvpThanks,`Chúng em đã nhận được phản hồi. Cảm ơn ${address} đã dành thời gian xác nhận.`);
+  assert.ok(copy.wishesIntro.includes(`của ${address}`));
+  assert.ok(copy.footerThanks.includes(`cảm ơn ${address}`));
+  for(const key of ['invitation','rsvpIntro','rsvpThanks','wishesIntro','footerThanks']){
+   assert.ok(!copy[key].includes('Anh Chị'),key);
+   assert.ok(!copy[key].includes('chúng mình'),key);
+  }
+ }
+});
 for(const [recipient,addressee] of [['Anh mẫu','Anh'],['Chị mẫu','Chị'],['Tập thể công ty','Anh/Chị'],['Khách mẫu','Anh/Chị'],['Minh Anh','Anh/Chị'],['Email nhóm','Anh/Chị'],['Xem thiệp','Anh/Chị'],['Emilia','Anh/Chị'],['Diem','Anh/Chị'],['','Anh/Chị']]){
  test(`Other recipients use chúng em: ${recipient}`,()=>assert.deepEqual(invitationVoice(recipient),{self:'chúng em',addressee}));
 }
@@ -25,7 +53,7 @@ test('UFC 97 always uses chúng em and addresses Anh Em',()=>{
 });
 
 test('CKLS addresses Các bạn, independently of casing and position',()=>{
- for(const [name,self] of [['Các bạn mình "CKLS thân yêu"','chúng mình'],['Nhóm ckls','chúng em'],['Các Em CKLS','Anh Chị']])assert.deepEqual(invitationVoice(name,'groom-friends'),{self,addressee:'các bạn'});
+ for(const [name,self] of [['Các bạn mình "CKLS thân yêu"','chúng mình'],['Nhóm ckls','chúng em'],['Các Em CKLS','Anh Chị'],['Anh An và Em Bình CKLS','chúng em']])assert.deepEqual(invitationVoice(name,'groom-friends'),{self,addressee:'các bạn'});
 });
 
 test('Both speaker and addressee adapt across invitation, RSVP, guestbook introduction and closing without request leakage',()=>{

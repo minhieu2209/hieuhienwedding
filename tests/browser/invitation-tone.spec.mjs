@@ -10,12 +10,12 @@ async function expectVoice(page,self,addressee){
  const footerText=(await footer.textContent()).toLocaleLowerCase('vi-VN');
  expect(footerText).toContain(self.toLocaleLowerCase('vi-VN'));
  for(const other of ['chúng mình','chúng em','anh chị'].filter(value=>value!==self.toLocaleLowerCase('vi-VN')))expect(footerText).not.toContain(other);
- const guestbook=page.locator('section').filter({has:page.getByRole('heading',{name:'Sổ lưu bút',exact:true})});
+ const guestbook=page.locator('section').filter({has:page.locator('#wishName')});
  await expect(guestbook).toContainText(`Những lời chúc của ${addressee}`);
 }
 
 test('Verified personal recipient controls both pronouns throughout the invitation, independently of URL and previous guests',async({page,request})=>{
- for(const [name,self,addressee] of [['Anh mẫu','chúng em','Anh'],['Em mẫu','Anh Chị','Em'],['Chị mẫu','chúng em','Chị'],['Các bạn nhóm CKLS mẫu','chúng mình','Các bạn'],['Anh và Em mẫu','Anh Chị','Em'],['Em mẫu và Bạn đồng hành','Anh Chị','Em'],['Khách mẫu','chúng em','Anh/Chị'],['Bạn mẫu','chúng mình','Bạn']]){
+ for(const [name,self,addressee] of [['Anh mẫu','chúng em','Anh'],['Em mẫu','Anh Chị','em'],['Chị mẫu','chúng em','Chị'],['Các bạn nhóm CKLS mẫu','chúng mình','các bạn'],['Anh và Em mẫu','chúng em','Anh'],['Anh An, Chị Bình và Em Cường','chúng em','Anh'],['Chị Bình, Anh An và Em Cường','chúng em','Chị'],['Em Cường, Anh An và Chị Bình','Anh Chị','em'],['Em mẫu và Bạn đồng hành','Anh Chị','em'],['Khách mẫu','chúng em','Anh/Chị'],['Bạn mẫu','chúng mình','bạn']]){
   await request.post('http://127.0.0.1:4711/__test/change',{data:{action:'rename',code:'GF-test',name}});
   await page.goto(`/groom/friends?guest=${token}&khach=Em%20khong%20hop%20le`);
   await expect(page.locator('#invitation h2').first()).toHaveText(name);
@@ -35,7 +35,7 @@ test('UFC 97 uses chúng em and addresses Anh Em throughout the invitation',asyn
  await expectVoice(page,'chúng em','Anh Em');
 });
 
-for(const [name,expected] of [['Anh khách mẫu','Chúng em đã nhận được phản hồi. Cảm ơn Anh đã dành thời gian xác nhận.'],['Em khách mẫu','Anh Chị đã nhận được phản hồi. Cảm ơn Em đã dành thời gian xác nhận.'],['Các bạn CKLS','Chúng mình đã nhận được phản hồi. Cảm ơn Các bạn đã dành thời gian xác nhận.']]){
+for(const [name,expected] of [['Anh khách mẫu','Chúng em đã nhận được phản hồi. Cảm ơn Anh đã dành thời gian xác nhận.'],['Em khách mẫu','Anh Chị đã nhận được phản hồi. Cảm ơn em đã dành thời gian xác nhận.'],['Các bạn CKLS','Chúng mình đã nhận được phản hồi. Cảm ơn các bạn đã dành thời gian xác nhận.'],['Anh An, Chị Bình và Em Cường','Chúng em đã nhận được phản hồi. Cảm ơn Anh đã dành thời gian xác nhận.'],['Chị Bình, Anh An và Em Cường','Chúng em đã nhận được phản hồi. Cảm ơn Chị đã dành thời gian xác nhận.']]){
  test(`RSVP thank-you matches both speaker and recipient for ${name}`,async({page,request})=>{
   await request.post('http://127.0.0.1:4711/__test/change',{data:{action:'rename',code:'GF-test',name}});
   await page.goto(`/groom/friends?guest=${token}`);
@@ -59,7 +59,7 @@ test('Personalized prose does not rewrite a guestbook author or the guest’s me
  const wish={id:'98765',guest_name:'Bạn tác giả mẫu',message:'Chúng mình chúc bạn hạnh phúc và cảm ơn Anh/Chị/Em!',created_at:'2026-11-04T00:00:00Z'};
  await page.route('**/api/invitations/groom-friends/wishes',route=>route.request().method()==='GET'?route.fulfill({json:{wishes:[wish],next:null}}):route.continue());
  await page.goto(`/groom/friends?guest=${token}`);
- await expectVoice(page,'Anh Chị','Em');
+ await expectVoice(page,'Anh Chị','em');
  const entry=page.locator('article').filter({has:page.getByRole('heading',{name:wish.guest_name,exact:true})});
  await expect(entry).toContainText(wish.message);
  await expect(entry.getByRole('heading')).toHaveText(wish.guest_name);
