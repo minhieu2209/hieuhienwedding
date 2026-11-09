@@ -59,7 +59,7 @@ export function buildInvitation(variant: Variant, event: WeddingEvent, locale: L
     recipient,
     recipientWelcome: locale === "ko"
       ? "저희 가족과 함께 기쁨을 나눠 주시면 감사하겠습니다."
-      : `Đến chung vui cùng gia đình ${voice.self}`,
+      : `Đến chung vui cùng gia đình ${voice.self.toLocaleLowerCase("vi-VN")}`,
     salutation: copy.salutation, message: copy.invitation,
     label: copy.labels[event.event_kind === "reception" ? "receptionInvitation" : "weddingInvitation"],
     copy, people, names, namesWithDot: people.map((person) => person.fullName).join(" · "),

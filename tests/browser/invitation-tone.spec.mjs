@@ -4,18 +4,18 @@ test.beforeEach(async({request})=>{token=(await (await request.post('http://127.
 
 async function expectVoice(page,self,addressee){
  const welcome=page.locator('#invitation h2').first().locator('xpath=following-sibling::p[1]');
- await expect(welcome).toHaveText(`Đến chung vui cùng gia đình ${self}`);
+ await expect(welcome).toHaveText(`Đến chung vui cùng gia đình ${self.toLocaleLowerCase('vi-VN')}`);
  const footer=page.locator('footer');
- await expect(footer).toContainText(`cảm ơn ${addressee}`);
+ await expect(footer).toContainText(`cảm ơn ${addressee.toLocaleLowerCase('vi-VN')}`);
  const footerText=(await footer.textContent()).toLocaleLowerCase('vi-VN');
  expect(footerText).toContain(self.toLocaleLowerCase('vi-VN'));
  for(const other of ['chúng mình','chúng em','anh chị'].filter(value=>value!==self.toLocaleLowerCase('vi-VN')))expect(footerText).not.toContain(other);
  const guestbook=page.locator('section').filter({has:page.locator('#wishName')});
- await expect(guestbook).toContainText(`Những lời chúc của ${addressee}`);
+ await expect(guestbook).toContainText(`Những lời chúc của ${addressee.toLocaleLowerCase('vi-VN')}`);
 }
 
 test('Verified personal recipient controls both pronouns throughout the invitation, independently of URL and previous guests',async({page,request})=>{
- for(const [name,self,addressee] of [['Anh mẫu','chúng em','Anh'],['Em mẫu','Anh Chị','em'],['Chị mẫu','chúng em','Chị'],['Các bạn nhóm CKLS mẫu','chúng mình','các bạn'],['Anh và Em mẫu','chúng em','Anh'],['Anh An, Chị Bình và Em Cường','chúng em','Anh'],['Chị Bình, Anh An và Em Cường','chúng em','Chị'],['Em Cường, Anh An và Chị Bình','Anh Chị','em'],['Em mẫu và Bạn đồng hành','Anh Chị','em'],['Khách mẫu','chúng em','Anh/Chị'],['Bạn mẫu','chúng mình','bạn']]){
+ for(const [name,self,addressee] of [['Anh mẫu','chúng em','Anh'],['Em mẫu','Anh Chị','em'],['Chị mẫu','chúng em','Chị'],['Các bạn nhóm CKLS mẫu','chúng mình','các bạn'],['Anh và Em mẫu','chúng em','Anh'],['Anh An, Chị Bình và Em Cường','chúng em','Anh'],['Chị Bình, Anh An và Em Cường','chúng em','Chị'],['Em Cường, Anh An và Chị Bình','Anh Chị','em'],['Em mẫu và Bạn đồng hành','Anh Chị','em'],['Khách mẫu','chúng mình','bạn'],['Bạn mẫu','chúng mình','bạn']]){
   await request.post('http://127.0.0.1:4711/__test/change',{data:{action:'rename',code:'GF-test',name}});
   await page.goto(`/groom/friends?guest=${token}&khach=Em%20khong%20hop%20le`);
   await expect(page.locator('#invitation h2').first()).toHaveText(name);
@@ -35,7 +35,7 @@ test('UFC 97 uses chúng em and addresses Anh Em throughout the invitation',asyn
  await expectVoice(page,'chúng em','Anh Em');
 });
 
-for(const [name,expected] of [['Anh khách mẫu','Chúng em đã nhận được phản hồi. Cảm ơn Anh đã dành thời gian xác nhận.'],['Em khách mẫu','Anh Chị đã nhận được phản hồi. Cảm ơn em đã dành thời gian xác nhận.'],['Các bạn CKLS','Chúng mình đã nhận được phản hồi. Cảm ơn các bạn đã dành thời gian xác nhận.'],['Anh An, Chị Bình và Em Cường','Chúng em đã nhận được phản hồi. Cảm ơn Anh đã dành thời gian xác nhận.'],['Chị Bình, Anh An và Em Cường','Chúng em đã nhận được phản hồi. Cảm ơn Chị đã dành thời gian xác nhận.']]){
+for(const [name,expected] of [['Anh khách mẫu','Chúng em đã nhận được phản hồi. Cảm ơn anh đã dành thời gian xác nhận.'],['Em khách mẫu','Anh chị đã nhận được phản hồi. Cảm ơn em đã dành thời gian xác nhận.'],['Các bạn CKLS','Chúng mình đã nhận được phản hồi. Cảm ơn các bạn đã dành thời gian xác nhận.'],['Anh An, Chị Bình và Em Cường','Chúng em đã nhận được phản hồi. Cảm ơn anh đã dành thời gian xác nhận.'],['Chị Bình, Anh An và Em Cường','Chúng em đã nhận được phản hồi. Cảm ơn chị đã dành thời gian xác nhận.']]){
  test(`RSVP thank-you matches both speaker and recipient for ${name}`,async({page,request})=>{
   await request.post('http://127.0.0.1:4711/__test/change',{data:{action:'rename',code:'GF-test',name}});
   await page.goto(`/groom/friends?guest=${token}`);
@@ -45,6 +45,23 @@ for(const [name,expected] of [['Anh khách mẫu','Chúng em đã nhận đượ
   await expect(page.getByRole('status').filter({hasText:expected})).toBeVisible();
  });
 }
+
+test('Bride friends use bridesmaid, 1H20 and unmarked-name rules across the welcome, guestbook, footer and RSVP',async({page,request})=>{
+ for(const [name,self,address,thanks] of [
+  ['Phù dâu của em','chúng em','chị','Chúng em đã nhận được phản hồi. Cảm ơn chị đã dành thời gian xác nhận.'],
+  ['Các gái iu 1H20','chúng mình','các gái iu','Chúng mình đã nhận được phản hồi. Cảm ơn các gái iu đã dành thời gian xác nhận.'],
+  ['Minh Anh và người ấy','chúng mình','bạn','Chúng mình đã nhận được phản hồi. Cảm ơn bạn đã dành thời gian xác nhận.'],
+ ]){
+  await request.post('http://127.0.0.1:4711/__test/change',{data:{action:'rename',code:'BF-test',name}});
+  await page.goto('/bride/friends?guest=BF-test');
+  await expect(page.locator('#invitation h2').first()).toHaveText(name);
+  await expect(page.locator('#invitation')).toContainText('28 · 11 · 2026');
+  await expectVoice(page,self,address);
+  await page.getByLabel('Sẽ tham dự',{exact:true}).check();
+  await page.locator('form').filter({has:page.locator('#guestName')}).locator('button[type=submit]').click();
+  await expect(page.getByRole('status').filter({hasText:thanks})).toBeVisible();
+ }
+});
 
 test('UncleLEE uses the reviewed Korean recipient and keeps its established welcome',async({page})=>{
  await page.goto('/UncleLEE');
