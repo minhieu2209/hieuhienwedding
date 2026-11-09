@@ -47,6 +47,8 @@ Link cá nhân dùng trực tiếp `guest_code`, ví dụ `/groom/friends?guest=
 
 ## Kiểm tra
 
+Build production dùng `next build --webpack` để tránh lỗi xử lý font Noto Serif KR của Turbopack trong Next.js 16.3.8. Giữ nguyên font và cấu hình hiển thị hiện tại; Vercel chạy lệnh này qua `npm run build`.
+
 ```bash
 npm run lint
 npm run test:unit

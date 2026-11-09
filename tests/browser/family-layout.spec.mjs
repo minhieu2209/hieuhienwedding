@@ -4,7 +4,8 @@ for (const [path, locale] of [['/groom/NGV', 'vi'], ['/bride/friends', 'vi'], ['
   test(`${path} ${locale}: fathers, mothers and portraits align when parent names wrap`, async ({ page }) => {
     for (const width of [320, 360, 390, 430, 1440]) {
       await page.setViewportSize({ width, height: 900 });
-      await page.goto(path);
+      // Autoplay media can delay window.load; wait for the actual fonts/images below.
+      await page.goto(path, { waitUntil: 'domcontentloaded' });
       if (path === '/bride/Partron' && locale === 'ko') await page.getByRole('link', { name: 'KOR', exact: true }).click();
       await expect(page.locator('main')).toHaveAttribute('lang', locale);
       await page.evaluate(() => document.fonts.ready);
