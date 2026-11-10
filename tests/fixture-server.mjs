@@ -20,8 +20,18 @@ async function reset() {
  await db.exec('TRUNCATE wedding_rsvp,wedding_wishes,wedding_guests,wedding_invitation_contents,wedding_invitation_variants,wedding_events,wedding_settings RESTART IDENTITY');
  await db.exec(seed);
  await db.exec(await readFile(new URL('../supabase/manual/07_apply_reviewed_korean.sql', import.meta.url), 'utf8'));
+ await db.exec(`INSERT INTO wedding_invitation_variants
+   (id,path,host_side,first_person,event_id,recipient_mode,default_locale,supported_locales)
+   VALUES ('bride-partron-ko','/bride/PartronKO','bride','bride','wedding-reception','individual','ko',ARRAY['ko']::text[]);
+   INSERT INTO wedding_invitation_contents(invitation_variant_id,locale,content,review_status)
+   SELECT 'bride-partron-ko','ko',
+     jsonb_set(jsonb_set(content,'{defaultRecipient}',to_jsonb('소중한 손님께'::text)),
+       '{invitation}',to_jsonb('저희 Thu Hiền과 Minh Hiếu의 결혼을 함께 축하하는 자리에 정중히 초대합니다. 따뜻한 축복과 소중한 발걸음이 저희에게 큰 기쁨이 될 것입니다.'::text)),
+     'approved'
+   FROM wedding_invitation_contents WHERE invitation_variant_id='bride-partron' AND locale='ko';`);
  await db.exec("UPDATE wedding_invitation_variants SET publication_status='published'; UPDATE wedding_invitation_contents SET review_status='approved';");
  await db.query('INSERT INTO wedding_guests(guest_code,display_name,invitation_variant_id,invite_token_hash,is_active) VALUES ($1,$2,$3,$4,true),($5,$6,$7,$8,true)', ['GF-test','Bạn mẫu & Gia Đình','groom-friends',createHash('sha256').update(token).digest('hex'),'BF-test','Lan mẫu','bride-friends',createHash('sha256').update(brideToken).digest('hex')]);
+ await db.query("INSERT INTO wedding_guests(guest_code,display_name,invitation_variant_id,invite_token_hash,is_active) VALUES ('BFKO-test','테스트 손님','bride-partron-ko',$1,true)",[createHash('sha256').update('korean-fixture').digest('hex')]);
  await db.exec("INSERT INTO wedding_wishes(guest_name,message,host_side,moderation_status) VALUES ('Fixture groom','Groom-only wish','groom','approved'),('Fixture bride','Bride-only wish','bride','approved'),('Legacy guest','Unclassified legacy wish',NULL,'pending');");
 }
 await reset();

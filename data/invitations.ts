@@ -11,6 +11,12 @@ export const chooseLocale = (variant: Variant, value?: string | string[]): Local
   return variant.supported_locales.includes(candidate as Locale) ? candidate as Locale : variant.default_locale;
 };
 export function getCopy(id: string, locale: Locale): Copy {
+  if (id === "bride-partron-ko" && locale === "ko") {
+    const copy = structuredClone(getCopy("bride-partron", "ko"));
+    copy.defaultRecipient = "소중한 손님께";
+    copy.invitation = "저희 Thu Hiền과 Minh Hiếu의 결혼을 함께 축하하는 자리에 정중히 초대합니다. 따뜻한 축복과 소중한 발걸음이 저희에게 큰 기쁨이 될 것입니다.";
+    return copy;
+  }
   const record = records.find((item) => item.variant_id === id && item.locale === locale);
   if (!record) throw new Error("Unsupported invitation translation");
   return record.content;
