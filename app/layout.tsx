@@ -27,6 +27,7 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://hieuhienwedding.vercel.app"),
   title: "Wedding Invitation",
   description: "Wedding Invitation",
 };

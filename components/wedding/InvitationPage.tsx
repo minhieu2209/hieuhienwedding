@@ -15,9 +15,20 @@ async function invitationFor(path: string, searchParams: Promise<InvitationSearc
 }
 export async function invitationMetadata(path: string, searchParams: Promise<InvitationSearchParams>): Promise<Metadata> {
   const { invitation } = await invitationFor(path, searchParams);
+  const title = `${invitation.names} | ${invitation.label}`;
+  const description = `${invitation.event.time} · ${invitation.event.date} · ${invitation.event.venue}`;
+  const image = "/images/share/wedding-preview-v1.jpg";
   return {
-    title: `${invitation.names} | ${invitation.label}`,
-    description: `${invitation.event.time} · ${invitation.event.date} · ${invitation.event.venue}`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      locale: invitation.locale === "ko" ? "ko_KR" : "vi_VN",
+      images: [{ url: image, width: 1200, height: 630, type: "image/jpeg", alt: invitation.names }],
+    },
+    twitter: { card: "summary_large_image", title, description, images: [image] },
     robots: invitation.recipientMode === "individual" ? { index: false, follow: false } : undefined,
   };
 }
