@@ -42,7 +42,7 @@ export function buildInvitation(variant: Variant, event: WeddingEvent, locale: L
   const recipientName = options.recipientName?.trim().replace(/\s+/g, " ").slice(0, 120) ?? "";
   const baseCopy = options.copy ?? getCopy(variant.id, locale);
   const recipient = recipientName || baseCopy.defaultRecipient;
-  const voice = invitationVoice(recipient, variant.id);
+  const voice = invitationVoice(recipient, variant.id, options.guestCode);
   const copy = personalizeInvitationCopy(baseCopy, voice, locale);
   const couple = options.couple ?? defaultCouple;
   const sides: Side[] = variant.first_person === "groom" ? ["groom", "bride"] : ["bride", "groom"];

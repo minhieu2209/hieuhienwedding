@@ -63,6 +63,17 @@ test('Bride friends use bridesmaid, 1H20 and unmarked-name rules across the welc
  }
 });
 
+test('BF-0003 specifically uses chúng em and addresses chị throughout the invitation',async({page,request})=>{
+ await page.goto('/bride/friends?guest=BF-0003');
+ await expect(page.locator('#invitation h2').first()).toHaveText('Khách thử nghiệm');
+ await expectVoice(page,'chúng em','chị');
+ await page.getByLabel('Sẽ tham dự',{exact:true}).check();
+ await page.locator('form').filter({has:page.locator('#guestName')}).locator('button[type=submit]').click();
+ await expect(page.getByRole('status').filter({hasText:'Chúng em đã nhận được phản hồi. Cảm ơn chị đã dành thời gian xác nhận.'})).toBeVisible();
+ const state=await (await request.get('http://127.0.0.1:4711/__test/state')).json();
+ expect(state.rsvp[0].guest_id).toBe(state.guests.find(guest=>guest.guest_code==='BF-0003').id);
+});
+
 test('UncleLEE uses the reviewed Korean recipient and keeps its established welcome',async({page})=>{
  await page.goto('/UncleLEE');
  await expect(page.locator('#invitation h2').first()).toHaveText('이준석 선생님께');

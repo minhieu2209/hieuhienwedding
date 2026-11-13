@@ -10,8 +10,9 @@ function containsWord(text: string, word: string) {
   return new RegExp(`(^|[^\\p{L}\\p{N}_])${word}(?=$|[^\\p{L}\\p{N}_])`, "iu").test(text);
 }
 
-export function invitationVoice(recipient: string, invitationId?: string): InvitationVoice {
+export function invitationVoice(recipient: string, invitationId?: string, guestCode?: string): InvitationVoice {
   const name = recipient.normalize("NFC");
+  if (invitationId === "bride-friends" && guestCode === "BF-0003") return { self: "chúng em", addressee: "Chị" };
   if (invitationId === "uncle-lee") return { self: "chúng cháu", addressee: "Bác" };
   if (invitationId === "groom-ngv" || invitationId === "bride-partron") return { self: "chúng em", addressee: "Anh/Chị/Em" };
   if (invitationId === "groom-ufc97") return { self: "chúng em", addressee: "Anh Em" };

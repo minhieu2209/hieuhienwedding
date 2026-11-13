@@ -31,6 +31,7 @@ async function reset() {
    FROM wedding_invitation_contents WHERE invitation_variant_id='bride-partron' AND locale='ko';`);
  await db.exec("UPDATE wedding_invitation_variants SET publication_status='published'; UPDATE wedding_invitation_contents SET review_status='approved';");
  await db.query('INSERT INTO wedding_guests(guest_code,display_name,invitation_variant_id,invite_token_hash,is_active) VALUES ($1,$2,$3,$4,true),($5,$6,$7,$8,true)', ['GF-test','Bạn mẫu & Gia Đình','groom-friends',createHash('sha256').update(token).digest('hex'),'BF-test','Lan mẫu','bride-friends',createHash('sha256').update(brideToken).digest('hex')]);
+ await db.query("INSERT INTO wedding_guests(guest_code,display_name,invitation_variant_id,invite_token_hash,is_active) VALUES ('BF-0003','Khách thử nghiệm','bride-friends',$1,true)",[createHash('sha256').update('bride-guest-0003-fixture').digest('hex')]);
  await db.query("INSERT INTO wedding_guests(guest_code,display_name,invitation_variant_id,invite_token_hash,is_active) VALUES ('BFKO-test','테스트 손님','bride-partron-ko',$1,true)",[createHash('sha256').update('korean-fixture').digest('hex')]);
  await db.exec("INSERT INTO wedding_wishes(guest_name,message,host_side,moderation_status) VALUES ('Fixture groom','Groom-only wish','groom','approved'),('Fixture bride','Bride-only wish','bride','approved'),('Legacy guest','Unclassified legacy wish',NULL,'pending');");
 }

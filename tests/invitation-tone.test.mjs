@@ -54,6 +54,12 @@ test('Bridesmaids override Em; 1H20 has its own collective address, with Unicode
  for(const id of ['groom-ngv','bride-partron'])assert.deepEqual(invitationVoice('Phù dâu và 1H20',id),{self:'chúng em',addressee:'Anh/Chị/Em'});
 });
 
+test('Only verified bride-friends guest BF-0003 has the requested chị address',()=>{
+ assert.deepEqual(invitationVoice('Khách thử nghiệm','bride-friends','BF-0003'),{self:'chúng em',addressee:'Chị'});
+ assert.deepEqual(invitationVoice('Khách thử nghiệm','bride-friends','BF-0004'),{self:'chúng mình',addressee:'bạn'});
+ assert.deepEqual(invitationVoice('Khách thử nghiệm','groom-friends','BF-0003'),{self:'chúng mình',addressee:'bạn'});
+});
+
 test('Both company exceptions precede recipient keywords',()=>{
  for(const id of ['groom-ngv','bride-partron'])assert.deepEqual(invitationVoice('Toàn thể Anh/Chị/Em công ty',id),{self:'chúng em',addressee:'Anh/Chị/Em'});
 });
