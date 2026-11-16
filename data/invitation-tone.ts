@@ -15,7 +15,7 @@ export function invitationVoice(recipient: string, invitationId?: string, guestC
   if (invitationId === "bride-friends" && guestCode === "BF-0003") return { self: "chúng em", addressee: "Chị" };
   if (invitationId === "uncle-lee") return { self: "chúng cháu", addressee: "Bác" };
   if (invitationId === "groom-ngv" || invitationId === "bride-partron") return { self: "chúng em", addressee: "Anh/Chị/Em" };
-  if (invitationId === "groom-ufc97") return { self: "chúng em", addressee: "Anh Em" };
+  if (invitationId === "groom-ufc97" || invitationId === "groom-fcds") return { self: "chúng em", addressee: "Anh Em" };
   if (containsWord(name, "phù\\s+dâu")) return { self: "chúng em", addressee: "Chị" };
   if (containsWord(name, "1H20")) return { self: "chúng mình", addressee: "các gái iu" };
   const junior = containsWord(name, "em");

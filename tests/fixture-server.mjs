@@ -20,6 +20,8 @@ async function reset() {
  await db.exec('TRUNCATE wedding_rsvp,wedding_wishes,wedding_guests,wedding_invitation_contents,wedding_invitation_variants,wedding_events,wedding_settings RESTART IDENTITY');
  await db.exec(seed);
  await db.exec(await readFile(new URL('../supabase/manual/07_apply_reviewed_korean.sql', import.meta.url), 'utf8'));
+ await db.exec("UPDATE wedding_invitation_variants SET publication_status='published' WHERE id='groom-ufc97'; UPDATE wedding_invitation_contents SET review_status='approved' WHERE invitation_variant_id='groom-ufc97' AND locale='vi';");
+ await db.exec(await readFile(new URL('../supabase/manual/08_add_fcds.sql', import.meta.url), 'utf8'));
  await db.exec(`INSERT INTO wedding_invitation_variants
    (id,path,host_side,first_person,event_id,recipient_mode,default_locale,supported_locales)
    VALUES ('bride-partron-ko','/bride/PartronKO','bride','bride','wedding-reception','individual','ko',ARRAY['ko']::text[]);

@@ -11,6 +11,12 @@ export const chooseLocale = (variant: Variant, value?: string | string[]): Local
   return variant.supported_locales.includes(candidate as Locale) ? candidate as Locale : variant.default_locale;
 };
 export function getCopy(id: string, locale: Locale): Copy {
+  if (id === "groom-fcds" && locale === "vi") {
+    const copy = structuredClone(getCopy("groom-ufc97", "vi"));
+    copy.defaultRecipient = "Toàn thể Anh/Em FC Dưỡng Sinh";
+    copy.invitation = "Chúng em trân trọng kính mời Toàn thể Anh/Em FC Dưỡng Sinh đến chung vui trong lễ thành hôn của Minh Hiếu và Thu Hiền. Sự hiện diện của Anh/Em là niềm vui và vinh hạnh của chúng em.";
+    return copy;
+  }
   if (id === "bride-partron-ko" && locale === "ko") {
     const copy = structuredClone(getCopy("bride-partron", "ko"));
     copy.defaultRecipient = "소중한 손님께";

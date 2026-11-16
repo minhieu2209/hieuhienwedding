@@ -66,6 +66,7 @@ test('Both company exceptions precede recipient keywords',()=>{
 
 test('UFC 97 always uses chúng em and addresses Anh Em',()=>{
  assert.deepEqual(invitationVoice('Toàn thể Anh/Em đội bóng UFC 97','groom-ufc97'),{self:'chúng em',addressee:'Anh Em'});
+ assert.deepEqual(invitationVoice('Toàn thể Anh/Em FC Dưỡng Sinh','groom-fcds'),{self:'chúng em',addressee:'Anh Em'});
 });
 
 test('CKLS addresses Các bạn, independently of casing and position',()=>{

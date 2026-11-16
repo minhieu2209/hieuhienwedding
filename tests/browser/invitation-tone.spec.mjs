@@ -35,6 +35,22 @@ test('UFC 97 uses chúng em and addresses Anh Em throughout the invitation',asyn
  await expectVoice(page,'chúng em','Anh Em');
 });
 
+test('FCDS matches UFC97 with its own recipient and working RSVP',async({page,request})=>{
+ await page.goto('/groom/FCDS');
+ await expect(page.locator('#invitation h2').first()).toHaveText('Toàn thể Anh/Em FC Dưỡng Sinh');
+ await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content','https://hieuhienwedding.vercel.app/images/share/wedding-preview-v1.jpg');
+ await expectVoice(page,'chúng em','Anh Em');
+ const content=await page.locator('main').textContent();
+ expect(content).not.toContain('UFC 97');
+ await page.locator('#guestName').fill('Thành viên FC Dưỡng Sinh');
+ await page.getByLabel('Sẽ tham dự',{exact:true}).check();
+ await page.locator('form').filter({has:page.locator('#guestName')}).locator('button[type=submit]').click();
+ await expect(page.getByRole('status').filter({hasText:'Chúng em đã nhận được phản hồi. Cảm ơn anh em đã dành thời gian xác nhận.'})).toBeVisible();
+ const state=await (await request.get('http://127.0.0.1:4711/__test/state')).json();
+ expect(state.rsvp[0].invitation_variant_id).toBe('groom-fcds');
+ expect(state.rsvp[0].event_id).toBe('groom-wedding');
+});
+
 for(const [name,expected] of [['Anh khách mẫu','Chúng em đã nhận được phản hồi. Cảm ơn anh đã dành thời gian xác nhận.'],['Em khách mẫu','Anh chị đã nhận được phản hồi. Cảm ơn em đã dành thời gian xác nhận.'],['Các bạn CKLS','Chúng mình đã nhận được phản hồi. Cảm ơn các bạn đã dành thời gian xác nhận.'],['Anh An, Chị Bình và Em Cường','Chúng em đã nhận được phản hồi. Cảm ơn anh đã dành thời gian xác nhận.'],['Chị Bình, Anh An và Em Cường','Chúng em đã nhận được phản hồi. Cảm ơn chị đã dành thời gian xác nhận.']]){
  test(`RSVP thank-you matches both speaker and recipient for ${name}`,async({page,request})=>{
   await request.post('http://127.0.0.1:4711/__test/change',{data:{action:'rename',code:'GF-test',name}});
