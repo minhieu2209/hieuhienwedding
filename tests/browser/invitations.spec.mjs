@@ -57,6 +57,30 @@ test('Personal names come from Supabase and do not duplicate prefixes or trust k
  await request.post('http://127.0.0.1:4711/__test/change',{data:{action:'rename',code:'GF-test',name:'Em Lan "mẫu"'}});
  await page.reload();await expect(page.locator('#invitation')).toContainText('Em Lan "mẫu"');
 });
+test('BF-0026 displays groom date, time and place while retaining the bride invitation',async({page,request})=>{
+ await page.goto('/groom/UFC97');
+ const groomMap=await page.getByRole('link',{name:'Xem bản đồ'}).getAttribute('href');
+ await page.goto('/bride/friends?guest=BF-0026');
+ await expect(page.locator('#invitation h2').first()).toHaveText('Khách BF-0026 mẫu');
+ const details=page.locator('#invitation');
+ await expect(details).toContainText('LỄ VU QUY');
+ await expect(details).toContainText('29 · 11 · 2026');
+ await expect(details).toContainText('10:00');
+ await expect(details).toContainText('Nhà hàng Chen 01 Nam Định');
+ await expect(details).toContainText('300 Trường Chinh, Nam Định, Ninh Bình');
+ await expect(details).not.toContainText('Tư gia Nhà gái');
+ await expect(page.getByRole('link',{name:'Xem bản đồ'})).toHaveAttribute('href',groomMap);
+ await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',/29 · 11 · 2026 · Nhà hàng Chen 01 Nam Định/);
+ await page.locator('#guestName').fill('Khách BF-0026 mẫu');
+ await page.getByLabel('Sẽ tham dự',{exact:true}).check();
+ await page.locator('form').filter({has:page.locator('#guestName')}).locator('button[type=submit]').click();
+ await expect(page.getByRole('status').filter({hasText:'đã nhận được phản hồi'})).toBeVisible();
+ const state=await (await request.get('http://127.0.0.1:4711/__test/state')).json();
+ expect(state.rsvp[0]).toMatchObject({invitation_variant_id:'bride-friends',event_id:'bride-wedding',host_side:'bride'});
+ await page.goto(`/bride/friends?guest=${tokens.brideToken}`);
+ await expect(page.locator('#invitation')).toContainText('28 · 11 · 2026');
+ await expect(page.locator('#invitation')).toContainText('Tư gia Nhà gái');
+});
 test('Wrong-group, missing and invalid tokens never enable individual submissions',async({page,request})=>{
  for(const query of ['',`?guest=${tokens.brideToken}`,'?guest=invalid']){
   await page.goto('/groom/friends'+query);for(const button of await page.locator('form button[type=submit]').all())await expect(button).toBeDisabled();

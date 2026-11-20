@@ -93,9 +93,22 @@ export async function databaseContext(pathOrId: string, query: InvitationSearchP
   }
   const published = variant.publication_status === "published" && allApproved;
   const formsEnabled = published && (variant.recipient_mode !== "individual" || Boolean(guestId));
+  let displayEvent = eventResult.data;
+  if (variant.id === "bride-friends" && guestCode === "BF-0026") {
+    const groomEvent = await db.from("wedding_events").select("*").eq("id", "groom-wedding").single();
+    if (groomEvent.error) throw new InvitationError("unavailable");
+    if (!validEvent(groomEvent.data)) throw new InvitationError("configuration");
+    displayEvent = {
+      ...displayEvent,
+      starts_at: groomEvent.data.starts_at,
+      venue: groomEvent.data.venue,
+      address: groomEvent.data.address,
+      map_url: groomEvent.data.map_url,
+    };
+  }
   return {
     db, variant, guestId, published,
-    invitation: buildInvitation(variant, eventResult.data, locale, {
+    invitation: buildInvitation(variant, displayEvent, locale, {
       copy, couple: settingsResult.data.couple ?? defaultCouple, recipientName,
       guestCode, formsEnabled, wishesEnabled: published,
       invalidGuest: variant.recipient_mode === "individual" && Boolean(reference) && !guestId,
